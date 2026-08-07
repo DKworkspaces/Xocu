@@ -1,0 +1,153 @@
+
+
+:root {
+  --s-font: system-ui, -apple-system, sans-serif;
+  --s-bg: #ffffff;
+  --s-text: #111111;
+  --s-muted: #555555;
+  --s-accent: #0066cc;
+  --s-border: #e5e5e5;
+ /* Pure CSS Smooth Interaction Architecture Tokens */
+  --s-scroll-behavior: smooth;
+  --s-scroll-padding: 2rem;
+  --s-item-transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+/* Sticky Header Structural Variables */
+  --s-header-sticky: sticky;
+  --s-header-top: 0;
+  --s-header-bg: rgba(255, 255, 255, 0.95);
+  --s-header-backdrop: blur(12px);
+  --s-header-shadow: 0 1px 0 var(--s-border);
+  --s-header-z: 100;
+  --s-header-pad: 1.5rem 1rem;
+}
+
+/* Global Root Configuration Application */
+html {
+  scroll-behavior: var(--s-scroll-behavior);
+  scroll-padding-top: var(--s-scroll-padding);
+}
+
+body.page-search {
+  font-family: var(--s-font);
+  background: var(--s-bg);
+  color: var(--s-text);
+  margin: 0;
+  padding: 0 1rem; /* Universal side spacing safe-zone for mobile browsers */
+}
+
+.mod-search {
+  max-width: 650px;
+  
+  /* Horizontal Centering + Top Margin Alignment */
+  margin: 5vh auto 0 auto; /* Form pushes down 5% from top viewport boundary, auto centers horizontally */
+  
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Minimalist Search Input Controller */
+.mod-search__bar {
+  position: var(--s-header-sticky);
+  top: var(--s-header-top);
+  z-index: var(--s-header-z);
+  background: var(--s-header-bg);
+  backdrop-filter: var(--s-header-backdrop);
+  -webkit-backdrop-filter: var(--s-header-backdrop);
+  box-shadow: var(--s-header-shadow);
+  padding: var(--s-header-pad);
+  
+  /* Pull full width to edge boundaries without structural div container bloat */
+  margin-left: calc(var(--s-header-pad) * -1);
+  margin-right: calc(var(--s-header-pad) * -1);
+}
+
+
+}
+
+.mod-search__bar input {
+  font-family: inherit;
+  font-size: 1rem;
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--s-border);
+  border-radius: 6px;
+  outline: none;
+}
+
+.mod-search__bar input:focus {
+  border-color: var(--s-accent);
+}
+
+.mod-search__bar button {
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background: var(--s-text);
+  color: var(--s-bg);
+  border: none;
+  padding: 0 1.25rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Query Meta Headers */
+.mod-search__summary {
+  font-size: 0.85rem;
+  color: var(--s-muted);
+  border-bottom: 1px solid var(--s-border);
+  padding-bottom: 0.75rem;
+  margin: 0;
+}
+
+.mod-search__summary p { margin: 0; }
+
+/* Linear Result Stream Processing */
+.mod-search__stream {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-bottom: 3rem; /* Adds breathing room when scrolling hits bottom viewport on mobile */
+}
+
+.search-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  transition: var(--s-item-transition);
+}
+
+.search-item:hover {
+  transform: translateX(4px);
+}
+
+.search-item__meta {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--s-muted);
+}
+
+.search-item__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.search-item__title a {
+  color: var(--s-accent);
+  text-decoration: none;
+}
+
+.search-item__title a:hover {
+  text-decoration: underline;
+}
+
+.search-item__snippet {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--s-muted);
+  margin: 0;
+}
