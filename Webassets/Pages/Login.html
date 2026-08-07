@@ -1,0 +1,21 @@
+<body class="page-auth">
+  <form class="mod-auth" method="POST" action="/api/login">
+    <header class="mod-auth__header">
+      <h1>Console Login</h1>
+      <p>Enter node credentials to connect.</p>
+    </header>
+    
+    <div class="mod-auth__field">
+      <label for="email">Node Address</label>
+      <input type="email" id="email" name="email" required autocomplete="email" placeholder="operator@domain.local">
+    </div>
+    
+    <div class="mod-auth__field">
+      <label for="pass">Secure Passkey</label>
+      <input type="password" id="pass" name="password" required autocomplete="current-password">
+    </div>
+    
+    <button type="submit" class="mod-auth__submit">Authenticate Instance</button>
+    <p class="mod-auth__footer">New connection? <a href="register.html">Provision account</a></p>
+  </form>
+</body>
