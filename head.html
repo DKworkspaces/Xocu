@@ -1,0 +1,108 @@
+
+  <!-- Tiny inline blocking script to prevent the modern Dark/Light theme flash -->
+  <script>
+    (function() {
+      const saved = localStorage.getItem('theme') || 'system';
+      const isDark = saved === 'system' ? window.matchMedia('(prefers-color-scheme: dark)').matches : saved === 'dark';
+      document.documentElement.setAttribute('data-theme', isDark ? 'dark' : (saved === 'system' ? 'light' : saved));
+    })();
+  </script>
+
+
+<header class="sh">
+  <nav class="nc" aria-label="Main Navigation">
+    <div class="nl"><a href="#" class="ll">DESIGNCO</a></div>
+
+    <!-- Hidden Master Hamburger Toggle State Box -->
+    <input type="checkbox" id="menu-toggle-state" class="v-h menu-toggle" aria-hidden="true">
+    
+    <!-- Label wrapper element acting as the visible interactive hamburger button -->
+    <label for="menu-toggle-state" class="mt" id="menu-toggle-btn" aria-label="Toggle navigation menu">
+      <span class="hb"><span class="hi"></span></span>
+    </label>
+
+    <!-- Nav Container Wrapper Drawer Sits Exactly Next To Checkbox Elements -->
+    <div class="nw" id="nav-drawer">
+      <ul class="lk">
+        
+        <!-- Integrated Search Block Inside UL (Natively morphs positions via CSS) -->
+        <li class="sw" id="search-block">
+          <form class="sf" role="search">
+            <input type="search" placeholder="Search..." aria-label="Search site">
+            <button type="submit" aria-label="Submit Search">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </button>
+          </form>
+        </li>
+
+        <!-- Standard Dropdown Wrapper -->
+        <li class="hp">
+          <input type="checkbox" id="dropdown-services-state" class="v-h menu-dropdown" aria-hidden="true">
+          <label for="dropdown-services-state" class="pt">
+            Services
+            <svg class="ch" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </label>
+          <ul class="dm" id="sm">
+            <li><a href="#">UI/UX Design</a></li>
+            <li><a href="#">Web Development</a></li>
+            <li><a href="#">Brand Identity</a></li>
+          </ul>
+        </li>
+
+        <!-- Mega Menu Wrapper -->
+        <li class="hp">
+          <input type="checkbox" id="dropdown-solutions-state" class="v-h menu-dropdown" aria-hidden="true">
+          <label for="dropdown-solutions-state" class="pt">
+            Solutions
+            <svg class="ch" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </label>
+          <div class="mm" id="mm">
+            <div class="mg">
+              <div class="mc">
+                <h3>Enterprise</h3>
+                <ul>
+                  <li><a href="#">Cloud Systems</a></li>
+                  <li><a href="#">Data Analytics</a></li>
+                  <li><a href="#">Security Matrix</a></li>
+                </ul>
+              </div>
+              <div class="mc">
+                <h3>SaaS Infrastructure</h3>
+                <ul>
+                  <li><a href="#">Automation Tools</a></li>
+                  <li><a href="#">CRM Platform</a></li>
+                  <li><a href="#">Integrations</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </li>
+        
+        <li><a href="#" class="li">About</a></li>
+
+        <!-- Embedded Mode Selector Component -->
+        <li class="ms">
+          <div class="mw">
+            <select class="me" id="theme-selector" aria-label="Select Theme Mode">
+              <option value="system">System Mode</option>
+              <option value="light">Light Mode</option>
+              <option value="dark">Dark Mode</option>
+              <option value="red">Red Light</option>
+              <option value="eye">Eye Protection</option>
+            </select>
+            <svg class="sc" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>
