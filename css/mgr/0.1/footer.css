@@ -1,5 +1,6 @@
 h3,h4,.ft,.f-st{font-family:var(--sys-font-second)}
 .f-ct,.sf-f,.fl-c,.fl-l,.fc,.fb,.fn{display:flex;flex-direction:column}
+.f-ch{width:14px;height:14px}
 .f-sf{width:100%;background-color:var(--sys-bg-primary);color:var(--sys-text-primary);font-family:var(--sys-font-main);font-size:var(--sys-fs-body);line-height:1.5;padding:var(--ftr-padding-mobile);border-top:1px solid var(--sys-border-color)}
 .f-sf a{color:var(--sys-text-muted);text-decoration:none;transition:background-color var(--sys-transition),color var(--sys-transition)}
 .fc{max-width:var(--sys-max-width);margin:0 auto;gap:var(--sys-gap-grid)}
