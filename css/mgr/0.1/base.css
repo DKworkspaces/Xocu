@@ -4,15 +4,7 @@
 [data-theme="eye"]{--sys-bg-primary:#f4edd9;--sys-bg-surface:#e7ddc4;--sys-bg-overlay:#e7ddc4;--sys-text-primary:#5c3a21;--sys-text-muted:#704e32;--sys-accent:#8b5a2b;--sys-accent-hover:#6f441b;--sys-border-color:#d3c2a3}
 *,*::before,*::after,.f-sf,.f-sf *{box-sizing:border-box;margin:0;padding:0}
 
-body {
-  font-family: var(--sys-font-main);
-  font-size: var(--sys-fs-body);
-  background-color: var(--sys-bg-primary);
-  color: var(--sys-text-primary);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-                                   }
-
+body {font-family: var(--sys-font-main);font-size: var(--sys-fs-body);background-color: var(--sys-bg-primary);color: var(--sys-text-primary);-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;}
 
 .nc,.nw,.sf,.lk,.pt,.li,.ms,.mw{display:flex;align-items:center}
 .ch,.sc{width:14px;height:14px}
