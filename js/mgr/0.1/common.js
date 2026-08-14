@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const footerNav = document.getElementById('fa');
   const footerCheckboxes = document.querySelectorAll('.f-st');
 
+
+
+  
   // ==========================================
   // 1. ADVANCED MULTI-THEME MANAGEMENT ENGINE
   // ==========================================
