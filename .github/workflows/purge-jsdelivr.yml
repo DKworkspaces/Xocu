@@ -14,15 +14,39 @@ jobs:
     steps:
       - name: Flush jsDelivr Assets
         run: |
-          # Define your configuration vars
-          USER="DKworkspaces"
-          REPO="Xocu"
+          # Automatically extracts 'username/repo' from GitHub environment
+          REPO_SLUG="${{ github.repository }}"
+          BRANCH="${{ github.ref_name }}"
+          
           BRANCH="main" 
           # Define your specific folder paths here
           JS_FOLDER="js/mgr"
           CSS_FOLDER="css/mgr"
-          
-          
-          
+
+          # Loop through each target folder
+          for FOLDER in "$JS_FOLDER" "$CSS_FOLDER"; do
+            if [ -d "$FOLDER" ]; then
+              echo "Scanning folder: $FOLDER..."
+              
+              # Find files recursively inside the current folder
+              find "$FOLDER" -type f \( -name "*.js" -o -name "*.css" \) | while read -r filepath; do
+                
+                # Keeps the folder name and its subfolders exactly as they are
+                # Example: 'src/js/components/app.js' stays 'src/js/components/app.js'
+                PURGE_URL="https://jsdelivr.net{REPO_SLUG}@${BRANCH}/${filepath}"
+                
+                echo "Purging: $PURGE_URL"
+                curl -s -o /dev/null -w "Status: %{http_code}\n" "$PURGE_URL"
+              done
+            else
+              echo "Warning: Directory $FOLDER does not exist, skipping."
+            fi
+          done
           
           echo -e "\nAll cache purge requests processed!"
+
+          
+
+
+          
+          
