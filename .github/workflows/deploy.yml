@@ -3,7 +3,7 @@ name: Deploy Bio Page
 on:
   push:
     branches:
-      - main
+      - bio
     paths:
       - 'data.yaml'
       - 'templates/**'
