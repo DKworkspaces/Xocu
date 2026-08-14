@@ -1,0 +1,26 @@
+name: Purge jsDelivr Cache
+
+on:
+  push:
+    branches:
+      - main  # Triggers the purge only when code is pushed to the main branch
+    paths:
+      - '**.js'   # Triggers only if a JS file changes
+      - '**.css'  # Triggers only if a CSS file changes
+
+jobs:
+  purge-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Flush jsDelivr Assets
+        run: |
+          # Replace USER, REPO, and file paths with your exact GitHub details
+          
+          echo "Purging JavaScript file..."
+          curl -s https://jsdelivr.net
+          
+          echo -e "\nPurging CSS file..."
+          curl -s https://jsdelivr.net
+          
+          echo -e "\nCache purge requests sent successfully!"
+          
