@@ -5,8 +5,8 @@ on:
     branches:
       - main  # Triggers the purge only when code is pushed to the main branch
     paths:
-      - '**.js'   # Triggers only if a JS file changes
-      - '**.css'  # Triggers only if a CSS file changes
+      - 'js/mgr/**'   # Triggers only if a JS file changes
+      - 'css/mgr/**'  # Triggers only if a CSS file changes
 
 jobs:
   purge-cache:
