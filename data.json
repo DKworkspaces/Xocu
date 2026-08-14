@@ -6,7 +6,7 @@
         {"title": "GitHub Portfolio", "url": "https://github.com"},
         {"title": "Latest YouTube Video", "url": "https://youtube.com"},
         {"title": "LinkedIn Profile", "url": "https://linkedin.com"},
-        {"title": "Contact Email", "url": "mailto:alex+contact@example.com"},
-        {"title": "Career Email", "url": "mailto:alex+careers@example.com"}
+        {"title": "Contact Email", "url": "mailto:alex+contact@gmail.com"},
+        {"title": "Career Email", "url": "mailto:alex+careers@gmail.com"}
     ]
 }
