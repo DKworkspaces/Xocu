@@ -1,0 +1,11 @@
+{
+    "name": "Alex Mercer",
+    "bio_text": "Python Developer & Tech Creator",
+    "profile_pic": "https://github.com",
+    "links": [
+        {"title": "GitHub Portfolio", "url": "https://github.com"},
+        {"title": "Latest YouTube Video", "url": "https://youtube.com"},
+        {"title": "LinkedIn Profile", "url": "https://linkedin.com"},
+        {"title": "Contact Email", "url": "mailto:alex@example.com"}
+    ]
+}
