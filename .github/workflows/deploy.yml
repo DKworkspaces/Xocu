@@ -1,0 +1,39 @@
+name: Deploy Bio Page
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'data.yaml'
+      - 'templates/**'
+      - 'generate.py'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-node-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install jinja2 pyyaml
+
+      - name: Generate static HTML
+        run: python generate.py
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: . # Deploys the folder containing index.html
+          branch: gh-pages # Deploys to a clean, isolated branch
