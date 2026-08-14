@@ -5,7 +5,7 @@ on:
     branches:
       - bio
     paths:
-      - 'data.yaml'
+      - 'data.json'
       - 'templates/**'
       - 'generate.py'
 
