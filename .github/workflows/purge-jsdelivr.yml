@@ -14,13 +14,15 @@ jobs:
     steps:
       - name: Flush jsDelivr Assets
         run: |
-          # Replace USER, REPO, and file paths with your exact GitHub details
+          # Define your configuration vars
+          USER="DKworkspaces"
+          REPO="Xocu"
+          BRANCH="main" 
+          # Define your specific folder paths here
+          JS_FOLDER="js/mgr"
+          CSS_FOLDER="css/mgr"
           
-          echo "Purging JavaScript file..."
-          curl -s https://jsdelivr.net
           
-          echo -e "\nPurging CSS file..."
-          curl -s https://jsdelivr.net
           
-          echo -e "\nCache purge requests sent successfully!"
           
+          echo -e "\nAll cache purge requests processed!"
