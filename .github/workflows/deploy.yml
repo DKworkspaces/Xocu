@@ -35,5 +35,5 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: .dist # Deploys the folder containing index.html
+          folder: dist # Deploys the folder containing index.html
           branch: bio # Deploys to a clean, isolated branch
