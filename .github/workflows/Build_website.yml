@@ -1,12 +1,13 @@
-name: Automatic Zero-API Website Builder
+
+name: Open-Source Code Enhancer (Zero-API)
 
 on:
   push:
     paths:
-      - 'prompt.txt' # Triggers the AI pipeline automatically only when this file is updated
+      - 'src/**' # Instantly triggers when you add or change files inside the src/ directory
 
 jobs:
-  build:
+  enhance_code:
     runs-on: ubuntu-latest
     
     steps:
@@ -18,18 +19,32 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: Install Pure Open Source Dependencies
+    - name: Install System Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install torch transformers accelerate
+        pip install requests
 
-    - name: Execute Local AI Agent Generation
+    - name: Install Local Ollama Runner Binary
       run: |
-        python agent.py
+        # Download and run the official Linux installer background runner script natively
+        curl -fsSL https://ollama.com | sh
 
-    - name: Deploy Resulting Web Build to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@v4
+    - name: Pre-Pull Lightweight Coding Model
+      run: |
+        # Start Ollama service daemon in the background safely
+        ollama serve &
+        # Wait for the service endpoint to wake up completely
+        sleep 5
+        # Pull the hyper-optimized 1.5 Billion parameters coding model
+        ollama pull qwen2.5-coder:1.5b-instruct
+
+    - name: Run AI Code Enhancement Agent
+      run: |
+        python enhancer.py
+
+    - name: Commit & Push Enhanced Assets to Production Folder
+      uses: stefanzweifel/git-auto-commit-action@v5
       with:
-        folder: dist
-        branch: gh-pages
+        commit_message: "✨ Refactor: Code structural optimization completed by local open-source AI"
+        file_pattern: 'dist/*'
         
