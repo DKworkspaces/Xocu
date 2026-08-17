@@ -1,6 +1,7 @@
 
 
 
+
 /* ==========================================================================
    GLOBAL DESIGN TOKENS & APPLICATION SYSTEM SYSTEM VARIABLES
    ========================================================================== */
@@ -22,6 +23,7 @@
   scroll-behavior: smooth;
   scroll-padding-top: var(--top-offset); 
 }
+
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -47,6 +49,7 @@ body {background-color: var(--bg-app);color: var(--text-main);
   .col-widgets { border-top: 1px solid var(--border-color); padding-top: 1.5rem;}
   .article-layout.no-sidebar .col-widgets { display: none;}
 }
+
 
 /* DESKTOP WORKSPACE SYSTEM (1024px and up) */
 
