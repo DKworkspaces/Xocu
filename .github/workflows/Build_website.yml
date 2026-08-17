@@ -1,12 +1,9 @@
-name: Zero-API Website Builder
+name: Automatic Zero-API Website Builder
 
 on:
-  workflow_dispatch:
-    inputs:
-      prompt:
-        description: 'Describe the website layout you want:'
-        required: true
-        default: 'A premium minimalist luxury portfolio landing page with dark glassmorphism styling'
+  push:
+    paths:
+      - 'prompt.txt' # Triggers the AI pipeline automatically only when this file is updated
 
 jobs:
   build:
@@ -27,8 +24,6 @@ jobs:
         pip install torch transformers accelerate
 
     - name: Execute Local AI Agent Generation
-      env:
-        USER_PROMPT: ${{ github.event.inputs.prompt }}
       run: |
         python agent.py
 
@@ -37,3 +32,4 @@ jobs:
       with:
         folder: dist
         branch: gh-pages
+        
