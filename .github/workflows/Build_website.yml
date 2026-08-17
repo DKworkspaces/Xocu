@@ -1,0 +1,39 @@
+name: Zero-API Website Builder
+
+on:
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: 'Describe the website layout you want:'
+        required: true
+        default: 'A premium minimalist luxury portfolio landing page with dark glassmorphism styling'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Repository Code
+      uses: actions/checkout@v4
+
+    - name: Set up Python Environment
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install Pure Open Source Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install torch transformers accelerate
+
+    - name: Execute Local AI Agent Generation
+      env:
+        USER_PROMPT: ${{ github.event.inputs.prompt }}
+      run: |
+        python agent.py
+
+    - name: Deploy Resulting Web Build to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: dist
+        branch: gh-pages
