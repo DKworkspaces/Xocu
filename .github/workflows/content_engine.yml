@@ -1,14 +1,16 @@
 name: Zero-to-One Content Prompt Engine
 
+# Trigger only when query.txt is modified and committed
 on:
-  issues:
-    types: [opened]
+  push:
+    paths:
+      - 'query.txt'
 
 jobs:
   build_ai_prompt:
     runs-on: ubuntu-latest
     permissions:
-      issues: write
+      contents: write # Allows the workflow to commit the new campaign file back to the repo
 
     steps:
       - name: Checkout Code
@@ -23,17 +25,16 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Fetch Trends & Build Prompt
-        id: generate_prompt
+      - name: Fetch Trends & Build Prompt File
         run: |
-          python free_growth_engine.py "${{ github.event.issue.title }}" > generated_prompt.txt
+          python free_growth_engine.py
+
+      # Automatically saves, commits, and pushes the new campaign file back to your repository
+      - name: Commit & Push Generated Campaign
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@://github.com"
+          git add campaigns/
+          git commit -m "Auto-generated social media prompt campaign" || echo "No changes to commit"
+          git push
           
-          echo "PROMPT_TEXT<<EOF" >> $GITHUB_OUTPUT
-          cat generated_prompt.txt >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-        
-      - name: Comment on GitHub Issue
-        uses: peter-evans/create-or-update-comment@v4
-        with:
-          issue-number: ${{ github.event.issue.number }}
-          body: ${{ steps.generate_prompt.outputs.PROMPT_TEXT }}
