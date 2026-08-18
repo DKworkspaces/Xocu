@@ -1,0 +1,39 @@
+name: Zero-to-One Content Prompt Engine
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  build_ai_prompt:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Fetch Trends & Build Prompt
+        id: generate_prompt
+        run: |
+          python free_growth_engine.py "${{ github.event.issue.title }}" > generated_prompt.txt
+          
+          echo "PROMPT_TEXT<<EOF" >> $GITHUB_OUTPUT
+          cat generated_prompt.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+        
+      - name: Comment on GitHub Issue
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: ${{ steps.generate_prompt.outputs.PROMPT_TEXT }}
