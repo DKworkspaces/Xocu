@@ -1,40 +1,37 @@
-name: Zero-to-One Content Prompt Engine
+name: Zero-to-One Content Research Engine
 
-# Trigger only when query.txt is modified and committed
 on:
   push:
     paths:
       - 'query.txt'
 
 jobs:
-  build_ai_prompt:
+  run_research_agent:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Allows the workflow to commit the new campaign file back to the repo
+      contents: write
 
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository Code
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Initialize Cloud Python Environment
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      - name: Install Dependencies
+      - name: Install System Dependencies
         run: |
           pip install -r requirements.txt
 
-      - name: Fetch Trends & Build Prompt File
+      - name: Run Web Scraper Research Agent
         run: |
           python free_growth_engine.py
 
-      # Automatically saves, commits, and pushes the new campaign file back to your repository
-      - name: Commit & Push Generated Campaign
+      - name: Commit Report Results to Repository
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@://github.com"
-          git add campaigns/
-          git commit -m "Auto-generated social media prompt campaign" || echo "No changes to commit"
+          git add research_reports/
+          git commit -m "Automated Research Agent: New campaign report added" || echo "No changes found to commit"
           git push
-          
