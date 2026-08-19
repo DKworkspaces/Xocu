@@ -1,3 +1,56 @@
+{
+  "site_name": "Xocumentary","name":"X Documentary",
+  "desc":"leading documentary n explorer of science history and geopolitics.",
+  "expertise_topics":["history","science","geopolitics"],
+  "social_links":["https://www.instagram.com/company","https://www.twitter.com/company","https://www.linkedin.com/company","https://www.facebook.com/company"],
+  "founder":{
+    "id":"founder","name":"John Ferry","job_title":"Founder & CEO","url":"/about",
+    "knowsAbout":["history","science","geopolitics"],
+    "social_links":["https://www.instagram.com/john","https://www.twitter.com/john","https://www.linkedin.com/john"]},
+
+  "authers":[
+    {"slug":"jane","name":"jane doe","title":"cofounder","bio":"10 years experience in geopolitical analysis","knowsAbout":["High end AI","Automation"],"social_links":["https://www.instagram.com/jane","https://www.twitter.com/jane","https://www.linkedin.com/jane"]},
+    {"slug":"john","name":"john smith","title":"senior editor","bio":"management in fast pase editorial working","knowsAbout":["workflow system","Technical Editorial","Management"],"social_links":["https://www.instagram.com/johns","https://www.twitter.com/johns","https://www.linkedin.com/sjohn"]},
+    {"slug":"lee","name":"alice lee","title":"junior editor","bio":"experience in using high end ai technology for editing","knowsAbout":["Psychology","Management","Editorial","AI"],"social_links":["https://www.instagram.com/lee","https://www.twitter.com/lee","https://www.linkedin.com/lee"]}
+  ],
+  "support_email":"support@emial.com",
+  "address":{ "street":"123,tech park, Andheri East","city":"Mumbai","region":"Maharashtra","zip":"400069","country":"IN" },
+  "seperator": "|","launch_date":"2026-01-15",
+  "twitter_site":"@Xocumantary",
+  "logo_url":"",
+  "image_base_url":"",
+  "base_url":"https://cdn.jsdelivr.net/gh/DKworkspaces/Xocu@main/",
+  "home_url": "https://dkworkspaces.github.io/Webgen/"
+}
+
+
+"global_settings":{
+"seperator":"|"
+}
+"company_details":{
+"name":"Xocumentary",
+"desc":"Xocumentary is a media company that explores the hidden forces shaping our world by connecting the dots between history, science, and geopolitics. Through deep-dive storytelling, the platform reveals how scientific breakthroughs and historical milestones directly drive global power shifts and current international relations. By blending these three disciplines, it offers audiences a cohesive, multi-dimensional understanding of complex global events.",
+"lite_desc":"A media company interlinking history, science, and geopolitics.",
+"support_email":"",
+"support_tele":"",
+"founded_date":"",
+"address":{"street":"","city":"","region":"","zip":"","country_code":""},
+"socials":[{"pf": "Facebook","url": "/Xocumentary"},{"pf": "X","url": "/Xocumentary"},{"pf": "LinkedIn","url": "/Xocumentary"}],
+"expertise":["Regional Geopolitics","International Relations""World History","Scientific History","Documentary Journalism","Documentary Film"]
+}
+
+
+"global_url":{"js_css_url":"https://cdn.jsdelivr.net/gh/DKworkspaces/Xocu@main/""image_url":"/img","css_url":"/css","js_url":"/js","logo_url":"/logo"}
+
+"pages":{"website_url":"https://dkworkspaces.github.io/Webgen","home_url":"/","about_url":"/about_us","contact_url":"/contact_us","privacy_url":"/privacy_policy","terms_url":"/terms_of_services","editorial_url":"/editorial_policy","categories_url":"/category","tags_url":"/tag","archives_url":"/archive"}
+
+
+
+
+
+
+
+
 class SiteConfig:
     name: str = "EnterpriseFlask"
     separator: str = "|"
@@ -200,6 +253,44 @@ page_data = {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Xocumentary",
+  "url": "https://xocumentary.com",
+  "knowsAbout": [
+    {
+      "@type": "DefinedTerm",
+      "name": "Geopolitics",
+      "sameAs": "https://wikipedia.org"
+    },
+    {
+      "@type": "DefinedTerm",
+      "name": "History of Science",
+      "sameAs": "https://wikipedia.org"
+    },
+    {
+      "@type": "DefinedTerm",
+      "name": "International Relations",
+      "sameAs": "https://wikipedia.org"
+    }
+  ]
+}
+</script>
 
 
 
