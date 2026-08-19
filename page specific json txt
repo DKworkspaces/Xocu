@@ -292,6 +292,26 @@ page_data = {
 }
 </script>
 
+"knowsAbout": [
+  {
+    "@type": "Thing",
+    "name": "Documentary Film",
+    "@id": "https://wikidata.org",
+    "sameAs": "https://wikipedia.org"
+  },
+  {
+    "@type": "Thing",
+    "name": "History of Science",
+    "@id": "https://wikidata.org",
+    "sameAs": "https://wikipedia.org"
+  },
+  {
+    "@type": "Thing",
+    "name": "Geopolitics",
+    "@id": "https://wikidata.org",
+    "sameAs": "https://wikipedia.org"
+  }
+]
 
 
 
