@@ -1,0 +1,206 @@
+class SiteConfig:
+    name: str = "EnterpriseFlask"
+    separator: str = "|"
+    launch_date: str = "2024-01-01"
+
+ 
+url: str = "https://example.com"
+    url_root: str = "https://example.com"
+base_url = request.url_root.rstrip('/')
+current_url = request.url.rstrip('/')
+
+
+
+home page 
+page_data = {
+"ishome": True,
+    "title": f"{site_config.name} {site_config.separator} Home",  # Clean f-strings
+    "desc": "Leading resource for enterprise-grade Flask architectures.",
+    "robots": "index, follow, max-image-preview:large",
+    "canonical_url": request.url.rstrip("/"),
+    "datePublished": site_config.launch_date,
+    "dateModified": "2026-07-20",
+    "about": {
+        "@id": f"{request.url_root.rstrip('/')}/#organization",
+        "@type": "Organization",
+    },
+    "social": {
+        "title": f"{site_config.name} {site_config.separator} Home"
+    },
+}
+
+about page
+
+class SiteConfig:
+    name: str = "EnterpriseFlask"
+    separator: str = "|"
+    founder: FounderConfig = field(default_factory=lambda: FounderConfig(
+        id="founder-id",
+        name="John Doe",
+        url="/team/john",
+        job_title="CEO",
+        knowsAbout=["Flask", "Python"],
+        social_links=["https://twitter.com"]
+    ))
+    authors: List[AuthorConfig] = field(default_factory=lambda: [
+        AuthorConfig(slug="jane-smith", name="Jane Smith", title="Lead Arch", knowsAbout=["Docker"], social_links=[], url="/team/jane"),
+        AuthorConfig(slug="alex-jones", name="Alex Jones", title="DevOps", knowsAbout=["AWS"], social_links=[])
+    ])
+
+
+
+
+
+    breadcrumb = [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": base_url },
+    { "@type": "ListItem", "position": 2, "name": "About Us", "item": request.url.rstrip('/') }
+]
+
+# 3. Build Authors List (Lazy senior approach: merge logic elegantly)
+founder_data = {
+    'id': site_config.founder.id,
+    'name': site_config.founder.name,
+    'url': f"{base_url}{site_config.founder.url}",
+    'image': "founder.jpg",
+    'job_title': site_config.founder.job_title,
+    'knowsAbout': site_config.founder.knowsAbout,
+    'social_links': site_config.founder.social_links
+}
+
+authors_list = [founder_data]
+
+for author in site_config.authors:
+    author_data = {
+        'id': author.slug,
+        'name': author.name,
+        'image': f"{author.slug}.jpg",
+        'job_title': author.title,
+        'knowsAbout': author.knowsAbout,
+        'social_links': author.social_links
+    }
+    if author.url:
+        author_data['url'] = f"{base_url}{author.url}"
+        
+    authors_list.append(author_data)
+
+# 4. Final Page Data Dictionary
+page_data = {
+    'title': f"About Us {site_config.separator} {site_config.name}",
+    'desc': f"Meet the team behind {site_config.name}.",
+    'robots': "index, follow",
+    'canonical_url': request.url.rstrip('/'),
+    'published_time': "2024-01-01T00:00:00Z",
+    'main_entity': { "@id": f"{base_url}/#organization", "@type": "Organization"},
+    'author_list': authors_list,
+    'breadcrumb': breadcrumb,  # Injected the breadcrumbs for utility
+    'social': {'title': f"About Us {site_config.separator} {site_config.name}"}
+}
+
+
+
+
+contact page
+
+
+
+# 1. Breadcrumbs
+breadcrumb = [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": base_url },
+    { "@type": "ListItem", "position": 2, "name": "Contact Us", "item": current_url }
+]
+
+# 2. Page Specific Metadata
+page_data = {
+    'title': f"Contact Us {site_config.separator} {site_config.name}",
+    'desc': f"Get in touch with {site_config.name}. Send us your inquiries, feedback, or support requests.",
+    'robots': "index, follow",
+    'canonical_url': current_url,
+    'datePublished': "2026-01-15",
+    'dateModified': "2026-07-20",
+    'main_entity': { 
+        "@id": f"{base_url}/#organization", 
+        "@type": "Organization"
+    },
+    'breadcrumb': breadcrumb,
+    'social': {
+        'title': f"Contact Us {site_config.separator} {site_config.name}"
+    }
+}
+
+
+
+
+
+privacy policy page 
+
+
+
+page_title = f"Privacy Policy {site_config.separator} {site_config.name}"
+org_entity = {"@id": f"{base_url}/#organization", "@type": "Organization"}
+
+
+# 1. Breadcrumbs
+breadcrumb = [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": base_url },
+    { "@type": "ListItem", "position": 2, "name": "Privacy Policy", "item": current_url }
+]
+
+# 2. Page Specific Metadata
+page_data = {
+    'title': page_title,
+    'desc': f"Legal privacy policy for {site_config.name}.",
+    'robots': "noindex, follow",  # Correctly preserved the noindex flag
+    'canonical_url': current_url,
+    'datePublished': "2026-01-15",
+    'dateModified': "2026-07-20",
+    'main_entity': org_entity,
+    'about': org_entity,
+    'breadcrumb': breadcrumb,
+    'social': {
+        'title': page_title
+    }
+}
+
+
+
+
+
+terms page
+
+
+
+page_title = f"Terms of Service {site_config.separator} {site_config.name}"
+org_entity = {"@id": f"{base_url}/#organization", "@type": "Organization"}
+
+
+
+
+
+# 1. Breadcrumbs
+breadcrumb = [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": base_url },
+    { "@type": "ListItem", "position": 2, "name": "Terms of Service", "item": current_url }
+]
+
+# 2. Page Specific Metadata
+page_data = {
+    'title': page_title,
+    'desc': f"Legal terms and conditions for using {site_config.name} services.",
+    'robots': "noindex, follow",  # Preserved noindex flag for legal pages
+    'canonical_url': current_url,
+    'datePublished': "2026-01-15",
+    'dateModified': "2026-07-20",
+    'main_entity': org_entity,
+    'about': org_entity,
+    'breadcrumb': breadcrumb,
+    'social': {
+        'title': f"Legal Terms {site_config.separator} {site_config.name}"  # Preserved your custom social title swap
+    }
+}
+
+
+
+
+
+
+
