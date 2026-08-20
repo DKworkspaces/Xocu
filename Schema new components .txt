@@ -1,0 +1,42 @@
+"knowsAbout": [
+    {% for topic in entity.expertise %}
+    {
+      "@type": "Thing",
+      "name": "{{ topic.name | safe }}",
+      {% if topic.wikidata_id %}
+      "identifier": "{{ topic.wikidata_id }}",
+      {% endif %}
+      "sameAs": [
+        {% if topic.wikipedia_url %}"{{ topic.wikipedia_url }}"{% if topic.wikidata_url %},{% endif %}{% endif %}
+        {% if topic.wikidata_url %}"{{ topic.wikidata_url }}"{% endif %}
+      ]
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ]
+
+
+
+
+
+profile_data = {
+    "expertise": [
+        {
+            "name": "Artificial Intelligence",
+            "wikipedia_url": "https://wikipedia.org",
+            "wikidata_url": "https://wikidata.org",
+            "wikidata_id": "Q11660"
+        },
+        {
+            "name": "Quantum Cryptography",
+            "wikipedia_url": "https://wikipedia.org",
+            "wikidata_url": "https://wikidata.org",
+            "wikidata_id": "Q11388"
+        },
+        {
+            "name": "Superconductivity",
+            "wikipedia_url": "https://wikipedia.org",
+            "wikidata_url": "https://wikidata.org",
+            "wikidata_id": "Q124131"
+        }
+    ]
+}
