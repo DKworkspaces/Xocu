@@ -50,7 +50,7 @@ jobs:
 
     # UPDATED: Point the Pages uploader to the newly committed '.dist' directory
     - name: Upload Clean Public Production Package
-      uses: actions/upload-pages-artifact@v3
+      uses: actions/upload-pages-artifact@v4
       with:
         path: './.dist' 
 
