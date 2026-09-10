@@ -7,7 +7,7 @@ on:
 
 # Grant required permissions to compile and update GitHub Pages nodes
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -39,11 +39,20 @@ jobs:
 
     - name: Execute Modular Build Compilation Engine
       run: python build.py
+      
+    # NEW: Safely commit and save the '.dist' folder back to your current branch
+    - name: Commit and Push '.dist' Folder to Branch
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: "Automated Build: Updated .dist folder architecture"
+        file_pattern: '.dist/*' # Restricts the commit changes solely to the .dist folder
+        # Optional: Add `branch: your-branch-name` here if you want to push to a separate branch
 
+    # UPDATED: Point the Pages uploader to the newly committed '.dist' directory
     - name: Upload Clean Public Production Package
       uses: actions/upload-pages-artifact@v3
       with:
-        path: './dist'
+        path: './.dist' 
 
     - name: Host Live Build on GitHub Pages Nodes
       id: deployment
