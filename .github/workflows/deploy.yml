@@ -45,7 +45,7 @@ jobs:
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: "Automated Build: Updated .dist folder architecture"
-        file_pattern: '.dist/*' # Restricts the commit changes solely to the .dist folder
+        file_pattern: './dist/*' # Restricts the commit changes solely to the .dist folder
         # Optional: Add `branch: your-branch-name` here if you want to push to a separate branch
 
     # UPDATED: Point the Pages uploader to the newly committed '.dist' directory
