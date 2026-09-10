@@ -13,19 +13,17 @@ def render_home_page():
     """Generates the primary home entry point."""
     print("Compiling Home page...")
     template = TEMPLATE_ENV.get_template('index.html')
-    
     context = {
         "title": "Welcome to AdminEngine",
         "hero_text": "Next-generation static site management infrastructure built with Python."
     }
-    
     with open(os.path.join(OUTPUT_DIR, 'index.html'), 'w') as f:
         f.write(template.render(context))
 
 def render_standard_pages():
     """Loops through and renders standard informational layouts (About, Contact, Privacy)."""
     print("Compiling Standard operational pages...")
-    template = TEMPLATE_ENV.get_template('page.html')
+    template = TEMPLATE_ENV.get_template('about.html')
     
     pages = [
         {
