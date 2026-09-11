@@ -33,7 +33,7 @@
     
     {% endfor %}
     <!-- Posts (Flat URLs) -->
-    {% for post in posts %}
+    {% for post in items.posts %}
     <url>
         <loc>{{ domain }}/{{ post.slug }}/</loc>
         {% if post.updated_at %}<lastmod>{{ post.updated_at }}</lastmod>{% endif %}
