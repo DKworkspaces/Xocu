@@ -1,0 +1,18 @@
+# {{ custom_header_comment | default("Robots.txt automatically generated via Python.") }}
+
+{% for group in user_agent_groups %}
+User-agent: {{ group.user_agent }}
+{%- for disallow in group.disallows %}
+Disallow: {{ disallow }}
+{%- endfor %}
+{%- for allow in group.allows %}
+Allow: {{ allow }}
+{%- endfor %}
+{% if group.crawl_delay %}
+Crawl-delay: {{ group.crawl_delay }}
+{%- endif %}
+
+{% endfor %}
+{%- if include_sitemap and base_url -%}
+Sitemap: {{ base_url }}/sitemap.xml
+{%- endif %}
