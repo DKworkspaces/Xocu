@@ -23,6 +23,11 @@
         <a href="pillar.html">Main Pillar Hub</a>
     </nav>
     <main>
+<div><strong>[Title]:</strong>{{ title }}</div>
+<div><strong>[Sitename]:</strong>{{ site_name }}</div>
+<div><strong>[Description]:</strong>{{ desc }}</div>
+<div><strong>[Canonical]:</strong>{{ url }}</div>
+        
         {% block content %}{% endblock %}
     </main>
     <footer>
