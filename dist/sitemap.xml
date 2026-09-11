@@ -79,5 +79,19 @@
     
     <!-- Posts (Flat URLs) -->
     
+    <url>
+        <loc>https://example.com/blog/machine-learning-basics.html/</loc>
+        <lastmod>2026-09-11</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <url>
+        <loc>https://example.com/blog/natural-language-processing.html/</loc>
+        <lastmod>2026-09-05</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
 
 </urlset>
