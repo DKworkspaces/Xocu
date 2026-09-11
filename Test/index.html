@@ -1,4 +1,8 @@
 {% extends "base.html" %}
+{% block title %}{{ post.title }} | {{ web.site_name }}{% endblock %}
+{% block meta_description %}{{ post.desc | truncate(155) }}{% endblock %}
+{% block canonical_url %}{{ post.url }}{% endblock %}
+
 {% block content %}
     <h1>Welcome to Our Website</h1>
     <p>This is the home page of a super fast, python-generated static website.</p>
