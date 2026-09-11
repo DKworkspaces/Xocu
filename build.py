@@ -12,29 +12,22 @@ def create_output_directory():
 
 def standard_pages(input_page,context,output_page):
     """Generates the primary home entry point."""
-    # 1. Compute the full, absolute target file path
     target_file_path = os.path.join(OUTPUT_DIR, output_page)
-    
-    # 2. Extract just the directory component (e.g., 'dist/blogs/fastapi-seo-optimization')
     target_dir = os.path.dirname(target_file_path)
-    
-    # 3. Automatically create the directory stack if missing
     if target_dir and not os.path.exists(target_dir):
         os.makedirs(target_dir, exist_ok=True)
-
-
     
     print("Compiling standard "+ output_page +" page...")
     template = TEMPLATE_ENV.get_template(input_page)
     combined_context = {**GLOBAL_SITE_DATA, **context}
-
+    
     with open(target_file_path, 'w') as f:
         f.write(template.render(combined_context))
 
 def render_standard_pages():
     STATIC_SEO = {
       "home": {
-        "url":"https://www.github.com",
+        "url":"https://github.com",
         "title": "Expert Python Web Development Services",
         "desc": "Scale your business with high-performance Python web applications. We specialize in Flask, FastAPI, and custom SEO architectures."
       },
@@ -136,12 +129,44 @@ def build_flat_blog():
             "url": f"https://github.com/blogs/{post['slug']}.html",
             "post_content": "<h1>" + post["title"] + "</h1><p>Deep-dive context follows...</p>"
         }
-        
-        # Output directly into OUTPUT_DIR root as 'slug.html'
-        # Nginx/Apache configurations can serve this smoothly without showing the '.html' extension
         output_filename = f"blogs/{post['slug']}.html"
         standard_pages("blog_post.html", post_context, output_filename)
 
+def generate_custom_robots():
+    # 1. Define your dynamic configuration and rules data
+    robots_data = {
+        "base_url": "https://github.com",
+        "include_sitemap": True,
+        "custom_header_comment": "Production Robots Rules - Last updated: 2026",
+        
+        # Define rules for different web scrapers and search bots
+        "user_agent_groups": [
+            {
+                "user_agent": "*",  # General rules for all bots
+                "disallows": [
+                    "/admin/",
+                    "/private/checkout",
+                    "/*?search=",   # Block search query parameters to prevent duplicate content
+                    "/api/v1/"
+                ],
+                "allows": [
+                    "/api/public/"  # Override to allow specific API endpoints
+                ]
+            },
+            {
+                "user_agent": "BadBotName",  # Block a specific aggressive scraper entirely
+                "disallows": ["/"]
+            },
+            {
+                "user_agent": "yandex",  # Apply a rate limit delay for specific search engines
+                "disallows": ["/secret-forum/"],
+                "allows": [],
+                "crawl_delay": 5
+            }
+        ]
+    }
+    standard_pages('robots.txt',robots_data,'robots.txt')
+    
 
 def main():
     """Central orchestration routine running within the GitHub Runner context."""
@@ -149,12 +174,11 @@ def main():
     create_output_directory()
     
     # Sequential execution of dedicated page compilers
-    
-    render_standard_pages()
-    # Execute the builder
-    build_topic_clusters()
-    build_flat_blog()
-
+    # its working 
+    #render_standard_pages()
+    #build_topic_clusters()
+    #build_flat_blog()
+    generate_custom_robots()
     print(" Static compilation complete! All files generated in /dist directory.")
 
 if __name__ == "__main__":
