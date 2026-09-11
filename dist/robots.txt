@@ -20,4 +20,4 @@ Disallow: /secret-forum/
 
 Crawl-delay: 5
 
-Sitemap: https://github.com/sitemap.xml
+Sitemap: https://techcorp.com/sitemap.xml
