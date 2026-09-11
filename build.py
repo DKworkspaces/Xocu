@@ -3,7 +3,7 @@ from jinja2 import Environment, FileSystemLoader
 
 def load_json_file(file_path):
     """Safely opens and reads a JSON file, converting it into a Python dictionary."""
-    with open('site_data.json', 'r', encoding='utf-8') as file:
+    with open(file_path, 'r', encoding='utf-8') as file:
         data = json.load(file)
         return data
 
