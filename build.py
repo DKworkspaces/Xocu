@@ -1,10 +1,24 @@
 import os
 from jinja2 import Environment, FileSystemLoader
 
+def load_json_file(file_path):
+    """Safely opens and reads a JSON file, converting it into a Python dictionary."""
+    with open('site_data.json', 'r', encoding='utf-8') as file:
+        data = json.load(file)
+        return data
+
 # Global initialization of the template compilation framework
 TEMPLATE_ENV = Environment(loader=FileSystemLoader('Test'))
 OUTPUT_DIR = 'dist'
+
+web = load_json_file('website.json')
+comp = load_json_file('company.json')
+
+combined_data = {"comp": comp,"web": web}
+
 GLOBAL_SITE_DATA ={"site_name": "MyAgency Digital"}
+
+
 
 def create_output_directory():
     """Ensures the production asset destination folder exists."""
