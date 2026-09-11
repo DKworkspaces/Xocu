@@ -92,19 +92,19 @@ def build_topic_clusters():
         pillar_context = {
             "title": data["title"],
             "desc": data["desc"],
-            "url": f"https://github.com/{data['filename']}",
+            "url": f"https://github.com/pillar/{data['filename']}",
             "h1": data["h1"],
             "intro": data["intro"],
             "subtopics": data["subtopics"] # Passes all spoke links to the hub
         }
-        standard_pages("pillar.html", pillar_context, data["filename"])
+        standard_pages("pillar.html", pillar_context,"pillar/"+ data["filename"])
         
         # 2. Compile every Subtopic Cluster Page under this Hub
         for subtopic in data["subtopics"]:
             cluster_context = {
                 "title": f"{subtopic['title']} | DevCorp Insights",
                 "desc": f"Deep dive documentation on {subtopic['title']}.",
-                "url": f"https://github.com/{subtopic['filename']}",
+                "url": f"https://github.com/pillar/{subtopic['filename']}",
                 "h1": subtopic["title"],
                 
                 # CRITICAL SEO: Give the spoke page complete context about its parent Pillar
@@ -113,7 +113,7 @@ def build_topic_clusters():
                     "anchor_text": "Return to the Core Python Web Development Guide"
                 }
             }
-            standard_pages("cluster.html", cluster_context, subtopic["filename"])
+            standard_pages("cluster.html", cluster_context,"pillar/"+ subtopic["filename"])
 
 def build_flat_blog():
     BLOG_POSTS = [
