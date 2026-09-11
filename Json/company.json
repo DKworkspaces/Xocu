@@ -1,0 +1,9 @@
+{
+    "name": "TechCorp Solutions",
+    "legal_name": "TechCorp International LLC",
+    "desc": "A leading provider of enterprise AI software and cloud infrastructure solutions.",
+    "founded_year": "2018",
+    "logo": {"url": "https://techcorp.com","caption": "TechCorp Solutions Official Logo","width": 1024,"height": 1024},
+    "contact": {"email": "support@techcorp.com","lang": ["en", "es"]},
+    "address": {"locality": "Austin","region": "Texas","pin": "78701","country": "US"}
+}
