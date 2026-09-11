@@ -1,0 +1,14 @@
+{
+    "site_name": "TechCorp Hub",
+    "site_url": "https://techcorp.com",
+    "alt_name": "TechCorp Online",
+    "site_desc": "Resource portal for enterprise tech innovations.",
+    "site_lang": "en-US",
+    "knows_about_list": [
+      ["Organization","search-engine-optimization","Search Engine Optimization",["https://wikipedia.org"]],
+      ["Thing","content-marketing","Content Marketing",["https://wikipedia.org","https://wikidata.org"]]
+    ],
+    "slogan": "Empowering Tomorrow's Infrastructure",
+    "social_links": ["https://linkedin.com","https://twitter.com"],
+    "policies": {"has_terms": true,"has_privacy": true,"has_editorial": true,"has_fact_check": true}
+}
