@@ -9,74 +9,44 @@ def create_output_directory():
     """Ensures the production asset destination folder exists."""
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-def render_home_page():
+def standard_pages(input_page,context,output_page):
     """Generates the primary home entry point."""
-    print("Compiling Home page...")
-    template = TEMPLATE_ENV.get_template('index.html')
+    print("Compiling standard "+ output_page +" page...")
+    template = TEMPLATE_ENV.get_template(input_page)
     context = {
         "title": "Welcome to AdminEngine",
         "hero_text": "Next-generation static site management infrastructure built with Python."
     }
-    with open(os.path.join(OUTPUT_DIR, 'index.html'), 'w') as f:
+    with open(os.path.join(OUTPUT_DIR, output_page), 'w') as f:
         f.write(template.render(context))
 
 def render_standard_pages():
-    """Loops through and renders standard informational layouts (About, Contact, Privacy)."""
-    print("Compiling Standard operational pages...")
-    template = TEMPLATE_ENV.get_template('about.html')
-    
-    pages = [
-        {
-            "filename": "about.html",
-            "title": "About Our Enterprise",
-            "content": "<p>We engineer flat-file architectures that compile rapidly, eliminate server runtime bugs, and scale securely through global distributions.</p>"
-        },
-        {
-            "filename": "contact.html",
-            "title": "Contact Engineering Support",
-            "content": "<p>For framework issues, connect directly with our network engineers at <code>sysops@example.com</code>.</p>"
-        },
-        {
-            "filename": "privacy.html",
-            "title": "Privacy & Compliance Policy",
-            "content": "<p>This is a zero-tracking workspace. We enforce local storage protection and inject absolutely no third-party analytic trackers.</p>"
-        }
-    ]
-    
-    for page in pages:
-        with open(os.path.join(OUTPUT_DIR, page['filename']), 'w') as f:
-            f.write(template.render(title=page['title'], content=page['content']))
+    STATIC_SEO = {
+    "home": {
+        "title": "Expert Python Web Development Services | MyAgency",
+        "desc": "Scale your business with high-performance Python web applications. We specialize in Flask, FastAPI, and custom SEO architectures."
+    },
+    "about": {
+        "title": "About Us | Learn About Our Web Development Mission",
+        "desc": "Meet the engineering team building sustainable, lightning-fast digital solutions for modern businesses globally."
+    },
+    "contact": {
+        "title": "Contact Our Engineering Team | Hire MyAgency",
+        "desc": "Get a free technical consultation. Drop us a line regarding your next backend application or custom automation project."
+    },
+    "privacy": {
+        "title": "Privacy Policy | MyAgency Data Protection Compliance",
+        "desc": "Read how we securely handle user interactions, cookie analytics, and data encryption to stay fully GDPR compliant."
+    }
+    }
 
-def render_seo_hub_and_clusters():
-    """Handles parsing and structural cross-linking for the Pillar and Cluster network."""
-    print(" Compiling SEO Pillar Hub and associated cluster sub-pages...")
     
-    # Raw database array mock for cluster pages
-    cluster_dataset = [
-        {
-            "filename": "cluster-actions-automation.html",
-            "title": "GitHub Actions Build Automation",
-            "description": "Unlocking parallel workflow execution pipelines for rapid edge deployments.",
-            "content": "<p>Continuous integration runners compile template targets into production assets in seconds, pushing immediate deployments directly onto global servers.</p>"
-        },
-        {
-            "filename": "cluster-jinja-speed.html",
-            "title": "Optimizing Jinja Rendering Engine",
-            "description": "How to fine-tune compilation parameters for instantaneous pipeline generation.",
-            "content": "<p>By using isolated string buffering and pre-compiling inherited layout files, Python handles rendering loops fast enough to process hundreds of pages in milliseconds.</p>"
-        }
-    ]
-    
-    # 1. Render the central, high-level Pillar Hub Page
-    pillar_template = TEMPLATE_ENV.get_template('pillar.html')
-    with open(os.path.join(OUTPUT_DIR, 'pillar.html'), 'w') as f:
-        f.write(pillar_template.render(title="Core Architecture Blueprint (Pillar Hub)", clusters=cluster_dataset))
-        
-    # 2. Render individual detailed sub-pages (Cluster/Blogpost layout)
-    cluster_template = TEMPLATE_ENV.get_template('cluster.html')
-    for post in cluster_dataset:
-        with open(os.path.join(OUTPUT_DIR, post['filename']), 'w') as f:
-            f.write(cluster_template.render(title=post['title'], content=post['content']))
+    standard_pages('index.html',STATIC_SEO.home,'index.html')
+    standard_pages('about.html',STATIC_SEO.about,'about.html')
+    standard_pages('contact.html',STATIC_SEO.contact,'contact.html')
+    standard_pages('privacy.html',STATIC_SEO.privacy,'privacy.html')
+
+
 
 def main():
     """Central orchestration routine running within the GitHub Runner context."""
@@ -84,9 +54,8 @@ def main():
     create_output_directory()
     
     # Sequential execution of dedicated page compilers
-    render_home_page()
+    
     render_standard_pages()
-    render_seo_hub_and_clusters()
     
     print(" Static compilation complete! All files generated in /dist directory.")
 
