@@ -14,9 +14,8 @@ OUTPUT_DIR = 'dist'
 web = load_json_file('website.json')
 comp = load_json_file('company.json')
 
-combined_data = {"comp": comp,"web": web}
+GLOBAL_SITE_DATA = {"comp": comp,"web": web}
 
-GLOBAL_SITE_DATA ={"site_name": "MyAgency Digital"}
 
 
 
