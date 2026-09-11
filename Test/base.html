@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }} | {{ site_name }}</title>
-    <meta name="description" content="{{ desc | truncate(155) }}">
+    <title>{{ title }} | {{ web.site_name }}</title>
+    <meta name="description" content="{{ desc }}">
     <link rel="canonical" href="{{ url }}">
     <style>
         body { font-family: sans-serif; line-height: 1.6; margin: 0; padding: 0; }
@@ -24,7 +24,7 @@
     </nav>
     <main>
 <div><strong>[Title]:</strong>{{ title }}</div>
-<div><strong>[Sitename]:</strong>{{ site_name }}</div>
+<div><strong>[Sitename]:</strong>{{ web.site_name }}</div>
 <div><strong>[Description]:</strong>{{ desc }}</div>
 <div><strong>[Canonical]:</strong>{{ url }}</div>
         
