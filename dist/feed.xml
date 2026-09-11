@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:atom="http://w3.org">
+<channel>
+    <title>My Custom Dev Blog</title>
+    <link>https://example.com</link>
+    <description>Exploring Python, automation, and system architecture.</description>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 11 Sep 2026 10:09:49 GMT</lastBuildDate>
+    <atom:link href="https://example.com/feed.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+        <title>Building Custom Crawlers Safely</title>
+        <link>https://example.com/blog/building-crawlers</link>
+        <guid isPermaLink="true">https://example.com/blog/building-crawlers</guid>
+        <pubDate>Fri, 11 Sep 2026 12:00:00 GMT</pubDate>
+        <description><![CDATA[<p>An in-depth look at implementing rate limiting and robots parsing.</p>]]></description>
+        
+        <author>dev-team@example.com</author>
+        
+    </item>
+    
+    <item>
+        <title>An Intro to Semantic HTML Structure</title>
+        <link>https://example.com/blog/semantic-html</link>
+        <guid isPermaLink="true">https://example.com/blog/semantic-html</guid>
+        <pubDate>Thu, 10 Sep 2026 15:30:00 GMT</pubDate>
+        <description><![CDATA[<p>Why choosing the correct elements makes a massive difference for accessibility.</p>]]></description>
+        
+        <author>seo-lead@example.com</author>
+        
+    </item>
+    
+</channel>
+</rss>
