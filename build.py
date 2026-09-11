@@ -209,8 +209,8 @@ def generate_feeds():
             "date_rss": post["timestamp"].strftime("%a, %d %b %Y %H:%M:%S GMT"),
             "date_atom": post["timestamp"].strftime("%Y-%m-%dT%H:%M:%SZ")
         })
-    standard_pages('feed_rss.j2',{**site_meta, "items": items},'feed.xml')
-    standard_pages('feed_atom.j2',{**site_meta, "items": items},'atom.xml')
+    standard_pages('feed_rss.j2',{**site_meta, "items": processed_items},'feed.xml')
+    standard_pages('feed_atom.j2',{**site_meta, "items": processed_items},'atom.xml')
 
             
 def main():
