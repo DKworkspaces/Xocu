@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://w3.org">
 <channel>
-    <title>{{ site_name }}</title>
+    <title>{{ web.site_name }}</title>
     <link>{{ base_url }}</link>
-    <description>{{ site_description }}</description>
-    <language>{{ language | default('en-us') }}</language>
+    <description>{{ web.site_desc }}</description>
+    <language>{{ web.lang | default('en-us') }}</language>
     <lastBuildDate>{{ build_date }}</lastBuildDate>
     <atom:link href="{{ base_url }}/feed.xml" rel="self" type="application/rss+xml" />
     
