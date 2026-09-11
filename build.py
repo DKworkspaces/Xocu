@@ -11,8 +11,8 @@ def load_json_file(file_path):
 TEMPLATE_ENV = Environment(loader=FileSystemLoader('Test'))
 OUTPUT_DIR = 'dist'
 
-web = load_json_file('website.json')
-comp = load_json_file('company.json')
+web = load_json_file('Json/website.json')
+comp = load_json_file('Json/company.json')
 
 GLOBAL_SITE_DATA = {"comp": comp,"web": web}
 
