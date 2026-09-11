@@ -12,12 +12,23 @@ def create_output_directory():
 
 def standard_pages(input_page,context,output_page):
     """Generates the primary home entry point."""
+    # 1. Compute the full, absolute target file path
+    target_file_path = os.path.join(OUTPUT_DIR, output_page)
+    
+    # 2. Extract just the directory component (e.g., 'dist/blogs/fastapi-seo-optimization')
+    target_dir = os.path.dirname(target_file_path)
+    
+    # 3. Automatically create the directory stack if missing
+    if target_dir and not os.path.exists(target_dir):
+        os.makedirs(target_dir, exist_ok=True)
+
+
     
     print("Compiling standard "+ output_page +" page...")
     template = TEMPLATE_ENV.get_template(input_page)
     combined_context = {**GLOBAL_SITE_DATA, **context}
 
-    with open(os.path.join(OUTPUT_DIR, output_page), 'w') as f:
+    with open(target_file_path, 'w') as f:
         f.write(template.render(combined_context))
 
 def render_standard_pages():
