@@ -1,14 +1,20 @@
 {
-    "site_name": "TechCorp Hub",
-    "site_url": "https://techcorp.com",
-    "alt_name": "TechCorp Online",
-    "site_desc": "Resource portal for enterprise tech innovations.",
+    "site_name": "Xocu",
+    "site_url": "https://dkworkspaces.github.io/Xocu",
+    "alt_name": "Xocu Media ",
+    "site_desc": "A premium production platform publishing interlinked documentaries and deeply researched analytical Articles and video Documentaries across global history, geopolitics, and scientific discovery.",
     "site_lang": "en-US",
     "knows_about_list": [
-      ["Organization","search-engine-optimization","Search Engine Optimization",["https://wikipedia.org"]],
-      ["Thing","content-marketing","Content Marketing",["https://wikipedia.org","https://wikidata.org"]]
+      ["Thing","geopolitics","Geopolitics",["https://wikipedia.org"]],
+      ["Thing","internationa-relations","International Relations",["https://wikipedia.org"]],
+      ["Thing","world-history","World History",["https://wikipedia.org"]],
+      ["Thing","history-of-science","History of Science",["https://wikipedia.org"]],
+      ["Thing","history-of-technology","History of Technology",["https://wikipedia.org"]],
+      ["Thing","documentary-film","Documentary Film",["https://wikipedia.org"]],
+      ["Thing","systems-thinking","Systems Thinking",["https://wikipedia.org"]],
+      ["Thing","technological-evolution","Technological Evolution",["https://wikipedia.org"]]
     ],
-    "slogan": "Empowering Tomorrow's Infrastructure",
+    "slogan": "History. Science. Power. Interlinked",
     "social_links": ["https://linkedin.com","https://twitter.com"],
     "policies": {"has_terms": true,"has_privacy": true,"has_editorial": true,"has_fact_check": true}
 }
