@@ -4,6 +4,7 @@ from jinja2 import Environment, FileSystemLoader
 # Global initialization of the template compilation framework
 TEMPLATE_ENV = Environment(loader=FileSystemLoader('Test'))
 OUTPUT_DIR = 'dist'
+GLOBAL_SITE_DATA ={"site_name": "MyAgency Digital"}
 
 def create_output_directory():
     """Ensures the production asset destination folder exists."""
@@ -11,7 +12,6 @@ def create_output_directory():
 
 def standard_pages(input_page,context,output_page):
     """Generates the primary home entry point."""
-    GLOBAL_SITE_DATA ={"site_name": "MyAgency Digital"}
     
     print("Compiling standard "+ output_page +" page...")
     template = TEMPLATE_ENV.get_template(input_page)
@@ -37,7 +37,7 @@ def render_standard_pages():
         "title": "Contact Our Engineering Team",
         "desc": "Get a free technical consultation. Drop us a line regarding your next backend application or custom automation project."
     },
-    "privacy": {
+    "policy": {
         "url":"https://www.github.com/privacy",
         "title": "Privacy Policy",
         "desc": "Read how we securely handle user interactions, cookie analytics, and data encryption to stay fully GDPR compliant."
@@ -48,7 +48,7 @@ def render_standard_pages():
     standard_pages('index.html',STATIC_SEO["home"],'index.html')
     standard_pages('about.html',STATIC_SEO["about"],'about.html')
     standard_pages('contact.html',STATIC_SEO["contact"],'contact.html')
-    standard_pages('privacy.html',STATIC_SEO["privacy"],'privacy.html')
+    standard_pages('policy.html',STATIC_SEO["policy"],'policy.html')
 
 
 
