@@ -253,7 +253,9 @@ def generate_sitemap():
     # Pass everything into your single payload variable
     standard_pages('sitemap.j2',{**site_meta, "items": items},'sitemap.xml')
     
-
+def error_page():
+        standard_pages('404.html',{},'404.html')
+   
             
 def main():
     """Central orchestration routine running within the GitHub Runner context."""
@@ -267,7 +269,8 @@ def main():
     #build_flat_blog()
     #generate_custom_robots()
     #generate_feeds()
-    generate_sitemap()
+    #generate_sitemap()
+    error_page()
     print(" Static compilation complete! All files generated in /dist directory.")
 
 if __name__ == "__main__":
