@@ -4,25 +4,25 @@
     <!-- 1. Core Pages (Homepage, About, Contact, Policy) -->
     
     <url>
-        <loc>https://techcorp.com/</loc>
+        <loc>https://dkworkspaces.github.io/Xocu/</loc>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
     
     <url>
-        <loc>https://techcorp.com/about.html</loc>
+        <loc>https://dkworkspaces.github.io/Xocu/about.html</loc>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
     
     <url>
-        <loc>https://techcorp.com/contact.html</loc>
+        <loc>https://dkworkspaces.github.io/Xocu/contact.html</loc>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
     
     <url>
-        <loc>https://techcorp.com/privacy.html</loc>
+        <loc>https://dkworkspaces.github.io/Xocu/privacy.html</loc>
         <changefreq>yearly</changefreq>
         <priority>0.3</priority>
     </url>
@@ -33,7 +33,7 @@
     
     <!-- Main Pillar Page -->
     <url>
-        <loc>https://techcorp.com/pillar/artificial-intelligence</loc>
+        <loc>https://dkworkspaces.github.io/Xocu/pillar/artificial-intelligence</loc>
         <lastmod>2026-09-10</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
@@ -42,14 +42,14 @@
     <!-- Related Cluster Sub-Topics -->
     
     <url>
-        <loc>https://techcorp.com/pillar/artificial-intelligence/machine-learning-basics.html</loc>
+        <loc>https://dkworkspaces.github.io/Xocu/pillar/artificial-intelligence/machine-learning-basics.html</loc>
         <lastmod>2026-09-11</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority> <!-- Slightly lower priority than the pillar -->
     </url>
     
     <url>
-        <loc>https://techcorp.com/pillar/artificial-intelligence/natural-language-processing.html</loc>
+        <loc>https://dkworkspaces.github.io/Xocu/pillar/artificial-intelligence/natural-language-processing.html</loc>
         <lastmod>2026-09-05</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority> <!-- Slightly lower priority than the pillar -->
@@ -60,7 +60,7 @@
     
     <!-- Main Pillar Page -->
     <url>
-        <loc>https://techcorp.com/pillar/web-development</loc>
+        <loc>https://dkworkspaces.github.io/Xocu/pillar/web-development</loc>
         <lastmod>2026-08-20</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
@@ -69,7 +69,7 @@
     <!-- Related Cluster Sub-Topics -->
     
     <url>
-        <loc>https://techcorp.com/pillar/web-development/learning-django.html</loc>
+        <loc>https://dkworkspaces.github.io/Xocu/pillar/web-development/learning-django.html</loc>
         <lastmod>2026-08-25</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority> <!-- Slightly lower priority than the pillar -->
@@ -80,14 +80,14 @@
     <!-- Posts (Flat URLs) -->
     
     <url>
-        <loc>https://techcorp.com/blog/machine-learning-basics.html/</loc>
+        <loc>https://dkworkspaces.github.io/Xocu/blog/machine-learning-basics.html/</loc>
         <lastmod>2026-09-11</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
     </url>
     
     <url>
-        <loc>https://techcorp.com/blog/natural-language-processing.html/</loc>
+        <loc>https://dkworkspaces.github.io/Xocu/blog/natural-language-processing.html/</loc>
         <lastmod>2026-09-05</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>

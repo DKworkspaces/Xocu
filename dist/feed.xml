@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://w3.org">
 <channel>
-    <title>TechCorp Hub</title>
-    <link>https://techcorp.com</link>
-    <description>Resource portal for enterprise tech innovations.</description>
+    <title>Xocu</title>
+    <link>https://dkworkspaces.github.io/Xocu</link>
+    <description>A premium production platform publishing interlinked documentaries and deeply researched analytical Articles and video Documentaries across global history, geopolitics, and scientific discovery.</description>
     <language>en-US</language>
-    <lastBuildDate>Fri, 11 Sep 2026 16:47:25 GMT</lastBuildDate>
-    <atom:link href="https://techcorp.com/feed.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 11 Sep 2026 17:22:54 GMT</lastBuildDate>
+    <atom:link href="https://dkworkspaces.github.io/Xocu/feed.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
         <title>Building Custom Crawlers Safely</title>
-        <link>https://techcorp.com/blog/building-crawlers</link>
-        <guid isPermaLink="true">https://techcorp.com/blog/building-crawlers</guid>
+        <link>https://dkworkspaces.github.io/Xocu/blog/building-crawlers</link>
+        <guid isPermaLink="true">https://dkworkspaces.github.io/Xocu/blog/building-crawlers</guid>
         <pubDate>Fri, 11 Sep 2026 12:00:00 GMT</pubDate>
         <description><![CDATA[<p>An in-depth look at implementing rate limiting and robots parsing.</p>]]></description>
         
@@ -22,8 +22,8 @@
     
     <item>
         <title>An Intro to Semantic HTML Structure</title>
-        <link>https://techcorp.com/blog/semantic-html</link>
-        <guid isPermaLink="true">https://techcorp.com/blog/semantic-html</guid>
+        <link>https://dkworkspaces.github.io/Xocu/blog/semantic-html</link>
+        <guid isPermaLink="true">https://dkworkspaces.github.io/Xocu/blog/semantic-html</guid>
         <pubDate>Thu, 10 Sep 2026 15:30:00 GMT</pubDate>
         <description><![CDATA[<p>Why choosing the correct elements makes a massive difference for accessibility.</p>]]></description>
         

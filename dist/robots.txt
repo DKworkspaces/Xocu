@@ -20,4 +20,4 @@ Disallow: /secret-forum/
 
 Crawl-delay: 5
 
-Sitemap: https://techcorp.com/sitemap.xml
+Sitemap: https://dkworkspaces.github.io/Xocu/sitemap.xml
