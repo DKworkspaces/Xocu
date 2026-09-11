@@ -57,13 +57,13 @@ def render_standard_pages():
     standard_pages('index.html',STATIC_SEO["home"],'index.html')
     standard_pages('about.html',STATIC_SEO["about"],'about.html')
     standard_pages('contact.html',STATIC_SEO["contact"],'contact.html')
-    standard_pages('policy.html',STATIC_SEO["policy"],'policy.html')
+    standard_pages('policy.html',STATIC_SEO["policy"],'privacy.html')
 
 def build_topic_clusters():
     TOPIC_CLUSTERS = {
       "python-web-dev": {
         "is_pillar": True,
-        "filename": "python-web-development",
+        "filename": "python-web-development.html",
         "title": "The Ultimate Guide to Python Web Development | Pillar",
         "desc": "A comprehensive pillar resource detailing modern Python backend options, frameworks, and architecture patterns.",
         "h1": "Python Web Development Architecture",
@@ -71,17 +71,17 @@ def build_topic_clusters():
         "subtopics": [
             {
                 "title": "FastAPI Async Optimization Guide", 
-                "filename": "fastapi-async-optimization",
+                "filename": "python-web-development/fastapi-async-optimization.html",
                 "anchor_text": "Optimize your endpoints with FastAPI Async strategies."
             },
             {
                 "title": "Scaling Flask Apps in Production", 
-                "filename": "flask-production-scaling",
+                "filename": "python-web-development/flask-production-scaling.html",
                 "anchor_text": "Discover deep horizontal scaling practices for legacy Flask codebases."
             },
             {
                 "title": "Advanced Jinja2 Template Engineering", 
-                "filename": "jinja2-advanced-templates",
+                "filename": "python-web-development/jinja2-advanced-templates.html",
                 "anchor_text": "Master modular layouts and SEO component caching with Jinja2."
             }
         ]
@@ -97,7 +97,7 @@ def build_topic_clusters():
             "intro": data["intro"],
             "subtopics": data["subtopics"] # Passes all spoke links to the hub
         }
-        standard_pages("pillar.html", pillar_context, data["filename"]+"/index.html")
+        standard_pages("pillar.html", pillar_context, data["filename"])
         
         # 2. Compile every Subtopic Cluster Page under this Hub
         for subtopic in data["subtopics"]:
@@ -113,7 +113,7 @@ def build_topic_clusters():
                     "anchor_text": "Return to the Core Python Web Development Guide"
                 }
             }
-            standard_pages("cluster.html", cluster_context, subtopic["filename"]+"/index.html")
+            standard_pages("cluster.html", cluster_context, subtopic["filename"])
 
 def build_flat_blog():
     BLOG_POSTS = [
@@ -133,13 +133,13 @@ def build_flat_blog():
             "title": post["title"],
             "desc": post["desc"],
             # Clean flat URL definition
-            "url": f"https://github.com/blogs/{post['slug']}/index.html",
+            "url": f"https://github.com/blogs/{post['slug']}.html",
             "post_content": "<h1>" + post["title"] + "</h1><p>Deep-dive context follows...</p>"
         }
         
         # Output directly into OUTPUT_DIR root as 'slug.html'
         # Nginx/Apache configurations can serve this smoothly without showing the '.html' extension
-        output_filename = f"blogs/{post['slug']}/index.html"
+        output_filename = f"blogs/{post['slug']}.html"
         standard_pages("blog_post.html", post_context, output_filename)
 
 
@@ -152,7 +152,7 @@ def main():
     
     render_standard_pages()
     # Execute the builder
-    # errored build_topic_clusters()
+    build_topic_clusters()
     build_flat_blog()
 
     print(" Static compilation complete! All files generated in /dist directory.")
