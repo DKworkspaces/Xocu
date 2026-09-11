@@ -264,12 +264,12 @@ def main():
     
     # Sequential execution of dedicated page compilers
     # its working 
-    #render_standard_pages()
-    #build_topic_clusters()
-    #build_flat_blog()
-    #generate_custom_robots()
-    #generate_feeds()
-    #generate_sitemap()
+    render_standard_pages()
+    build_topic_clusters()
+    build_flat_blog()
+    generate_custom_robots()
+    generate_feeds()
+    generate_sitemap()
     error_page()
     print(" Static compilation complete! All files generated in /dist directory.")
 
