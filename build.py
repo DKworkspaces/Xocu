@@ -167,7 +167,52 @@ def generate_custom_robots():
     }
     standard_pages('robots.txt',robots_data,'robots.txt')
     
+def generate_feeds():
+    from datetime import datetime, timezone
+    
+    # 1. Global Feed Metadata
+    now = datetime.now(timezone.utc)
+    site_meta = {
+        "base_url": "https://example.com",
+        "site_name": "My Custom Dev Blog",
+        "site_description": "Exploring Python, automation, and system architecture.",
+        "language": "en-us",
+        "default_author": "Engineering Team",
+        # Format dates according to specifications
+        "build_date": now.strftime("%a, %d %b %Y %H:%M:%S GMT"),       # RSS (RFC 822)
+        "build_date_atom": now.strftime("%Y-%m-%dT%H:%M:%SZ")          # Atom (ISO 8601)
+    }
 
+    # 2. Raw Content Items (Simulating a database or markdown source)
+    raw_posts = [
+        {
+            "title": "Building Custom Crawlers Safely",
+            "url": "/blog/building-crawlers",
+            "content": "<p>An in-depth look at implementing rate limiting and robots parsing.</p>",
+            "author": "dev-team@example.com",
+            "timestamp": datetime(2026, 9, 11, 12, 0, 0, tzinfo=timezone.utc)
+        },
+        {
+            "title": "An Intro to Semantic HTML Structure",
+            "url": "/blog/semantic-html",
+            "content": "<p>Why choosing the correct elements makes a massive difference for accessibility.</p>",
+            "author": "seo-lead@example.com",
+            "timestamp": datetime(2026, 9, 10, 15, 30, 0, tzinfo=timezone.utc)
+        }
+    ]
+
+    # 3. Format item dates for each specific feed specification
+    processed_items = []
+    for post in raw_posts:
+        processed_items.append({
+            **post,
+            "date_rss": post["timestamp"].strftime("%a, %d %b %Y %H:%M:%S GMT"),
+            "date_atom": post["timestamp"].strftime("%Y-%m-%dT%H:%M:%SZ")
+        })
+    standard_pages('feed_rss.j2',{**site_meta, "items": items},'feed.xml')
+    standard_pages('feed_atom.j2',{**site_meta, "items": items},'atom.xml')
+
+            
 def main():
     """Central orchestration routine running within the GitHub Runner context."""
     print(" Initializing modular build execution loop...")
@@ -178,7 +223,8 @@ def main():
     #render_standard_pages()
     #build_topic_clusters()
     #build_flat_blog()
-    generate_custom_robots()
+    #generate_custom_robots()
+    generate_feeds()
     print(" Static compilation complete! All files generated in /dist directory.")
 
 if __name__ == "__main__":
