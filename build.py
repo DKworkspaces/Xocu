@@ -211,20 +211,21 @@ def generate_feeds():
         })
     standard_pages('feed_rss.j2',{**site_meta, "items": processed_items},'feed.xml')
     standard_pages('feed_atom.j2',{**site_meta, "items": processed_items},'atom.xml')
+    
 def generate_sitemap():
     site_meta = {"domain": "https://example.com"}
 
-# Grouping items structurally
-items = {
-    # Core static pages
-    "static_pages": [
+    # Grouping items structurally
+    items = {
+      # Core static pages
+      "static_pages": [
         {"slug": "", "changefreq": "daily", "priority": "1.0"},       # Homepage
         {"slug": "about.html", "changefreq": "monthly", "priority": "0.5"},
         {"slug": "contact.html", "changefreq": "monthly", "priority": "0.5"},
         {"slug": "privacy.html", "changefreq": "yearly", "priority": "0.3"},
-    ],
-    # Topic Clusters (Pillar pages and their sub-pages)
-    "topic_clusters": [
+      ],
+      # Topic Clusters (Pillar pages and their sub-pages)
+      "topic_clusters": [
         {
             "pillar_slug": "pillar/artificial-intelligence", # Main Hub/Pillar
             "updated_at": "2026-09-10",
@@ -242,15 +243,15 @@ items = {
                 {"slug": "pillar/web-development/learning-django.html", "updated_at": "2026-08-25"},
             ]
         }
-    ],
-   "posts": [
+      ],
+     "posts": [
                 {"slug": "blog/machine-learning-basics.html", "updated_at": "2026-09-11"},     # Flat URL
                 {"slug": "blog/natural-language-processing.html", "updated_at": "2026-09-05"}, # Flat URL
-    ]
-}
+      ]
+    }
 
-# Pass everything into your single payload variable
-standard_pages('sitemap.j2',{**site_meta, "items": items},'sitemap.xml')
+    # Pass everything into your single payload variable
+    standard_pages('sitemap.j2',{**site_meta, "items": items},'sitemap.xml')
     
 
             
