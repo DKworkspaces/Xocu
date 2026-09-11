@@ -129,7 +129,7 @@ def build_flat_blog():
         # Output directly into OUTPUT_DIR root as 'slug.html'
         # Nginx/Apache configurations can serve this smoothly without showing the '.html' extension
         output_filename = f"blogs/{post['slug']}.html"
-        standard_pages("blog_layout.html", post_context, output_filename)
+        standard_pages("blog_post.html", post_context, output_filename)
 
 
 def main():
