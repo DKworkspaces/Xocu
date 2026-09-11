@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://w3.org">
+    <title>{{ site_name }}</title>
+    <subtitle>{{ site_description }}</subtitle>
+    <link href="{{ base_url }}/atom.xml" rel="self" type="application/atom+xml" />
+    <link href="{{ base_url }}/" />
+    <updated>{{ build_date_atom }}</updated>
+    <id>{{ base_url }}/</id>
+    
+    {% for item in items %}
+    <entry>
+        <title>{{ item.title }}</title>
+        <link href="{{ base_url }}{{ item.url }}" />
+        <id>{{ base_url }}{{ item.url }}</id>
+        <updated>{{ item.date_atom }}</updated>
+        <summary type="html"><![CDATA[{{ item.content }}]]></summary>
+        <author>
+            <name>{{ item.author | default(default_author) }}</name>
+        </author>
+    </entry>
+    {% endfor %}
+</feed>
