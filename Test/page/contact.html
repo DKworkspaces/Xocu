@@ -1,5 +1,70 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>Contact Us</h1>
-    <p>Feel free to reach out via email at contact@example.com.</p>
+    <section>
+      <h1>Establish Contact</h1>
+      <blockquote>
+        <p>"The third side of the coin requires new lines of communication."</p>
+      </blockquote> 
+      <p>Whether you are a fellow analyst, a reader with a compelling data point, or someone who has spotted an overlooked pattern in history, your insights are welcome. {{ web.site_name }} remains a private operation, but the network is always open to collaborative minds.</p>
+    </section>
+    <hr>
+    <section>
+      <h2>How to Reach Out</h2>
+      <ul>
+        <li>
+            <h3>The Secure Inbox</h3>
+            <p>For secure inquiries, data sharing, or feedback, dispatch an email directly to: {{ comp.email }}</p>  
+        </li>
+        <li>
+            <h3>The Transmission Portal</h3>
+            <p>Alternatively, utilize the encrypted submission form below to send a direct message into the archives.</p>  
+        </li>
+      </ul> 
+    </section>
+    <hr>
+    <section>
+      <h2>Inquiry Directives</h2>
+      <p>To ensure your message bypasses our filters, please categorize your subject line:</p>
+      <ul>
+        <li>
+            <h3>[Data/Corrections]</h3>
+            <p>For verified corrections to articles or new maps.</p>  
+        </li>
+        <li>
+            <h3>[Intel/Leads]</h3>
+            <p>For historical, scientific, or geopolitical patterns worth investigating.</p>  
+        </li>
+        <li>
+            <h3>[Syndicate]</h3>
+            <p>For content sharing, translation requests, or collaboration.</p>  
+        </li>
+      </ul> 
+      <p>Note: Due to the high volume of automated noise across the digital landscape, responses are sent selectively. If your data holds weight, you will receive a transmission back from {{ web.site_name }}.</p>
+    </section>
+    <hr>
+    <section>
+      <form action="#" method="POST" class="eform">
+        <div class="form-group full-width">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="john@example.com" required>
+        </div>
+        <div class="form-group full-width">
+          <label for="subject">Regarding</label>
+          <input type="text" id="subject" name="subject" placeholder="Place Your Subject here..." required>
+        </div>
+        <div class="form-group full-width">
+          <label for="message">Your Message</label>
+          <textarea id="message" name="message" rows="6" placeholder="Tell us more about your subject here..." required></textarea>
+        </div>
+        <button type="submit" class="submit-btn">Submit Inquiry</button>
+      </form>
+    </section>
+    <hr>
+    <section>
+      <blockquote>
+        <p>"Monitoring the frequencies.. "</p>
+        <cite>— The DK</cite>
+      </blockquote> 
+    </section>
+    <hr>
 {% endblock %}
