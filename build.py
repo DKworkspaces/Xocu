@@ -120,7 +120,7 @@ def build_topic_clusters():
                     "anchor_text": "Return to the Core Python Web Development Guide"
                 }
             }
-            standard_pages("cluster.html",{"page": clusrer_context},"pillar/"+ subtopic["filename"])
+            standard_pages("cluster.html",{"page": cluster_context},"pillar/"+ subtopic["filename"])
 
 def build_flat_blog():
     BLOG_POSTS = [
