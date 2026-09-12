@@ -3,9 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }} | {{ web.site_name }}</title>
-    <meta name="description" content="{{ desc }}">
-    <link rel="canonical" href="{{ url }}">
+
+
+    <title>{{ page.title }} | {{ web.site_name }}</title>
+    <meta name="description" content="{{ page.desc }}">
+    <link rel="canonical" href="{{ page.url }}">
+    {% if page.is_search or page.is_policy %}
+    <meta name="robots" content="noindex, follow, noarchive, nosnippet">
+    {% elif page.is_blogpost or page.is_pillar or page.is_topiccluster %}
+    <meta name="robots" content="index, follow, max-snippet:-1,max-image-preview:large, max-video-preview:-1">
+    {% elif page.is_home or page.is_about or page.is_contact or page.is_index or page.is_taxo %}
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    {% else %}
+    <meta name="robots" content="noindex, nofollow">
+    {% endif %}
+    <link rel="icon" type="image/x-icon" href="{{ web.site_url }}/asset/img/icons/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ web.site_url }}/asset/img/icons/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ web.site_url }}/asset/img/icons/apple-touch-icon.png">
+    
+    {% if web.is_sitemap -%}
+    <link rel="alternate" type="application/rss+xml" title="{{ web.site_name }} | Global RSS Feed" href="{{ web.site_url }}/feed.xml">
+    <link rel="alternate" type="application/atom+xml" title="{{ web.site_name }} | Global Atom Feed" href="{{ web.site_url }}/atom.xml">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ web.site_url }}/sitemap.xml">
+    {%- endif %}
+
+    
     <style>
         body { font-family: sans-serif; line-height: 1.6; margin: 0; padding: 0; }
         nav { background: #333; padding: 1rem; }
@@ -23,10 +45,10 @@
         <a href="pillar.html">Main Pillar Hub</a>
     </nav>
     <main>
-<div><strong>[Title]:</strong>{{ title }}</div>
+<div><strong>[Title]:</strong>{{ page.title }}</div>
 <div><strong>[Sitename]:</strong>{{ web.site_name }}</div>
-<div><strong>[Description]:</strong>{{ desc }}</div>
-<div><strong>[Canonical]:</strong>{{ url }}</div>
+<div><strong>[Description]:</strong>{{ page.desc }}</div>
+<div><strong>[Canonical]:</strong>{{ page.url }}</div>
         
         {% block content %}{% endblock %}
     </main>
