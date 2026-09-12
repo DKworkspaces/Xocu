@@ -104,7 +104,7 @@ def build_topic_clusters():
             "intro": data["intro"],
             "subtopics": data["subtopics"] # Passes all spoke links to the hub
         }
-        standard_pages("pillar.html", pillar_context,"pillar/"+ data["filename"])
+        standard_pages("pillar.html",{"page": pillar_context},"pillar/"+ data["filename"])
         
         # 2. Compile every Subtopic Cluster Page under this Hub
         for subtopic in data["subtopics"]:
@@ -120,7 +120,7 @@ def build_topic_clusters():
                     "anchor_text": "Return to the Core Python Web Development Guide"
                 }
             }
-            standard_pages("cluster.html", cluster_context,"pillar/"+ subtopic["filename"])
+            standard_pages("cluster.html",{"page": clusrer_context},"pillar/"+ subtopic["filename"])
 
 def build_flat_blog():
     BLOG_POSTS = [
@@ -144,7 +144,7 @@ def build_flat_blog():
             "post_content": "<h1>" + post["title"] + "</h1><p>Deep-dive context follows...</p>"
         }
         output_filename = f"blogs/{post['slug']}.html"
-        standard_pages("blog_post.html", post_context, output_filename)
+        standard_pages("blog_post.html",{"page": post_context}, output_filename)
 
 def generate_custom_robots():
     # 1. Define your dynamic configuration and rules data
