@@ -33,7 +33,7 @@ def standard_pages(input_page,context,output_page):
     
     print("Compiling standard "+ output_page +" page...")
     template = TEMPLATE_ENV.get_template(input_page)
-    combined_context = {**GLOBAL_SITE_DATA,"page":**context}
+    combined_context = {**GLOBAL_SITE_DATA,"page":context}
     
     with open(target_file_path, 'w') as f:
         f.write(template.render(combined_context))
