@@ -61,10 +61,10 @@ def render_standard_pages():
         "desc": "Read how we securely handle user interactions, cookie analytics, and data encryption to stay fully GDPR compliant."
       }
     }
-    standard_pages('pages/index.html',{"page": STATIC_SEO["home"]},'index.html')
-    standard_pages('pages/about.html',{"page": STATIC_SEO["about"]},'about.html')
-    standard_pages('pages/contact.html',{"page": STATIC_SEO["contact"]},'contact.html')
-    standard_pages('pages/policy.html',{"page": STATIC_SEO["policy"]},'privacy.html')
+    standard_pages('page/index.html',{"page": STATIC_SEO["home"]},'index.html')
+    standard_pages('page/about.html',{"page": STATIC_SEO["about"]},'about.html')
+    standard_pages('page/contact.html',{"page": STATIC_SEO["contact"]},'contact.html')
+    standard_pages('page/policy.html',{"page": STATIC_SEO["policy"]},'privacy.html')
 
 def build_topic_clusters():
     TOPIC_CLUSTERS = {
@@ -104,7 +104,7 @@ def build_topic_clusters():
             "intro": data["intro"],
             "subtopics": data["subtopics"] # Passes all spoke links to the hub
         }
-        standard_pages("pages/pillar.html",{"page": pillar_context},"pillar/"+ data["filename"])
+        standard_pages("page/pillar.html",{"page": pillar_context},"pillar/"+ data["filename"])
         
         # 2. Compile every Subtopic Cluster Page under this Hub
         for subtopic in data["subtopics"]:
@@ -120,7 +120,7 @@ def build_topic_clusters():
                     "anchor_text": "Return to the Core Python Web Development Guide"
                 }
             }
-            standard_pages("pages/cluster.html",{"page": cluster_context},"pillar/"+ subtopic["filename"])
+            standard_pages("page/cluster.html",{"page": cluster_context},"pillar/"+ subtopic["filename"])
 
 def build_flat_blog():
     BLOG_POSTS = [
@@ -144,7 +144,7 @@ def build_flat_blog():
             "post_content": "<h1>" + post["title"] + "</h1><p>Deep-dive context follows...</p>"
         }
         output_filename = f"blogs/{post['slug']}.html"
-        standard_pages("pages/blog_post.html",{"page": post_context}, output_filename)
+        standard_pages("page/blog_post.html",{"page": post_context}, output_filename)
 
 def generate_custom_robots():
     # 1. Define your dynamic configuration and rules data
