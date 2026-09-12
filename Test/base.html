@@ -1,3 +1,4 @@
+{% import 'others/social.html' as social without context %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,6 +21,9 @@
     {% include "others/icon.html" %}
     {% include "others/rss.html" %}
     {% include "others/sitemap.html" %}
+    {{ social.og(web,page) }}
+    {{ social.twitter(web,page) }}
+    {% if page.pin %}{{ social.pin(page.pin) }}{% endif %}
     <style>
         * {box-sizing: border-box;margin: 0;padding: 0;}
         body { font-family: sans-serif; line-height: 1.6; margin: 0; padding: 4rem 2rem;}
