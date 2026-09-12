@@ -4,7 +4,7 @@
     "alt_name":"Xocu Media",
     "site_desc":"A premium production platform publishing interlinked documentaries and deeply researched analytical Articles and video Documentaries across global history, geopolitics, and scientific discovery.",
     "site_lang":"en-US",
-    "site_handler": "@Xocu"
+    "site_handler": "@Xocu",
     "is_sitemap":true,
     "knows_about_list":[
       ["Thing","geopolitics","Geopolitics",["https://wikipedia.org"]],
