@@ -33,7 +33,7 @@ def standard_pages(input_page,context,output_page):
     
     print("Compiling standard "+ output_page +" page...")
     template = TEMPLATE_ENV.get_template(input_page)
-    combined_context = {**GLOBAL_SITE_DATA,"page":context}
+    combined_context = {**GLOBAL_SITE_DATA,**context}
     
     with open(target_file_path, 'w') as f:
         f.write(template.render(combined_context))
@@ -61,10 +61,10 @@ def render_standard_pages():
         "desc": "Read how we securely handle user interactions, cookie analytics, and data encryption to stay fully GDPR compliant."
       }
     }
-    standard_pages('index.html',STATIC_SEO["home"],'index.html')
-    standard_pages('about.html',STATIC_SEO["about"],'about.html')
-    standard_pages('contact.html',STATIC_SEO["contact"],'contact.html')
-    standard_pages('policy.html',STATIC_SEO["policy"],'privacy.html')
+    standard_pages('index.html',{"page": STATIC_SEO["home"]},'index.html')
+    standard_pages('about.html',{"page": STATIC_SEO["about"]},'about.html')
+    standard_pages('contact.html',{"page": STATIC_SEO["contact"]},'contact.html')
+    standard_pages('policy.html',{"page": STATIC_SEO["policy"]},'privacy.html')
 
 def build_topic_clusters():
     TOPIC_CLUSTERS = {
