@@ -26,6 +26,7 @@
         nav { background: #333; padding: 1rem; }
         nav a { color: white; margin-right: 15px; text-decoration: none; }
         main { padding: 2rem; max-width: 800px; margin: auto; }
+        
         hr {border: 0;border-top: 1px solid #e5e0d8;margin: 3rem 0;}
         h1, h2, h3 {font-family: 'Playfair Display', 'Georgia', serif;font-weight: 400;color: #111111;letter-spacing: -0.01em;margin-bottom: 1rem;}
         h4, h5, h6 {font-family: 'Segoe UI', system-ui, sans-serif;font-weight: 600;text-transform: uppercase;letter-spacing: 0.08em;color: #2c2c2c;margin-bottom: 0.8rem;}
@@ -46,7 +47,16 @@
         ul li::before {content: "—";position: absolute;left: -1.2rem;color: #9d9a93;}
         ol {list-style: none;counter-reset: editorial-counter;}
         ol li {counter-increment: editorial-counter;position: relative;}
-        ol li::before {content: counter(editorial-counter, decimal-leading-zero) "."; /* 01, 02, 03 style */font-family: 'Georgia', serif;font-style: italic;color: #9d9a93;position: absolute;left: -2.2rem;font-size: 0.95rem;}
+        ol li::before {content: counter(editorial-counter, decimal-leading-zero) ".";font-family: 'Georgia', serif;font-style: italic;color: #9d9a93;position: absolute;left: -2.2rem;font-size: 0.95rem;}
+            .form-group {display: flex;flex-direction: column;}
+            .full-width {width:90vw; max-width:250px;}
+            .eform label {font-size: 0.85rem;text-transform: uppercase;letter-spacing: 0.1em;font-weight: 600;margin-bottom: 0.6rem;color: #1a1a1a;}
+            .eform input,.eform textarea {background-color: #faf9f6;border: 1px solid #e5e0d8;padding: 1rem;font-size: 1rem;font-family: inherit;color: #1a1a1a;transition: all 0.3s ease;}
+            .eform input:focus,.eform textarea:focus {outline: none;border-color: #1a1a1a;background-color: #ffffff;}
+            .submit-btn {background-color: #1a1a1a;color: #ffffff;border: none;padding: 1.2rem;font-size: 0.9rem;text-transform: uppercase;letter-spacing: 0.15em;font-weight: bold;cursor: pointer;transition: opacity 0.3s ease;margin-top: 1rem;}
+            .submit-btn:hover {opacity: 0.85;}
+            
+            
         footer { background: #f4f4f4; text-align: center; padding: 1rem; position: fixed; width: 100%; bottom: 0; }
     </style>
 </head>
