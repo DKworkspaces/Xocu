@@ -17,17 +17,9 @@
     {% else %}
     <meta name="robots" content="noindex, nofollow">
     {% endif %}
-    <link rel="icon" type="image/x-icon" href="{{ web.site_url }}/asset/img/icons/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ web.site_url }}/asset/img/icons/favicon-32x32.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ web.site_url }}/asset/img/icons/apple-touch-icon.png">
-    
-    {% if web.is_sitemap -%}
-    <link rel="alternate" type="application/rss+xml" title="{{ web.site_name }} | Global RSS Feed" href="{{ web.site_url }}/feed.xml">
-    <link rel="alternate" type="application/atom+xml" title="{{ web.site_name }} | Global Atom Feed" href="{{ web.site_url }}/atom.xml">
-    <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ web.site_url }}/sitemap.xml">
-    {%- endif %}
-
-    
+    {% include "others/icon.html" %}
+    {% include "others/rss.html" %}
+    {% include "others/sitemap.html" %}
     <style>
         * {box-sizing: border-box;margin: 0;padding: 0;}
         body { font-family: sans-serif; line-height: 1.6; margin: 0; padding: 4rem 2rem;}
