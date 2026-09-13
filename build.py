@@ -45,13 +45,13 @@ def render_standard_pages():
     "url": "https://techcraftinsights.com",
     "title": "The Future of AI: Trends to Watch",
     "desc": "An in-depth look at upcoming AI breakthroughs.",
-    "img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"}
+    "vid": {"url": "https://techcraftinsights.com","w": "1920","h": "1080"},
+    "img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
+    "pin": {"url": "https://techcraftinsights.com","w": "1000","h": "1500"}
   },
-"pin": {"url": "https://techcraftinsights.com","w": "1000","h": "1500"},
   "type": "article",
-      "author": {"handler": "@alex_dev_26},
+  "author": {"handler": "@alex_dev_26},
   "card": "summary_large_image",
-  "vid": {"url": "https://techcraftinsights.com","w": "1920","h": "1080"},
   "article": {
     "pub": "2026-03-15","mod": "2026-03-18",
     "author_url": "https://techcraftinsights.com",
@@ -62,33 +62,62 @@ def render_standard_pages():
 """
     STATIC_SEO = {
       "home": {
-        "url":"https://github.com",
-        "title": "Expert Python Web Development Services",
-        "desc": "Scale your business with high-performance Python web applications. We specialize in Flask, FastAPI, and custom SEO architectures."
+        "url":"/",
+        "title": "Home | Hall of Documentary",
+        "desc": "Explore the invisible forces shaping our world. We connect the dots between historical echoes, scientific breakthroughs, and modern geopolitics through cinematic, deep-dive investigative journalism.",
+"img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
+"pin": {"url": "https://techcraftinsights.com","w": "1000","h": "1500"}
       },
       "about": {
-        "url":"https://www.github.com/about",
-        "title": "About Us",
-        "desc": "Meet the engineering team building sustainable, lightning-fast digital solutions for modern businesses globally."
+        "url":"/about.html",
+        "title": "About Our Mission and Story",
+        "desc": "Meet the team uncovering the hidden currents of global power, human history, and technological friction. Learn why we treat blogging like high-production documentary filmmaking.",
+"img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
+"pin": {"url": "https://techcraftinsights.com","w": "1000","h": "1500"}
       },
       "contact": {
-        "url":"https://www.github.com/contact",
-        "title": "Contact Our Engineering Team",
-        "desc": "Get a free technical consultation. Drop us a line regarding your next backend application or custom automation project."
+        "url":"/contact.html",
+        "title": "Contact With Our Team",
+        "desc": "Have a tip, a story pitch, or want to collaborate on a deep dive? Get in touch with our editorial team. Let’s map out the world’s most compelling narratives together.",
+"img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
+"pin": {"url": "https://techcraftinsights.com","w": "1000","h": "1500"}
       },
-      "policy": {
-        "url":"https://www.github.com/privacy",
-        "title": "Privacy Policy",
-        "desc": "Read how we securely handle user interactions, cookie analytics, and data encryption to stay fully GDPR compliant."
+      "privacy": {
+        "url":"/privacy.html",
+        "title": "Privacy Policy | How We Protect Your Data",
+        "desc": "Read our privacy policy to understand how we collect, protect, and use your data. Your privacy is paramount as we explore global narratives.",
+"img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
+"pin": {"url": "https://techcraftinsights.com","w": "1000","h": "1500"}
+      },
+      "editorial": {
+        "url":"/editorial.html",
+        "title": "Editorial Policy | Our Standards & Ethics",
+        "desc": "Discover our rigorous editorial standards. Learn how we maintain objective, independent, and high-quality storytelling at the intersection of history, science, and global politics.",
+"img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
+"pin": {"url": "https://techcraftinsights.com","w": "1000","h": "1500"}
+      },
+      "terms": {
+        "url":"/terms.html",
+        "title": "Terms of Service | User Agreement & Guidelines",
+        "desc": "Review the terms of service governing your use of our platform. Read our guidelines for community conduct, intellectual property, and content usage.",
+"img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
+"pin": {"url": "https://techcraftinsights.com","w": "1000","h": "1500"}
+      },
+      "fact": {
+        "url":"/fact.html",
+        "title": "Fact-Checking Policy | Our Commitment to Accuracy",
+        "desc": "Accuracy is our foundational rule. Learn about our multi-layered fact-checking process, primary source verification, and how we correct errors transparently.",
+"img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
+"pin": {"url": "https://techcraftinsights.com","w": "1000","h": "1500"}
       }
     }
     standard_pages('page/index.html',{"page": STATIC_SEO["home"]},'index.html')
     standard_pages('page/about.html',{"page": STATIC_SEO["about"]},'about.html')
     standard_pages('page/contact.html',{"page": STATIC_SEO["contact"]},'contact.html')
-    standard_pages('page/privacy.html',{"page": STATIC_SEO["policy"]},'privacy.html')
-    standard_pages('page/terms.html',{"page": STATIC_SEO["policy"]},'terms.html')
-    standard_pages('page/editorial.html',{"page": STATIC_SEO["policy"]},'editorial.html')
-    standard_pages('page/fact.html',{"page": STATIC_SEO["policy"]},'fact.html')
+    standard_pages('page/privacy.html',{"page": STATIC_SEO["privacy"]},'privacy.html')
+    standard_pages('page/terms.html',{"page": STATIC_SEO["editorial"]},'terms.html')
+    standard_pages('page/editorial.html',{"page": STATIC_SEO["terms"]},'editorial.html')
+    standard_pages('page/fact.html',{"page": STATIC_SEO["fact"]},'fact.html')
 
 def build_topic_clusters():
     TOPIC_CLUSTERS = {
@@ -106,7 +135,7 @@ def build_topic_clusters():
                 "anchor_text": "Optimize your endpoints with FastAPI Async strategies."
             },
             {
-                "title": "Scaling Flask Apps in Production", 
+                "title": "Scaling Flask App n", 
                 "filename": "python-web-development/flask-production-scaling.html",
                 "anchor_text": "Discover deep horizontal scaling practices for legacy Flask codebases."
             },
