@@ -10,7 +10,7 @@
     <title>{{ page.title }} | {{ web.site_name }}</title>
     <meta name="description" content="{{ page.desc }}">
     <link rel="canonical" href="{{ web.site_url }}{{ page.url }}">
-    {% if page.is_search or page.is_policy %}
+    {% if page.is_search or page.is_privacy or page.is_editorial or page.is_terms or page.is_fact %}
     <meta name="robots" content="noindex, follow, noarchive, nosnippet">
     {% elif page.is_blogpost or page.is_pillar or page.is_topiccluster %}
     <meta name="robots" content="index, follow, max-snippet:-1,max-image-preview:large, max-video-preview:-1">
@@ -22,18 +22,22 @@
     {% include "others/icon.html" %}
     {% include "others/rss.html" %}
     {% include "others/sitemap.html" %}
-    {{ social.og(web,page) }}
-    {{ social.twitter(web,page) }}
-    {% if page.pin %}{{ social.pin(page.pin) }}{% endif %}
+    {% if page.is_home or page.is_about or page.is_contact or page.is_privacy or page.is_editorial or page.is_terms or page.is_fact %}
+      {{ social.og(web,page) }}
+      {{ social.twitter(web,page) }}
+      {% if page.pin %}
+        {{ social.pin(page.pin) }}
+      {% endif %}
+    {% endif %}
     
     <script type="application/ld+json">{"@context": "https://schema.org","@graph": [
-    {% if is_home %}{{ sch.org_s(web,comp) }},{{ webpage_s(web,comp,page,page_type="WebPage",is_home=True) }}
-    {% elif is_about %}{{ sch.webpage_s(web,comp,page,page_type="AboutPage") }},{{ breadcrumb_s(web,page,crumbs) }}
-    {% elif is_contact %}{{ sch.webpage_s(web,comp,page,page_type="ContactPage") }},{{ breadcrumb_s(web,page,crumbs) }}
-    {% elif is_privacy %}{{ sch.webpage_s(web,comp,page,page_type="PrivacyPolicy") }},{{ breadcrumb_s(web,page,crumbs) }}
-    {% elif is_editorial %}{{ sch.webpage_s(web,comp,page,page_type="PolicyPage") }},{{ breadcrumb_s(web,page,crumbs) }}
-    {% elif is_terms %}{{ sch.webpage_s(web,comp,page,page_type="TermsAndConditions") }},{{ breadcrumb_s(web,page,crumbs) }}
-    {% elif is_fact %}{{ sch.webpage_s(web,comp,page,page_type="PolicyPage") }},{{ breadcrumb_s(web,page,crumbs) }}
+    {% if page.is_home %}{{ sch.org_s(web,comp) }},{{ webpage_s(web,comp,page,page_type="WebPage",is_home=True) }}
+    {% elif page.is_about %}{{ sch.webpage_s(web,comp,page,page_type="AboutPage") }},{{ breadcrumb_s(web,page,crumbs) }}
+    {% elif page.is_contact %}{{ sch.webpage_s(web,comp,page,page_type="ContactPage") }},{{ breadcrumb_s(web,page,crumbs) }}
+    {% elif page.is_privacy %}{{ sch.webpage_s(web,comp,page,page_type="PrivacyPolicy") }},{{ breadcrumb_s(web,page,crumbs) }}
+    {% elif page.is_editorial %}{{ sch.webpage_s(web,comp,page,page_type="PolicyPage") }},{{ breadcrumb_s(web,page,crumbs) }}
+    {% elif page.is_terms %}{{ sch.webpage_s(web,comp,page,page_type="TermsAndConditions") }},{{ breadcrumb_s(web,page,crumbs) }}
+    {% elif page.is_fact %}{{ sch.webpage_s(web,comp,page,page_type="PolicyPage") }},{{ breadcrumb_s(web,page,crumbs) }}
     {% endif %}
     ]}
     </script>
