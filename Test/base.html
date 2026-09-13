@@ -1,4 +1,5 @@
 {% import 'others/social.html' as social without context %}
+{% import 'others/schema.html' as sch without context %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,6 +25,21 @@
     {{ social.og(web,page) }}
     {{ social.twitter(web,page) }}
     {% if page.pin %}{{ social.pin(page.pin) }}{% endif %}
+    
+    <script type="application/ld+json">{"@context": "https://schema.org","@graph": [
+    {% if is_home %}{{ sch.org_s(web,comp) }},{{ webpage_s(web,comp,page,page_type="WebPage",is_home=True) }}
+    {% elif is_about %}{{ sch.webpage_s(web,comp,page,page_type="AboutPage") }},{{ breadcrumb_s(web,page,crumbs) }}
+    {% elif is_contact %}{{ sch.webpage_s(web,comp,page,page_type="ContactPage") }},{{ breadcrumb_s(web,page,crumbs) }}
+    {% elif is_privacy %}{{ sch.webpage_s(web,comp,page,page_type="PrivacyPolicy") }},{{ breadcrumb_s(web,page,crumbs) }}
+    {% elif is_editorial %}{{ sch.webpage_s(web,comp,page,page_type="PolicyPage") }},{{ breadcrumb_s(web,page,crumbs) }}
+    {% elif is_terms %}{{ sch.webpage_s(web,comp,page,page_type="TermsAndConditions") }},{{ breadcrumb_s(web,page,crumbs) }}
+    {% elif is_fact %}{{ sch.webpage_s(web,comp,page,page_type="PolicyPage") }},{{ breadcrumb_s(web,page,crumbs) }}
+    {% endif %}
+    ]}
+    </script>
+    
+
+    
     <style>
         * {box-sizing: border-box;margin: 0;padding: 0;}
         body { font-family: sans-serif; line-height: 1.6; margin: 0; padding: 4rem 2rem;}
