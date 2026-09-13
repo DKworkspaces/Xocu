@@ -42,18 +42,18 @@ def render_standard_pages():
     """
     {
     "page": {
-    "url": "https://techcraftinsights.com",
-    "title": "The Future of AI: Trends to Watch",
-    "desc": "An in-depth look at upcoming AI breakthroughs.",
-    "vid": {"url": "https://techcraftinsights.com","w": "1920","h": "1080"},
-    "img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
-    "pin": {"url": "https://techcraftinsights.com","w": "1000","h": "1500"}
+        "url": "https://techcraftinsights.com",
+        "title": "The Future of AI: Trends to Watch",
+        "desc": "An in-depth look at upcoming AI breakthroughs.",
+        "vid": {"url": "https://techcraftinsights.com","w": "1920","h": "1080"},
+        "img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
+        "pin": {"url": "https://techcraftinsights.com","w": "1000","h": "1500"}
     },
     "type": "article",
     "author": {"handler": "@alex_dev_26},
     "card": "summary_large_image",
     "article": {
-    "pub": "2026-03-15","mod": "2026-03-18",
+        "pub": "2026-03-15","mod": "2026-03-18",
     "author_url": "https://techcraftinsights.com",
     "about": ["Artificial Intelligence", "Web Development", "Tech Trends"]
     }
