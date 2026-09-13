@@ -37,3 +37,11 @@
   "publisher":{"@id":"{{ org_id }}"},
   "potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"{{ site_url }}/search?q={search_term_string}"},"query-input":"required name=search_term_string"}]}{% endwith %}
 {% endmacro %}
+{% macro breadcrumb_schema(web,page,crumbs) %}
+  {% with page_url = page.url ~ "/#breadcrumb" %}
+  {"@type":"BreadcrumbList","@id":"{{ page_url }}",
+  "itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"{{ web.site_url }}"}
+  {%- if crumbs -%}
+    {%- for name, url in crumbs -%},{"@type":"ListItem","position":{{ loop.index + 1 }},"name":"{{ name }}","item":"{{ url }}"} {%- endfor -%}
+  {%- endif -%} ]}{% endwith %}
+{% endmacro %}
