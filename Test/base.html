@@ -8,7 +8,7 @@
 
     <title>{{ page.title }} | {{ web.site_name }}</title>
     <meta name="description" content="{{ page.desc }}">
-    <link rel="canonical" href="{{ page.url }}">
+    <link rel="canonical" href="{{ web.site_url }}{{ page.url }}">
     {% if page.is_search or page.is_policy %}
     <meta name="robots" content="noindex, follow, noarchive, nosnippet">
     {% elif page.is_blogpost or page.is_pillar or page.is_topiccluster %}
