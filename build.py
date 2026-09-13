@@ -39,27 +39,26 @@ def standard_pages(input_page,context,output_page):
         f.write(template.render(combined_context))
 
 def render_standard_pages():
-"""
-{
-  "page": {
+    """
+    {
+    "page": {
     "url": "https://techcraftinsights.com",
     "title": "The Future of AI: Trends to Watch",
     "desc": "An in-depth look at upcoming AI breakthroughs.",
     "vid": {"url": "https://techcraftinsights.com","w": "1920","h": "1080"},
     "img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
     "pin": {"url": "https://techcraftinsights.com","w": "1000","h": "1500"}
-  },
-  "type": "article",
-  "author": {"handler": "@alex_dev_26},
-  "card": "summary_large_image",
-  "article": {
+    },
+    "type": "article",
+    "author": {"handler": "@alex_dev_26},
+    "card": "summary_large_image",
+    "article": {
     "pub": "2026-03-15","mod": "2026-03-18",
     "author_url": "https://techcraftinsights.com",
     "about": ["Artificial Intelligence", "Web Development", "Tech Trends"]
-  }
-}
-
-"""
+    }
+    }
+    """
     STATIC_SEO = {
       "home": {
         "url":"/",
