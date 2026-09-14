@@ -1,4 +1,4 @@
-    {%- macro og(web,page,type='website',vid=none,article=none) -%}
+why    {%- macro og(web,page,type='website',vid=none,article=none) -%}
 <meta property="og:site_name" content="{{ web.site_name }}">
 <meta property="og:type" content="{{ 'video.other' if vid else type }}">
 <meta property="og:url" content="{{ web.site_url }}{{ page.url }}">
@@ -32,7 +32,7 @@
     {%- endif %}
     {%- endif %}
     {%- endmacro -%}
-    {%- macro pin(pin) -%}
+    {%- macro pin(pin,web) -%}
 <meta name="pinterest:image" content="{{ web.site_url }}{{ pin.url }}">
 <meta name="pinterest:image:width" content="{{ pin.w if pin.w else '1000' }}">
 <meta name="pinterest:image:height" content="{{ pin.h if pin.h else '1500' }}">
