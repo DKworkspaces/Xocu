@@ -87,7 +87,7 @@ def render_standard_pages():
       },
       "contact": {
         "url":"/contact.html","is_contact":True,
-        "title": "Contact With Our Team",
+        "title": "Contact Our Team",
         "desc": "Have a tip, a story pitch, or want to collaborate on a deep dive? Get in touch with our editorial team. Let’s map out the world’s most compelling narratives together.",
         "img": {"url": "/asset/img/","alt": "Abstract digital network visualization","w": "1200","h": "630"},
         "pin": {"url": "/asset/img/","w": "1000","h": "1500"},
