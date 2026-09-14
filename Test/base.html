@@ -15,9 +15,9 @@
     {% else -%}
 <meta name="robots" content="noindex, nofollow">
     {%- endif -%}
-{% include "others/icon.html" -%}
-{% include "others/rss.html" -%}
-{% include "others/sitemap.html" -%}
+{% include "others/icon.html" %}
+{% include "others/rss.html" %}
+{% include "others/sitemap.html" %}
     {% if page.is_home or page.is_about or page.is_contact or page.is_privacy or page.is_editorial or page.is_terms or page.is_fact -%}
 {{- social.og(web,page) -}}
 {{- social.twitter(web,page) -}}
