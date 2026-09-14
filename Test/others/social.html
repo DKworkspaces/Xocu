@@ -1,7 +1,7 @@
     {%- macro og(web,page,type='website',vid=none,article=none) -%}
 <meta property="og:site_name" content="{{ web.site_name }}">
 <meta property="og:type" content="{{ 'video.other' if vid else type }}">
-<meta property="og:url" content="{{ page.url }}">
+<meta property="og:url" content="{{ web.site_url }}{{ page.url }}">
 <meta property="og:title" content="{{ page.title }}">
 <meta property="og:description" content="{{ page.desc }}">
     {%- if vid -%}
@@ -41,7 +41,7 @@
 <meta name="twitter:site" content="{{ web.site_handler }}">
 <meta name="twitter:creator" content="{{ author.handler if author.handler else web.site_handler }}">
 <meta name="twitter:card" content="{{ 'player' if vid else card }}">
-<meta name="twitter:url" content="{{ page.url }}">
+<meta name="twitter:url" content="{{ web.site_url }}{{ page.url }}">
 <meta name="twitter:title" content="{{ page.title }}">
 <meta name="twitter:description" content="{{ page.desc }}">
     {%- if vid -%}
