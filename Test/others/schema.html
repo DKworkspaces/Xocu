@@ -118,8 +118,8 @@
 {# modified #}
 {%- macro webpage_s(web,comp, page,page_type="WebPage",article=none,is_home=False, parent_page=none, items=none) %}
   {%- with site_url= web.site_url, is_policy = page_type in ['TermsAndConditions', 'PrivacyPolicy', 'PolicyPage'],
-    org_id = web.site_url ~ "/#organization",pol_id = web.page.url ~ "/#policy",
-    web_id = web.site_url ~ "/#website",page_id = web.site_url+ web.page.url ~ "/#webpage",
+    org_id = web.site_url ~ "/#organization",pol_id = web.site_url + page.url ~ "/#policy",
+    web_id = web.site_url ~ "/#website",page_id = web.site_url+ page.url ~ "/#webpage",
     crumb_id = web.site_url + page.url ~ "/#breadcrumb",
     org_pointer = '{"@type":"Organization","@id":"' ~ web.site_url ~ '/#organization","name":"' ~ web.site_name ~ '"}' -%}
 
