@@ -136,7 +136,7 @@ def render_standard_pages():
         standard_pages('page/terms.html',{"page": STATIC_SEO["terms"],"crumbs":static_crumbs["terms"]},'terms.html')
     if a.has_editorial:
         standard_pages('page/editorial.html',{"page": STATIC_SEO["editorial"],"crumbs":static_crumbs["editorial"]},'editorial.html')
-    if a.has_fact:
+    if a.has_fact_check:
         standard_pages('page/fact.html',{"page": STATIC_SEO["fact"],"crumbs":static_crumbs["fact"]},'fact.html')
 
 def build_topic_clusters():
