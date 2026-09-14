@@ -130,19 +130,19 @@
     {%- else -%}"isPartOf":{"@type":"WebSite","@id":"{{ web_id }}","url":"{{ web.site_url }}"},{%- endif -%}
   {%- if not is_home -%}"breadcrumb":{"@id":"{{ crumb_id }}"},{%- endif -%}
   {%- if page.date_published -%}"datePublished":"{{ page.date_published }}","dateModified":"{{ page.date_modified | default(page.date_published) }}",{%- endif -%}
-  "inLanguage":"{{ web.site_lang | default('en-US') }}",
   {%- if page.hero_image -%}"primaryImageOfPage":{"@type":"ImageObject","@id":"{{ (page.url ~ "/#primaryimage") }}","url":"{{ page.hero_image }}","caption":"{{ page.title }}"},{%- endif -%}
+  "inLanguage":"{{ web.site_lang | default('en-US') }}"
 
   {%- if page_type == "AboutPage" or page_type == "ContactPage" -%}
-    "mainEntity":{{ org_pointer }}
+    ,"mainEntity":{{ org_pointer }}
   {%- elif is_policy -%}
-    "about":{{ org_pointer }},
-    "publishingPrinciples":{"@type":"CreativeWork","@id":"{{ pol_id }}"},
+    ,"about":{{ org_pointer }},
+    "publishingPrinciples":{"@type":"CreativeWork","@id":"{{ pol_id }}"}
   {%- elif page_type == "CollectionPage" or page_type == "WebPage" and not is_home -%}
-    {%- if page.about -%}"about":{{ _topics(page.about) }},{%- endif -%}
-    {%- if page.mention -%}"mentions":{{ _topics(page.mention) }}{%- endif -%}
+    {%- if page.about -%},"about":{{ _topics(page.about) }}{%- endif -%}
+    {%- if page.mention -%},"mentions":{{ _topics(page.mention) }}{%- endif -%}
 {#.  this is place where i have to add article of cluster or category page for ranking purpose #}
-    "mainEntity":{
+    ,"mainEntity":{
       "@type":"Article","@id":"{{ page.url }}#article",
       "headline":"{{ article.headline }}","description":"{{ article.intro }}",
       "articleBody":"{{ article.content }}"
