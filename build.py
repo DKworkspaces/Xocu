@@ -78,7 +78,7 @@ def render_standard_pages():
         "pin": {"url": "/asset/img/","w": "1000","h": "1500"}
       },
       "about": {
-        "url":"/about.html","is_about":True,
+        "url":"/about","is_about":True,
         "title": "About Our Mission and Story",
         "desc": "Meet the team uncovering the hidden currents of global power, human history, and technological friction. Learn why we treat blogging like high-production documentary filmmaking.",
         "img": {"url": "/asset/img/","alt": "Abstract digital network visualization","w": "1200","h": "630"},
@@ -128,7 +128,7 @@ def render_standard_pages():
     }
     a=GLOBAL_SITE_DATA["web"]["policies"]
     standard_pages('page/index.html',{"page": STATIC_SEO["home"]},'index.html')
-    standard_pages('page/about.html',{"page": STATIC_SEO["about"],"crumbs":static_crumbs["about"]},'about.html')
+    standard_pages('page/about.html',{"page": STATIC_SEO["about"],"crumbs":static_crumbs["about"]},'about/index.html')
     standard_pages('page/contact.html',{"page": STATIC_SEO["contact"],"crumbs":static_crumbs["contact"]},'contact.html')
     if a["has_privacy"]:
         standard_pages('page/privacy.html',{"page": STATIC_SEO["privacy"],"crumbs":static_crumbs["privacy"]},'privacy.html')
