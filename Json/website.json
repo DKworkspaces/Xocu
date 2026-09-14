@@ -7,14 +7,14 @@
     "site_handler": "@Xocu",
     "is_sitemap":true,
     "knows_about_list":[
-      ["Thing","geopolitics","Geopolitics",["https://wikipedia.org"]],
-      ["Thing","internationa-relations","International Relations",["https://wikipedia.org"]],
-      ["Thing","world-history","World History",["https://wikipedia.org"]],
-      ["Thing","history-of-science","History of Science",["https://wikipedia.org"]],
-      ["Thing","history-of-technology","History of Technology",["https://wikipedia.org"]],
-      ["Thing","documentary-film","Documentary Film",["https://wikipedia.org"]],
-      ["Thing","systems-thinking","Systems Thinking",["https://wikipedia.org"]],
-      ["Thing","technological-evolution","Technological Evolution",["https://wikipedia.org"]]
+      ["Thing","geopolitics","Geopolitics",["https://en.wikipedia.org/wiki/Geopolitics","https://www.wikidata.org/wiki/Q159385"]],
+      ["Thing","international-relations","International Relations",["https://en.wikipedia.org/wiki/Category:History_of_international_relations","https://www.wikidata.org/wiki/Q55022436"]],
+      ["Thing","world-history","World History",["https://en.wikipedia.org/wiki/World_history_(field)","https://www.wikidata.org/wiki/Q6457238"]],
+      ["Thing","history-of-science","History of Science",["https://en.wikipedia.org/wiki/History_of_science","https://www.wikidata.org/wiki/Q201486"]],
+      ["Thing","history-of-technology","History of Technology",["https://en.wikipedia.org/wiki/History_of_technology","https://www.wikidata.org/wiki/Q465352"]],
+      ["Thing","documentary-film","Documentary Film",["https://en.wikipedia.org/wiki/Documentary_film","https://www.wikidata.org/wiki/Q93204"]],
+      ["Thing","systems-thinking","Systems Thinking",["https://en.wikipedia.org/wiki/Systems_thinking","https://www.wikidata.org/wiki/Q1340474"]],
+      ["Thing","technological-evolution","Technological Evolution",["https://en.wikipedia.org/wiki/Technological_evolution","https://www.wikidata.org/wiki/Q1756507"]]
     ],
     "slogan":"History. Science. Power. Interlinked",
     "social_links":["https://linkedin.com","https://twitter.com"],
