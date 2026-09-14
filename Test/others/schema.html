@@ -128,7 +128,7 @@
   "description":"{{ page.desc }}",
   {%- if parent_page -%}"isPartOf":{"@type":"{{ parent_page.type }}","@id":"{{ parent_page.url }}/#webpage","url":"{{ parent_page.url }}"},
     {%- else -%}"isPartOf":{"@type":"WebSite","@id":"{{ web_id }}","url":"{{ web.site_url }}"},{%- endif -%}
-  {%- if not is_home -%}"breadcrumb":{"@type":"BreadcrumbList","@id":"{{ crumb_id }}"},{%- endif -%}
+  {%- if not is_home -%}"breadcrumb":{"@id":"{{ crumb_id }}"},{%- endif -%}
   {%- if page.date_published -%}"datePublished":"{{ page.date_published }}","dateModified":"{{ page.date_modified | default(page.date_published) }}",{%- endif -%}
   "inLanguage":"{{ web.site_lang | default('en-US') }}",
   {%- if page.hero_image -%}"primaryImageOfPage":{"@type":"ImageObject","@id":"{{ (page.url ~ "/#primaryimage") }}","url":"{{ page.hero_image }}","caption":"{{ page.title }}"},{%- endif -%}
