@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://w3.org">
+    <title>Xocu</title>
+    <subtitle>A premium production platform publishing interlinked documentaries and deeply researched analytical Articles and video Documentaries across global history, geopolitics, and scientific discovery.</subtitle>
+    <link href="https://dkworkspaces.github.io/Xocu/atom.xml" rel="self" type="application/atom+xml" />
+    <link href="https://dkworkspaces.github.io/Xocu/" />
+    <updated>2026-09-14T15:54:12Z</updated>
+    <id>https://dkworkspaces.github.io/Xocu/</id>
+    
+    
+    <entry>
+        <title>Building Custom Crawlers Safely</title>
+        <link href="https://dkworkspaces.github.io/Xocu/blog/building-crawlers" />
+        <id>https://dkworkspaces.github.io/Xocu/blog/building-crawlers</id>
+        <updated>2026-09-11T12:00:00Z</updated>
+        <summary type="html"><![CDATA[<p>An in-depth look at implementing rate limiting and robots parsing.</p>]]></summary>
+        <author>
+            <name>dev-team@example.com</name>
+        </author>
+    </entry>
+    
+    <entry>
+        <title>An Intro to Semantic HTML Structure</title>
+        <link href="https://dkworkspaces.github.io/Xocu/blog/semantic-html" />
+        <id>https://dkworkspaces.github.io/Xocu/blog/semantic-html</id>
+        <updated>2026-09-10T15:30:00Z</updated>
+        <summary type="html"><![CDATA[<p>Why choosing the correct elements makes a massive difference for accessibility.</p>]]></summary>
+        <author>
+            <name>seo-lead@example.com</name>
+        </author>
+    </entry>
+    
+</feed>
