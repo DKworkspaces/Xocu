@@ -61,12 +61,12 @@ def render_standard_pages():
     """
         
     static_crumbs = {
-      "about":[ ["About Us", "/about.html"] ],
-      "contact":[ ["Contact Us", "/contact.html"] ],
-      "privacy":[ ["Privacy Policy", "/privacy.html"] ],
-      "editorial":[ ["Editorial Policy", "/editorial.html"] ],
-      "terms":[ ["Terms Of Service", "/terms.html"] ],
-      "fact":[ ["Fact-Check Policy", "/fact.html"] ]
+      "about":[ ["About Us", "/about"] ],
+      "contact":[ ["Contact Us", "/contact"] ],
+      "privacy":[ ["Privacy Policy", "/privacy"] ],
+      "editorial":[ ["Editorial Policy", "/editorial"] ],
+      "terms":[ ["Terms Of Service", "/terms"] ],
+      "fact":[ ["Fact-Check Policy", "/fact"] ]
     }
 
     STATIC_SEO = {
@@ -78,7 +78,7 @@ def render_standard_pages():
         "pin": {"url": "/asset/img/","w": "1000","h": "1500"}
       },
       "about": {
-        "url":"/about.html","is_about":True,
+        "url":"/about","is_about":True,
         "title": "About Our Mission and Story",
         "desc": "Meet the team uncovering the hidden currents of global power, human history, and technological friction. Learn why we treat blogging like high-production documentary filmmaking.",
         "img": {"url": "/asset/img/","alt": "Abstract digital network visualization","w": "1200","h": "630"},
@@ -86,7 +86,7 @@ def render_standard_pages():
         "crumbs": [ ["About Us", "/about.html"] ]
       },
       "contact": {
-        "url":"/contact.html","is_contact":True,
+        "url":"/contact","is_contact":True,
         "title": "Contact Our Team",
         "desc": "Have a tip, a story pitch, or want to collaborate on a deep dive? Get in touch with our editorial team. Let’s map out the world’s most compelling narratives together.",
         "img": {"url": "/asset/img/","alt": "Abstract digital network visualization","w": "1200","h": "630"},
@@ -94,7 +94,7 @@ def render_standard_pages():
         "crumbs": [ ["Contact Us", "/contact.html"] ]
       },
       "privacy": {
-        "url":"/privacy.html","is_privacy":True,
+        "url":"/privacy","is_privacy":True,
         "title": "Privacy Policy | How We Protect Your Data",
         "desc": "Read our privacy policy to understand how we collect, protect, and use your data. Your privacy is paramount as we explore global narratives.",
         "img": {"url": "/asset/img/","alt": "Abstract digital network visualization","w": "1200","h": "630"},
@@ -102,7 +102,7 @@ def render_standard_pages():
         "crumbs": [ ["Privacy Policy", "/privacy.html"] ]
       },
       "editorial": {
-        "url":"/editorial.html","is_editorial":True,
+        "url":"/editorial","is_editorial":True,
         "title": "Editorial Policy | Our Standards & Ethics",
         "desc": "Discover our rigorous editorial standards. Learn how we maintain objective, independent, and high-quality storytelling at the intersection of history, science, and global politics.",
         "img": {"url": "/asset/img/","alt": "Abstract digital network visualization","w": "1200","h": "630"},
@@ -110,7 +110,7 @@ def render_standard_pages():
         "crumbs": [ ["Editorial Policy", "/editorial.html"] ]
       },
       "terms": {
-        "url":"/terms.html","is_terms":True,
+        "url":"/terms","is_terms":True,
         "title": "Terms of Service | User Agreement & Guidelines",
         "desc": "Review the terms of service governing your use of our platform. Read our guidelines for community conduct, intellectual property, and content usage.",
         "img": {"url": "/asset/img/","alt": "Abstract digital network visualization","w": "1200","h": "630"},
@@ -118,7 +118,7 @@ def render_standard_pages():
         "crumbs": [ ["Terms Of Service", "/terms.html"] ]
       },
       "fact": {
-        "url":"/fact.html","is_fact":True,
+        "url":"/fact","is_fact":True,
         "title": "Fact-Check Policy | Our Commitment to Accuracy",
         "desc": "Accuracy is our foundational rule. Learn about our multi-layered fact-checking process, primary source verification, and how we correct errors transparently.",
         "img": {"url": "/asset/img/","alt": "Abstract digital network visualization","w": "1200","h": "630"},
@@ -128,16 +128,16 @@ def render_standard_pages():
     }
     a=GLOBAL_SITE_DATA["web"]["policies"]
     standard_pages('page/index.html',{"page": STATIC_SEO["home"]},'index.html')
-    standard_pages('page/about.html',{"page": STATIC_SEO["about"],"crumbs":static_crumbs["about"]},'about.html')
-    standard_pages('page/contact.html',{"page": STATIC_SEO["contact"],"crumbs":static_crumbs["contact"]},'contact.html')
+    standard_pages('page/about.html',{"page": STATIC_SEO["about"],"crumbs":static_crumbs["about"]},'about/index.html')
+    standard_pages('page/contact.html',{"page": STATIC_SEO["contact"],"crumbs":static_crumbs["contact"]},'contact/index.html')
     if a["has_privacy"]:
-        standard_pages('page/privacy.html',{"page": STATIC_SEO["privacy"],"crumbs":static_crumbs["privacy"]},'privacy.html')
+        standard_pages('page/privacy.html',{"page": STATIC_SEO["privacy"],"crumbs":static_crumbs["privacy"]},'privacy/index.html')
     if a["has_terms"]:
-        standard_pages('page/terms.html',{"page": STATIC_SEO["terms"],"crumbs":static_crumbs["terms"]},'terms.html')
+        standard_pages('page/terms.html',{"page": STATIC_SEO["terms"],"crumbs":static_crumbs["terms"]},'terms/index.html')
     if a["has_editorial"]:
-        standard_pages('page/editorial.html',{"page": STATIC_SEO["editorial"],"crumbs":static_crumbs["editorial"]},'editorial.html')
+        standard_pages('page/editorial.html',{"page": STATIC_SEO["editorial"],"crumbs":static_crumbs["editorial"]},'editorial/index.html')
     if a["has_fact_check"]:
-        standard_pages('page/fact.html',{"page": STATIC_SEO["fact"],"crumbs":static_crumbs["fact"]},'fact.html')
+        standard_pages('page/fact.html',{"page": STATIC_SEO["fact"],"crumbs":static_crumbs["fact"]},'fact/index.html')
 
 def build_topic_clusters():
     TOPIC_CLUSTERS = {
