@@ -69,7 +69,7 @@ def render_standard_pages():
         "date_modified": "2026-09-08T08:00:00Z",
         "mention": [
             ["Thing","documentary-film","Documentary Film",["https://en.wikipedia.org/wiki/Documentary_film","https://www.wikidata.org/wiki/Q93204"]],
-            ["Thing","investigative-journalism","Investigative Journalism",["https://en.wikipedia.org/wiki/Investigative_journalism","https://www.wikidata.org/wiki/Q1127717,]],
+            ["Thing","investigative-journalism","Investigative Journalism",["https://en.wikipedia.org/wiki/Investigative_journalism","https://www.wikidata.org/wiki/Q1127717"]],
             ["Thing","digital-content","Digital Content",["https://en.wikipedia.org/wiki/Digital_content","https://www.wikidata.org/wiki/Q11320476"]]
         ],
         "crumbs": [ ["About Us", "/about.html"] ]
