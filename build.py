@@ -59,6 +59,16 @@ def render_standard_pages():
     }
     }
     """
+        
+    static_crumbs = {
+      "about":[ ["About Us", "/about.html"] ],
+      "contact":[ ["Contact Us", "/contact.html"] ],
+      "privacy":[ ["Privacy Policy", "/privacy.html"] ],
+      "editorial":[ ["Editorial Policy", "/editorial.html"] ],
+      "terms":[ ["Terms Of Service", "/terms.html"] ],
+      "fact":[ ["Fact-Check Policy", "/fact.html"] ]
+    }
+
     STATIC_SEO = {
       "home": {
         "url":"/","is_home":True,
@@ -117,12 +127,12 @@ def render_standard_pages():
       }
     }
     standard_pages('page/index.html',{"page": STATIC_SEO["home"]},'index.html')
-    standard_pages('page/about.html',{"page": STATIC_SEO["about"]},'about.html')
-    standard_pages('page/contact.html',{"page": STATIC_SEO["contact"]},'contact.html')
-    standard_pages('page/privacy.html',{"page": STATIC_SEO["privacy"]},'privacy.html')
-    standard_pages('page/terms.html',{"page": STATIC_SEO["editorial"]},'terms.html')
-    standard_pages('page/editorial.html',{"page": STATIC_SEO["terms"]},'editorial.html')
-    standard_pages('page/fact.html',{"page": STATIC_SEO["fact"]},'fact.html')
+    standard_pages('page/about.html',{"page": STATIC_SEO["about"],"crumbs":static_crumbs["about"]},'about.html')
+    standard_pages('page/contact.html',{"page": STATIC_SEO["contact"],"crumbs":static_crumbs["contact"]},'contact.html')
+    standard_pages('page/privacy.html',{"page": STATIC_SEO["privacy"],"crumbs":static_crumbs["privacy"]},'privacy.html')
+    standard_pages('page/terms.html',{"page": STATIC_SEO["editorial"],"crumbs":static_crumbs["terms"]},'terms.html')
+    standard_pages('page/editorial.html',{"page": STATIC_SEO["terms"],"crumbs":static_crumbs["editorial"]},'editorial.html')
+    standard_pages('page/fact.html',{"page": STATIC_SEO["fact"],"crumbs":static_crumbs["fact"]},'fact.html')
 
 def build_topic_clusters():
     TOPIC_CLUSTERS = {
