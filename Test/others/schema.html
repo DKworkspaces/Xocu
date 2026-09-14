@@ -157,6 +157,6 @@
    "inLanguage":"{{ web.site_lang | default('en-US') }}",
    "author":{{ org_pointer }},"publisher":{{ org_pointer }},"copyrightHolder":{{ org_pointer }}
    {%- if page.date_published -%},"datePublished":"{{ page.date_published }}","dateModified":"{{ page.date_modified | default(page.date_published) }}"{%- endif -%}
-  }{%- endif -%}
+  }{%- endif -%}{% endwith %}
 {% endmacro %}
 
