@@ -306,10 +306,10 @@ def generate_sitemap():
     items = {
       # Core static pages
       "static_pages": [
-        {"slug": "", "changefreq": "daily", "priority": "1.0"},       # Homepage
-        {"slug": "about.html", "changefreq": "monthly", "priority": "0.5"},
-        {"slug": "contact.html", "changefreq": "monthly", "priority": "0.5"},
-        {"slug": "privacy.html", "changefreq": "yearly", "priority": "0.3"},
+        {"slug": "/", "changefreq": "daily", "priority": "1.0"},       # Homepage
+        {"slug": "/about", "changefreq": "monthly", "priority": "0.5"},
+        {"slug": "/contact", "changefreq": "monthly", "priority": "0.5"},
+        {"slug": "/privacy", "changefreq": "yearly", "priority": "0.3"},
       ],
       # Topic Clusters (Pillar pages and their sub-pages)
       "topic_clusters": [
