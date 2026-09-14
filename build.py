@@ -61,49 +61,49 @@ def render_standard_pages():
     """
     STATIC_SEO = {
       "home": {
-        "url":"/","is_home":true,
+        "url":"/","is_home": true,
         "title": "Home | Hall of Documentary",
         "desc": "Explore the invisible forces shaping our world. We connect the dots between historical echoes, scientific breakthroughs, and modern geopolitics through cinematic, deep-dive investigative journalism.",
         "img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
         "pin": {"url": "https://techcraftinsights.com","w": "1000","h": "1500"}
       },
       "about": {
-        "url":"/about.html","is_about":true,
+        "url":"/about.html","is_about": true,
         "title": "About Our Mission and Story",
         "desc": "Meet the team uncovering the hidden currents of global power, human history, and technological friction. Learn why we treat blogging like high-production documentary filmmaking.",
         "img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
         "pin": {"url": "https://techcraftinsights.com","w": "1000","h": "1500"}
       },
       "contact": {
-        "url":"/contact.html","is_contact":true,
+        "url":"/contact.html","is_contact": true,
         "title": "Contact With Our Team",
         "desc": "Have a tip, a story pitch, or want to collaborate on a deep dive? Get in touch with our editorial team. Let’s map out the world’s most compelling narratives together.",
         "img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
         "pin": {"url": "https://techcraftinsights.com","w": "1000","h": "1500"}
       },
       "privacy": {
-        "url":"/privacy.html","is_privacy":true,
+        "url":"/privacy.html","is_privacy": true,
         "title": "Privacy Policy | How We Protect Your Data",
         "desc": "Read our privacy policy to understand how we collect, protect, and use your data. Your privacy is paramount as we explore global narratives.",
         "img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
         "pin": {"url": "https://techcraftinsights.com","w": "1000","h": "1500"}
       },
       "editorial": {
-        "url":"/editorial.html","is_editorial":true,
+        "url":"/editorial.html","is_editorial": true,
         "title": "Editorial Policy | Our Standards & Ethics",
         "desc": "Discover our rigorous editorial standards. Learn how we maintain objective, independent, and high-quality storytelling at the intersection of history, science, and global politics.",
         "img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
         "pin": {"url": "https://techcraftinsights.com","w": "1000","h": "1500"}
       },
       "terms": {
-        "url":"/terms.html","is_terms":true,
+        "url":"/terms.html","is_terms": true,
         "title": "Terms of Service | User Agreement & Guidelines",
         "desc": "Review the terms of service governing your use of our platform. Read our guidelines for community conduct, intellectual property, and content usage.",
         "img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
         "pin": {"url": "https://techcraftinsights.com","w": "1000","h": "1500"}
       },
       "fact": {
-        "url":"/fact.html","is_fact":true,
+        "url":"/fact.html","is_fact": true,
         "title": "Fact-Checking Policy | Our Commitment to Accuracy",
         "desc": "Accuracy is our foundational rule. Learn about our multi-layered fact-checking process, primary source verification, and how we correct errors transparently.",
         "img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
