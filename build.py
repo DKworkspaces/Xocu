@@ -61,14 +61,14 @@ def render_standard_pages():
     """
     STATIC_SEO = {
       "home": {
-        "url":GLOBAL_SITE_DATA.web.site_url~"/","is_home":True,
+        "url":"/","is_home":True,
         "title": "Home | Hall of Documentary",
         "desc": "Explore the invisible forces shaping our world. We connect the dots between historical echoes, scientific breakthroughs, and modern geopolitics through cinematic, deep-dive investigative journalism.",
         "img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
         "pin": {"url": "https://techcraftinsights.com","w": "1000","h": "1500"}
       },
       "about": {
-        "url":GLOBAL_SITE_DATA.web.site_url~"/about.html","is_about":True,
+        "url":"/about.html","is_about":True,
         "title": "About Our Mission and Story",
         "desc": "Meet the team uncovering the hidden currents of global power, human history, and technological friction. Learn why we treat blogging like high-production documentary filmmaking.",
         "img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
@@ -76,7 +76,7 @@ def render_standard_pages():
         "crumbs": [ ["About Us", "https://techcorp.com"] ]
       },
       "contact": {
-        "url":GLOBAL_SITE_DATA.web.site_url~"/contact.html","is_contact":True,
+        "url":"/contact.html","is_contact":True,
         "title": "Contact With Our Team",
         "desc": "Have a tip, a story pitch, or want to collaborate on a deep dive? Get in touch with our editorial team. Let’s map out the world’s most compelling narratives together.",
         "img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
@@ -84,7 +84,7 @@ def render_standard_pages():
         "crumbs": [ ["Contact Us", "https://techcorp.com"] ]
       },
       "privacy": {
-        "url":GLOBAL_SITE_DATA.web.site_url~"/privacy.html","is_privacy":True,
+        "url":"/privacy.html","is_privacy":True,
         "title": "Privacy Policy | How We Protect Your Data",
         "desc": "Read our privacy policy to understand how we collect, protect, and use your data. Your privacy is paramount as we explore global narratives.",
         "img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
@@ -92,7 +92,7 @@ def render_standard_pages():
         "crumbs": [ ["Privacy Policy", "https://techcorp.com"] ]
       },
       "editorial": {
-        "url":GLOBAL_SITE_DATA.web.site_url~"/editorial.html","is_editorial":True,
+        "url":"/editorial.html","is_editorial":True,
         "title": "Editorial Policy | Our Standards & Ethics",
         "desc": "Discover our rigorous editorial standards. Learn how we maintain objective, independent, and high-quality storytelling at the intersection of history, science, and global politics.",
         "img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
@@ -100,7 +100,7 @@ def render_standard_pages():
         "crumbs": [ ["Editorial Policy", "https://techcorp.com"] ]
       },
       "terms": {
-        "url":GLOBAL_SITE_DATA.web.site_url~"/terms.html","is_terms":True,
+        "url":"/terms.html","is_terms":True,
         "title": "Terms of Service | User Agreement & Guidelines",
         "desc": "Review the terms of service governing your use of our platform. Read our guidelines for community conduct, intellectual property, and content usage.",
         "img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
@@ -108,7 +108,7 @@ def render_standard_pages():
         "crumbs": [ ["Terms Of Service", "https://techcorp.com"] ]
       },
       "fact": {
-        "url":GLOBAL_SITE_DATA.web.site_url~"/fact.html","is_fact":True,
+        "url":"/fact.html","is_fact":True,
         "title": "Fact-Check Policy | Our Commitment to Accuracy",
         "desc": "Accuracy is our foundational rule. Learn about our multi-layered fact-checking process, primary source verification, and how we correct errors transparently.",
         "img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
