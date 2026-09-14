@@ -65,7 +65,7 @@
 {%- macro breadcrumb_s(web,page,crumbs) -%}
   {%- with page_url = web.site_url + page.url ~ "/#breadcrumb" -%}
   {"@type":"BreadcrumbList","@id":"{{ page_url }}",
-  "itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"{{ web.site_url }}"}
+  "itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"{{ web.site_url }}/"}
   {%- if crumbs -%}
     {%- for name, url in crumbs -%},{"@type":"ListItem","position":{{ loop.index + 1 }},"name":"{{ name }}","item":"{{ url }}"} {%- endfor -%}
   {%- endif -%} ]}{%- endwith -%}
