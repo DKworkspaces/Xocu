@@ -31,13 +31,13 @@
     {% endif %}
     
     <script type="application/ld+json">{"@context": "https://schema.org","@graph": [
-    {% if page.is_home %}{{ sch.org_s(web,comp) }},{{ webpage_s(web,comp,page,page_type="WebPage",is_home=True) }}
-    {% elif page.is_about %}{{ sch.webpage_s(web,comp,page,page_type="AboutPage") }},{{ breadcrumb_s(web,page,crumbs) }}
-    {% elif page.is_contact %}{{ sch.webpage_s(web,comp,page,page_type="ContactPage") }},{{ breadcrumb_s(web,page,crumbs) }}
-    {% elif page.is_privacy %}{{ sch.webpage_s(web,comp,page,page_type="PrivacyPolicy") }},{{ breadcrumb_s(web,page,crumbs) }}
-    {% elif page.is_editorial %}{{ sch.webpage_s(web,comp,page,page_type="PolicyPage") }},{{ breadcrumb_s(web,page,crumbs) }}
-    {% elif page.is_terms %}{{ sch.webpage_s(web,comp,page,page_type="TermsAndConditions") }},{{ breadcrumb_s(web,page,crumbs) }}
-    {% elif page.is_fact %}{{ sch.webpage_s(web,comp,page,page_type="PolicyPage") }},{{ breadcrumb_s(web,page,crumbs) }}
+    {% if page.is_home %}{{ sch.org_s(web,comp) }},{{ sch.webpage_s(web,comp,page,page_type="WebPage",is_home=True) }}
+    {% elif page.is_about %}{{ sch.webpage_s(web,comp,page,page_type="AboutPage") }},{{ sch.breadcrumb_s(web,page,crumbs) }}
+    {% elif page.is_contact %}{{ sch.webpage_s(web,comp,page,page_type="ContactPage") }},{{ sch.breadcrumb_s(web,page,crumbs) }}
+    {% elif page.is_privacy %}{{ sch.webpage_s(web,comp,page,page_type="PrivacyPolicy") }},{{ sch.breadcrumb_s(web,page,crumbs) }}
+    {% elif page.is_editorial %}{{ sch.webpage_s(web,comp,page,page_type="PolicyPage") }},{{ sch.breadcrumb_s(web,page,crumbs) }}
+    {% elif page.is_terms %}{{ sch.webpage_s(web,comp,page,page_type="TermsAndConditions") }},{{ sch.breadcrumb_s(web,page,crumbs) }}
+    {% elif page.is_fact %}{{ sch.webpage_s(web,comp,page,page_type="PolicyPage") }},{{ sch.breadcrumb_s(web,page,crumbs) }}
     {% endif %}
     ]}
     </script>
