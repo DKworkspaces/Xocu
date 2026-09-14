@@ -129,11 +129,14 @@ def render_standard_pages():
     standard_pages('page/index.html',{"page": STATIC_SEO["home"]},'index.html')
     standard_pages('page/about.html',{"page": STATIC_SEO["about"],"crumbs":static_crumbs["about"]},'about.html')
     standard_pages('page/contact.html',{"page": STATIC_SEO["contact"],"crumbs":static_crumbs["contact"]},'contact.html')
-    if GLOBAL_SITE_DATA.web.poli.has_privacy:
+    if GLOBAL_SITE_DATA.web.policies.has_privacy:
         standard_pages('page/privacy.html',{"page": STATIC_SEO["privacy"],"crumbs":static_crumbs["privacy"]},'privacy.html')
-    standard_pages('page/terms.html',{"page": STATIC_SEO["terms"],"crumbs":static_crumbs["terms"]},'terms.html')
-    standard_pages('page/editorial.html',{"page": STATIC_SEO["editorial"],"crumbs":static_crumbs["editorial"]},'editorial.html')
-    standard_pages('page/fact.html',{"page": STATIC_SEO["fact"],"crumbs":static_crumbs["fact"]},'fact.html')
+    if GLOBAL_SITE_DATA.web.policies.has_terms:
+        standard_pages('page/terms.html',{"page": STATIC_SEO["terms"],"crumbs":static_crumbs["terms"]},'terms.html')
+    if GLOBAL_SITE_DATA.web.policies.has_editorial:
+        standard_pages('page/editorial.html',{"page": STATIC_SEO["editorial"],"crumbs":static_crumbs["editorial"]},'editorial.html')
+    if GLOBAL_SITE_DATA.web.policies.has_fact:
+        standard_pages('page/fact.html',{"page": STATIC_SEO["fact"],"crumbs":static_crumbs["fact"]},'fact.html')
 
 def build_topic_clusters():
     TOPIC_CLUSTERS = {
