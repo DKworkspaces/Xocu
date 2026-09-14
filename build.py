@@ -39,27 +39,6 @@ def standard_pages(input_page,context,output_page):
         f.write(template.render(combined_context))
 
 def render_standard_pages():
-    """
-    {
-    "page": {
-        "url": "https://techcraftinsights.com",
-        "title": "The Future of AI: Trends to Watch",
-        "desc": "An in-depth look at upcoming AI breakthroughs.",
-        "vid": {"url": "https://techcraftinsights.com","w": "1920","h": "1080"},
-        "img": {"url": "https://techcraftinsights.com","alt": "Abstract digital network visualization","w": "1200","h": "630"},
-        "pin": {"url": "https://techcraftinsights.com","w": "1000","h": "1500"}
-    },
-    "type": "article",
-    "author": {"handler": "@alex_dev_26},
-    "card": "summary_large_image",
-    "article": {
-        "pub": "2026-03-15","mod": "2026-03-18",
-    "author_url": "https://techcraftinsights.com",
-    "about": ["Artificial Intelligence", "Web Development", "Tech Trends"]
-    }
-    }
-    """
-        
     static_crumbs = {
       "about":[ ["About Us", "/about"] ],
       "contact":[ ["Contact Us", "/contact"] ],
@@ -68,14 +47,16 @@ def render_standard_pages():
       "terms":[ ["Terms Of Service", "/terms"] ],
       "fact":[ ["Fact-Check Policy", "/fact"] ]
     }
-
     STATIC_SEO = {
       "home": {
         "url":"/","is_home":True,
         "title": "Home | Hall of Documentary",
         "desc": "Explore the invisible forces shaping our world. We connect the dots between historical echoes, scientific breakthroughs, and modern geopolitics through cinematic, deep-dive investigative journalism.",
         "img": {"url": "/asset/img/","alt": "Abstract digital network visualization","w": "1200","h": "630"},
-        "pin": {"url": "/asset/img/","w": "1000","h": "1500"}
+        "pin": {"url": "/asset/img/","w": "1000","h": "1500"},
+        "hero_image": "/asset/img/",
+        "date_published": "2026-01-15T08:00:00Z",
+        "date_modified": "2026-09-08T08:00:00Z"
       },
       "about": {
         "url":"/about","is_about":True,
@@ -83,6 +64,14 @@ def render_standard_pages():
         "desc": "Meet the team uncovering the hidden currents of global power, human history, and technological friction. Learn why we treat blogging like high-production documentary filmmaking.",
         "img": {"url": "/asset/img/","alt": "Abstract digital network visualization","w": "1200","h": "630"},
         "pin": {"url": "/asset/img/","w": "1000","h": "1500"},
+        "hero_image": "/asset/img/",
+        "date_published": "2026-01-15T08:00:00Z",
+        "date_modified": "2026-09-08T08:00:00Z",
+        "mention": [
+            ["Thing","documentary-film","Documentary Film",["https://en.wikipedia.org/wiki/Documentary_film","https://www.wikidata.org/wiki/Q93204"]],
+            ["Thing","investigative-journalism","Investigative Journalism",["https://en.wikipedia.org/wiki/Investigative_journalism","https://www.wikidata.org/wiki/Q1127717,]],
+            ["Thing","digital-content","Digital Content",["https://en.wikipedia.org/wiki/Digital_content","https://www.wikidata.org/wiki/Q11320476"]]
+        ],
         "crumbs": [ ["About Us", "/about.html"] ]
       },
       "contact": {
@@ -91,6 +80,9 @@ def render_standard_pages():
         "desc": "Have a tip, a story pitch, or want to collaborate on a deep dive? Get in touch with our editorial team. Let’s map out the world’s most compelling narratives together.",
         "img": {"url": "/asset/img/","alt": "Abstract digital network visualization","w": "1200","h": "630"},
         "pin": {"url": "/asset/img/","w": "1000","h": "1500"},
+        "hero_image": "/asset/img/",
+        "date_published": "2026-01-15T08:00:00Z",
+        "date_modified": "2026-09-08T08:00:00Z",
         "crumbs": [ ["Contact Us", "/contact.html"] ]
       },
       "privacy": {
@@ -99,6 +91,9 @@ def render_standard_pages():
         "desc": "Read our privacy policy to understand how we collect, protect, and use your data. Your privacy is paramount as we explore global narratives.",
         "img": {"url": "/asset/img/","alt": "Abstract digital network visualization","w": "1200","h": "630"},
         "pin": {"url": "/asset/img/","w": "1000","h": "1500"},
+        "hero_image": "/asset/img/",
+        "date_published": "2026-01-15T08:00:00Z",
+        "date_modified": "2026-09-08T08:00:00Z",
         "crumbs": [ ["Privacy Policy", "/privacy.html"] ]
       },
       "editorial": {
@@ -107,6 +102,9 @@ def render_standard_pages():
         "desc": "Discover our rigorous editorial standards. Learn how we maintain objective, independent, and high-quality storytelling at the intersection of history, science, and global politics.",
         "img": {"url": "/asset/img/","alt": "Abstract digital network visualization","w": "1200","h": "630"},
         "pin": {"url": "/asset/img/","w": "1000","h": "1500"},
+        "hero_image": "/asset/img/",
+        "date_published": "2026-01-15T08:00:00Z",
+        "date_modified": "2026-09-08T08:00:00Z",
         "crumbs": [ ["Editorial Policy", "/editorial.html"] ]
       },
       "terms": {
@@ -115,6 +113,9 @@ def render_standard_pages():
         "desc": "Review the terms of service governing your use of our platform. Read our guidelines for community conduct, intellectual property, and content usage.",
         "img": {"url": "/asset/img/","alt": "Abstract digital network visualization","w": "1200","h": "630"},
         "pin": {"url": "/asset/img/","w": "1000","h": "1500"},
+        "hero_image": "/asset/img/",
+        "date_published": "2026-01-15T08:00:00Z",
+        "date_modified": "2026-09-08T08:00:00Z",
         "crumbs": [ ["Terms Of Service", "/terms.html"] ]
       },
       "fact": {
@@ -123,6 +124,9 @@ def render_standard_pages():
         "desc": "Accuracy is our foundational rule. Learn about our multi-layered fact-checking process, primary source verification, and how we correct errors transparently.",
         "img": {"url": "/asset/img/","alt": "Abstract digital network visualization","w": "1200","h": "630"},
         "pin": {"url": "/asset/img/","w": "1000","h": "1500"},
+        "hero_image": "/asset/img/",
+        "date_published": "2026-01-15T08:00:00Z",
+        "date_modified": "2026-09-08T08:00:00Z",
         "crumbs": [ ["Fact-Check Policy", "/fact.html"] ]
       }
     }
