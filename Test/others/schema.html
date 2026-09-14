@@ -67,7 +67,7 @@
   {"@type":"BreadcrumbList","@id":"{{ page_url }}",
   "itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"{{ web.site_url }}/"}
   {%- if crumbs -%}
-    {%- for name, url in crumbs -%},{"@type":"ListItem","position":{{ loop.index + 1 }},"name":"{{ name }}","item":"{{ url }}"} {%- endfor -%}
+    {%- for name, url in crumbs -%},{"@type":"ListItem","position":{{ loop.index + 1 }},"name":"{{ name }}","item":"{{ web.site_url }}{{ url }}"} {%- endfor -%}
   {%- endif -%} ]}{%- endwith -%}
 {%- endmacro -%}
 {%- macro blog_s(post, web) -%}
