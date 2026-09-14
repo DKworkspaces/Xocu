@@ -15,7 +15,7 @@
 <meta property="og:image:height" content="{{ vid.w if vid.w else '1280' }}">
 <meta property="og:image:width" content="{{ vid.h if vid.h else '1280' }}">
     {%- else -%}
-<meta property="og:image" content="{{ page.img.url }}">
+<meta property="og:image" content="{{ web.site_url }}{{ page.img.url }}">
 <meta property="og:image:alt" content="{{ page.img.alt or ('Cover photo for ' ~ page.title) }}">
 <meta property="og:image:height" content="{{ page.img.h if page.img.h else '1280' }}">
 <meta property="og:image:width" content="{{ page.img.w if page.img.w else '720' }}">
@@ -33,7 +33,7 @@
     {%- endif %}
     {%- endmacro -%}
     {%- macro pin(pin) -%}
-<meta name="pinterest:image" content="{{ pin.url }}">
+<meta name="pinterest:image" content="{{ web.site_url }}{{ pin.url }}">
 <meta name="pinterest:image:width" content="{{ pin.w if pin.w else '1000' }}">
 <meta name="pinterest:image:height" content="{{ pin.h if pin.h else '1500' }}">
     {%- endmacro -%}
@@ -51,7 +51,7 @@
 <meta name="twitter:image" content="{{ vid.img.url }}">
 <meta name="twitter:image:alt" content="{{ vid.img.alt }}">
     {%- else -%}
-<meta name="twitter:image" content="{{ page.img.url }}">
+<meta name="twitter:image" content="{{ web.site_url }}{{ page.img.url }}">
 <meta name="twitter:image:alt" content="{{ page.img.alt or ('Cover photo for ' ~ page.title) }}">
     {%- endif -%}
     {%- endmacro -%}
