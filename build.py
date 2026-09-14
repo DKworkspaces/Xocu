@@ -71,7 +71,7 @@ def render_standard_pages():
 
     STATIC_SEO = {
       "home": {
-        "url":"/","is_home":True,
+        "url":"/index.html","is_home":True,
         "title": "Home | Hall of Documentary",
         "desc": "Explore the invisible forces shaping our world. We connect the dots between historical echoes, scientific breakthroughs, and modern geopolitics through cinematic, deep-dive investigative journalism.",
         "img": {"url": "/asset/img/","alt": "Abstract digital network visualization","w": "1200","h": "630"},
