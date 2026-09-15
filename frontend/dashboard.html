@@ -24,6 +24,10 @@
             <a href="add_user.html" class="nav-link" style="background: #007bff;">➕ Add New Admin Record</a>
         </div>
         <button onclick="logout()" class="logout-btn">Terminate Session</button>
+        <!-- Insert this layout snippet inside your dashboard panel controls -->
+<button onclick="saveAndExit()" style="background: #fd7e14; color: white; border: none; padding: 12px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; margin-left: 10px;">
+    💾 Save & Exit Server
+</button>      
     </div>
 
     <script>
@@ -39,6 +43,33 @@
             localStorage.clear();
             window.location.href = "index.html";
         }
+
+    async function saveAndExit() {
+        if (!confirm("Are you sure you want to save all changes and turn off the admin server? This will take the database offline instantly.")) {
+            return;
+        }
+
+        const backendUrl = localStorage.getItem('ADMIN_BACKEND_URL');
+        
+        try {
+            const response = await fetch(`${backendUrl}/exit-session`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert("Database state committed! The server is now shutting down safely.");
+                localStorage.clear(); // Wipe browser access session tokens
+                window.location.href = "index.html"; // Move back to gateway page
+            } else {
+                alert("Failed to communicate exit routine validation protocol.");
+            }
+        } catch (err) {
+            alert("Connection error or server already offline.");
+        }
+    }
     </script>
 </body>
 </html>
