@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Portal Gateway</title>
+    <style>
+        body { font-family: system-ui, sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 340px; }
+        h2 { margin-top: 0; text-align: center; color: #1c1e21; }
+        input { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccd0d5; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        label { font-weight: bold; display: block; margin-bottom: 6px; font-size: 14px; color: #606770; }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <h2>Gateway Control</h2>
+        
+        <label for="ngrokUrl">Active Live Tunnel URL:</label>
+        <input type="text" id="ngrokUrl" placeholder="https://ngrok-free.app">
+
+        <form id="loginForm">
+            <label for="user">Username</label>
+            <input type="text" id="user" required placeholder="e.g. admin_one">
+            
+            <label for="pass">Password</label>
+            <input type="password" id="pass" required placeholder="••••••••">
+            
+            <button type="submit">Log In</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const serverUrl = document.getElementById('ngrokUrl').value.trim();
+            
+            if(!serverUrl) {
+                alert("Please retrieve the active Ngrok Tunnel URL from your GitHub Action run logs.");
+                return;
+            }
+
+            const payload = {
+                username: document.getElementById('user').value,
+                password: document.getElementById('pass').value
+            };
+
+            try {
+                const response = await fetch(`${serverUrl}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Cache global network routing configs into local browser storage
+                    localStorage.setItem('ADMIN_BACKEND_URL', serverUrl);
+                    localStorage.setItem('SESSION_TOKEN', data.token);
+                    
+                    // Shift browser focus to the core node directory page
+                    window.location.href = "dashboard.html";
+                } else {
+                    alert(data.detail || "Invalid entries match.");
+                }
+            } catch (err) {
+                alert("Target runtime environment could not be processed. Verify your 4-hour Action state is active.");
+            }
+        });
+    </script>
+</body>
+  </html>
+  
