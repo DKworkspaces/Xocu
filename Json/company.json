@@ -1,9 +1,0 @@
-{
-    "name": "Xocu",
-    "legal_name": "Xocu llp",
-    "desc": "A leading production of interlinked Documentary about the invisible forces shaping our world.",
-    "founded_year": "2026",
-    "logo": {"url": "https://dkworkspaces.github.io/Xocu/assets/logo_lg.jpeg","caption": "Xocu Official Logo","width": 1024,"height": 1024},
-    "contact": {"email": "support@xocu.com","lang": ["en"]},
-    "address": {"locality": "Poona","region": "Maharashtra","pin": "411058","country": "IN"}
-}
