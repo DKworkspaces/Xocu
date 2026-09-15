@@ -17,9 +17,12 @@
         <h1>🔒 Security Console Root</h1>
         <p>Your session communication layer is fully configured. Data syncing is managed by GitHub automation engines.</p>
         <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-        
-        <!-- Redirect across secondary static pages safely -->
-        <a href="database_view.html" class="nav-link">📊 View Database Entries</a>
+
+        <!-- Navigate across static pages safely -->
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+            <a href="database_view.html" class="nav-link">📊 View Database Entries</a>
+            <a href="add_user.html" class="nav-link" style="background: #007bff;">➕ Add New Admin Record</a>
+        </div>
         <button onclick="logout()" class="logout-btn">Terminate Session</button>
     </div>
 
