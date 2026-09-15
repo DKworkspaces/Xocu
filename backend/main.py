@@ -3,6 +3,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import database
 
+import subprocess
+import os
+from fastapi import BackgroundTasks
+
+
+def run_shutdown():
+    """Executes the Git save-and-kill routine script."""
+    # Find the absolute path to our shutdown script
+    script_path = os.path.join(os.path.dirname(__file__), 'shutdown.sh')
+    subprocess.run(["bash", script_path])
+    
+
 app = FastAPI()
 
 # Allow CORS requests securely from any web browser or GitHub Pages link
@@ -56,3 +68,10 @@ def create_admin(data: CreateUserRequest):
     else:
         raise HTTPException(status_code=400, detail="Username already exists in the system.")
                 
+@app.post("/exit-session")
+def exit_session(background_tasks: BackgroundTasks):
+    """Securely triggers a database commit and workflow termination."""
+    # Run the shutdown in the background so the server has time to reply 'Success' to the browser first
+    background_tasks.add_task(run_shutdown)
+    return {"status": "terminating", "message": "Save sequence active. Cloud runner closing down safely."}
+    
