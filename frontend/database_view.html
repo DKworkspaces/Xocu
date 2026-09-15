@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Database Matrix Monitor</title>
+    <style>
+        body { font-family: system-ui, sans-serif; margin: 40px; background: #f8f9fa; }
+        .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); max-width: 700px; margin: 0 auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #dee2e6; padding: 12px; text-align: left; }
+        th { background: #e9ecef; }
+        .back-btn { display: inline-block; margin-bottom: 20px; color: #007bff; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="dashboard.html" class="back-btn">⬅️ Return to Control Panel</a>
+        <h2>SQLite Core File Records: <code>admins</code></h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Row Entry ID</th>
+                    <th>System Username</th>
+                </tr>
+            </thead>
+            <tbody id="gridOutput">
+                <tr><td colspan="2" style="text-align: center; color: #888;">Connecting to active runtime instance...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const backendUrl = localStorage.getItem('ADMIN_BACKEND_URL');
+        
+        if (!backendUrl) {
+            window.location.href = "index.html";
+        }
+
+        async function populateGrid() {
+            try {
+                const response = await fetch(`${backendUrl}/records`);
+                const rows = await response.json();
+                
+                const gridOutput = document.getElementById('gridOutput');
+                gridOutput.innerHTML = ""; // Wipe table status loaders
+                
+                if (rows.length === 0) {
+                    gridOutput.innerHTML = `<tr><td colspan="2" style="text-align:center;">No entries matching rows inside SQLite context.</td></tr>`;
+                    return;
+                }
+
+                rows.forEach(item => {
+                    gridOutput.innerHTML += `
+                        <tr>
+                            <td><strong>${item.id}</strong></td>
+                            <td><code>${item.username}</code></td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                alert("Data communication failed. Check if your 4-hour backend server expired.");
+            }
+        }
+
+        // Initialize retrieval query pipeline immediately on load
+        populateGrid();
+    </script>
+</body>
+</html>
