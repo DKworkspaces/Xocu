@@ -33,10 +33,21 @@ jobs:
 
       - name: Install and Configure Ngrok
         run: |
-          curl -s https://amazonaws.com | sudo gpg --dearmor -o /usr/share/keyrings/ngrok.gpg
-          echo "deb [signed-by=/usr/share/keyrings/ngrok.gpg] https://amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
-          sudo apt-get update && sudo apt-get install ngrok
-          ngrok config add-authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
+                # 1. Update the certificate authorities to prevent download drops
+                sudo apt-get update && sudo apt-get install -y ca-certificates curl gnupg
+                
+                # 2. Safely download and store the ngrok repository signature key
+                sudo mkdir -p /etc/apt/keyrings
+                curl -fsSL https://amazonaws.com | sudo gpg --dearmor -o /etc/apt/keyrings/ngrok.gpg --yes
+                
+                # 3. Add the ngrok package channel to apt sources using the saved key reference
+                echo "deb [signed-by=/etc/apt/keyrings/ngrok.gpg] https://amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
+                
+                # 4. Update the package database and download the ngrok binary engine
+                sudo apt-get update && sudo apt-get install -y ngrok
+                
+                # 5. Connect your free validation credentials
+                ngrok config add-authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
 
       - name: Start FastAPI Backend in Background
         run: |
