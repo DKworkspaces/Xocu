@@ -37,13 +37,21 @@ jobs:
         
       - name: Start Localtunnel & Display Public URL
         run: |
+          # 1. Give FastAPI 5 seconds to fully boot up
           sleep 5
+          
+          # 2. Start localtunnel in the BACKGROUND (&) and save logs to a file
+          npx lt --port 8000 > localtunnel.log 2>&1 &
+          
+          # 3. Wait 5 seconds for localtunnel to secure a public URL link
+          sleep 5
+          
+          # 4. Read the text file and print the generated URL out to the console logs
           echo "=========================================================="
           echo "YOUR LIVE ADMIN BACKEND URL IS:"
-          # This boots the tunnel pointing to port 8000 and prints the URL to logs
-          npx lt --port 8000
+          cat localtunnel.log | grep -o 'https://[^ ]*' || cat localtunnel.log
           echo "=========================================================="
-          
+
       - name: Keep Server Active for 4 Hours
         run: |
           echo "Server is now live. System accepting data logs..."
