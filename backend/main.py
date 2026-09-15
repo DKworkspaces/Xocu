@@ -20,6 +20,11 @@ database.init_db()
 class LoginRequest(BaseModel):
     username: str
     password: str
+    
+class CreateUserRequest(BaseModel):
+    username: str
+    password: str
+
 
 @app.post("/login")
 def handle_login(data: LoginRequest):
@@ -37,3 +42,17 @@ def get_records():
         return database.fetch_all_users()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/add-admin")
+def create_admin(data: CreateUserRequest):
+    """Processes new administrative records submitted via the frontend form."""
+    if not data.username or not data.password:
+        raise HTTPException(status_code=400, detail="Fields cannot be left blank.")
+        
+    success = database.add_new_admin(data.username, data.password)
+    
+    if success:
+        return {"status": "success", "message": f"Account '{data.username}' registered successfully!"}
+    else:
+        raise HTTPException(status_code=400, detail="Username already exists in the system.")
+                
