@@ -3,7 +3,7 @@ name: Deploy Frontend Pages to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - Db
     paths:
       - 'frontend/**' # Triggers only when changes are made inside the frontend folder
   workflow_dispatch: # Allows you to trigger this deployment manually if needed
