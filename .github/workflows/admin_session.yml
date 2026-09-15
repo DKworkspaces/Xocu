@@ -2,11 +2,6 @@ name: Start 4-Hour Admin Session
 
 on:
   workflow_dispatch:
-    inputs:
-      log_level:
-        description: 'Session log level'
-        required: false
-        default: 'info'
   push:
     branches:
       - Db  # 👈 This tells GitHub explicitly that the 'main' branch owns this workflow!
@@ -31,39 +26,24 @@ jobs:
           pip install -r backend/requirements.txt
           pip install uvicorn
 
-      - name: Install and Configure Ngrok
-        run: |
-                # 1. Update the certificate authorities to prevent download drops
-                sudo apt-get update && sudo apt-get install -y ca-certificates curl gnupg
-                
-                # 2. Safely download and store the ngrok repository signature key
-                sudo mkdir -p /etc/apt/keyrings
-                curl -fsSL https://amazonaws.com | sudo gpg --dearmor -o /etc/apt/keyrings/ngrok.gpg --yes
-                
-                # 3. Add the ngrok package channel to apt sources using the saved key reference
-                echo "deb [signed-by=/etc/apt/keyrings/ngrok.gpg] https://amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
-                
-                # 4. Update the package database and download the ngrok binary engine
-                sudo apt-get update && sudo apt-get install -y ngrok
-                
-                # 5. Connect your free validation credentials
-                ngrok config add-authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
-
+      - name: Install Localtunnel via NPM
+        # Node and npm are already pre-installed on the runner. Zero keys needed!
+        run: sudo npm install -g localtunnel
+        
       - name: Start FastAPI Backend in Background
         run: |
           cd backend
           uvicorn main:app --host 127.0.0.1 --port 8000 &
         
-      - name: Start Ngrok Tunnel & Display Public URL
+      - name: Start Localtunnel & Display Public URL
         run: |
-          ngrok http 8000 --log=stdout > ngrok.log &
           sleep 5
-          export PUBLIC_URL=$(curl -s http://127.0.0 | jq -r '.tunnels.public_url')
           echo "=========================================================="
           echo "YOUR LIVE ADMIN BACKEND URL IS:"
-          echo "$PUBLIC_URL"
+          # This boots the tunnel pointing to port 8000 and prints the URL to logs
+          npx lt --port 8000
           echo "=========================================================="
-
+          
       - name: Keep Server Active for 4 Hours
         run: |
           echo "Server is now live. System accepting data logs..."
