@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Insert Database Record</title>
+    <style>
+        body { font-family: system-ui, sans-serif; margin: 40px; background: #f8f9fa; }
+        .form-card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); max-width: 400px; margin: 0 auto; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 6px; font-weight: bold; color: #495057; }
+        input { width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button:hover { background: #0056b3; }
+        .back-btn { display: inline-block; margin-bottom: 20px; color: #6c757d; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="form-card">
+        <a href="dashboard.html" class="back-btn">⬅️ Return to Control Panel</a>
+        <h2>Create Administrative Record</h2>
+        <p style="color: #6c757d; font-size: 14px;">This will append a row entry directly inside the SQLite database container.</p>
+        <hr style="border:0; border-top: 1px solid #dee2e6; margin-bottom: 20px;">
+
+        <form id="recordForm">
+            <div class="input-group">
+                <label for="newUsername">Desired Username</label>
+                <input type="text" id="newUsername" required placeholder="e.g. admin_four">
+            </div>
+
+            <div class="input-group">
+                <label for="newPassword">Access Password</label>
+                <input type="password" id="newPassword" required placeholder="••••••••">
+            </div>
+
+            <button type="submit">Write to SQLite</button>
+        </form>
+    </div>
+
+    <script>
+        // Security Gatekeeper: Verify connection configuration exists
+        const backendUrl = localStorage.getItem('ADMIN_BACKEND_URL');
+        if (!backendUrl) {
+            window.location.href = "index.html";
+        }
+
+        document.getElementById('recordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const payload = {
+                username: document.getElementById('newUsername').value.trim(),
+                password: document.getElementById('newPassword').value
+            };
+
+            try {
+                const response = await fetch(`${backendUrl}/add-admin`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert(data.message);
+                    document.getElementById('recordForm').reset(); // Clear form fields
+                } else {
+                    alert(`Error: ${data.detail || "Could not write database record."}`);
+                }
+            } catch (err) {
+                alert("Network communication timeout. Your 4-hour runtime window might have expired.");
+            }
+        });
+    </script>
+</body>
+</html>
