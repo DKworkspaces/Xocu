@@ -10,7 +10,12 @@ git add form_data.db || true
 git commit -m "chore: safe-exit administrative database sync [skip ci]" || echo "No changes recorded."
 git push
 
-echo "=== DATABASE SAVED. TERMINATING RUNNER RUN ==="
-# 3. Kill the parent shell process to stop the GitHub Action instantly
-pkill -9 -f "sleep 14400"
-pkill -9 -f "uvicorn"
+echo "=== DATABASE SAVED. FORCING IMMEDIATE ACTION TERMINATION ==="
+
+# 3. Kill every background process tied to this runner session cleanly
+pkill -f "uvicorn"
+pkill -f "lt" # Kills the localtunnel process
+pkill -f "sleep"
+
+# 4. The Ultimate Killswitch: Forces the entire GitHub Actions container job runner to end instantly
+sudo kill -9 $(pgrep -f "runner/runners") || kill -9 $PPID
