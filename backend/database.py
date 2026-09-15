@@ -48,3 +48,18 @@ def fetch_all_users():
         cursor.execute("SELECT id, username FROM admins")
         # Returns raw list arrays back to the application route
         return [{"id": row[0], "username": row[1]} for row in cursor.fetchall()]
+def add_new_admin(username, password):
+    """Insert a new administrative row entry into SQLite safely."""
+    try:
+        with sqlite3.connect(DATABASE_NAME) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "INSERT INTO admins (username, password) VALUES (?, ?)",
+                (username, password)
+            )
+            conn.commit()
+            return True
+    except sqlite3.IntegrityError:
+        # Triggers if the username already exists due to the UNIQUE constraint
+        return False
+
