@@ -9,7 +9,7 @@ on:
         default: 'info'
   push:
     branches:
-      - main  # 👈 This tells GitHub explicitly that the 'main' branch owns this workflow!
+      - Db  # 👈 This tells GitHub explicitly that the 'main' branch owns this workflow!
 
 permissions:
   contents: write
