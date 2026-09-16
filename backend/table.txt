@@ -1,0 +1,190 @@
+pages_or_posts Table
+id, author_id,title,slug,content,status,type,
+published_at
+
+categories Table
+id,name,slug,parent_id
+
+tags Table
+id,name,slug
+
+post_tags Table (Many-to-Many Relationship Link)
+post_id,tag_id
+
+
+
+
+
+
+
+
+
+from datetime import datetime
+from typing import List, Optional
+from sqlalchemy import create_engine, ForeignKey, Table, Column, String, CheckConstraint
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+
+# 1. Base Class for Models
+class Base(DeclarativeBase):
+    pass
+
+# 2. Reusable Mixin for Common Columns
+class TimestampMixin:
+    id: Mapped[int] = mapped_column(primary_key=True)
+    
+    # func.now() lets the database handle the default timestamp generation
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now())
+    
+    # server_default sets initial time; onupdate updates it whenever rows change
+    modified_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    
+    # Soft delete flag (False = Active, True = Deleted)
+    is_deleted: Mapped[bool] = mapped_column(default=False, server_default="0")
+
+class StatusWorkflowMixin:
+    """Handles publishing lifecycle states, content type categorization, and release dates."""
+    status: Mapped[str] = mapped_column(String(20), default="draft")
+    type: Mapped[str] = mapped_column(String(20), default="page")
+    published_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    @declared_attr
+    def __table_args__(cls):
+        """Dynamically applies constraints to the table inheriting this mixin."""
+        return (
+            CheckConstraint(
+                "status IN ('draft', 'published', 'archived')", name=f"check_{cls.__tablename__}_valid_status"),
+            CheckConstraint(
+                "type IN ('page', 'blog_post', 'landing_page', 'system_category')", name=f"check_{cls.__tablename__}_valid_type"),
+        )
+
+class IdentifiableContentMixin:
+    """Handles standard text grouping, naming conventions, and resource locator slugs."""
+    name: Mapped[str] = mapped_column(String(150), nullable=False)
+    slug: Mapped[str] = mapped_column(String(150), unique=True, nullable=False)
+    desc: Mapped[Optional[str]] = mapped_column(String(500), nullable=True) # Short summary/description
+
+
+
+
+class MetaMixin:
+    
+    og_type: Mapped[str] = mapped_column(
+        String(50), default="website",server_default="website")
+    twitter_card_type: Mapped[str] = mapped_column(
+        String(50), default="summary_large_image",server_default="summary_large_image")
+
+    @declared_attr
+    def __table_args__(cls):
+      return(
+            CheckConstraint(
+                "og_type IN ('website', 'article','video.other')", name="check_valid_og_type"),
+            CheckConstraint(
+                "twitter_card_type IN ('summary', 'summary_large_image', 'player')", name="check_valid_twitter_card_type"),
+        )
+
+
+# 2. Junction Table for Many-to-Many Relationship (Posts <-> Tags)
+# In SQLAlchemy, simple join tables without extra data are defined via Table
+post_tags = Table(
+    "post_tags",
+    Base.metadata,
+    Column("post_id", ForeignKey("pages_or_posts.id", ondelete="CASCADE"), primary_key=True),
+    Column("tag_id", ForeignKey("tags.id", ondelete="CASCADE"), primary_key=True),
+)
+
+# 3. Tables Models
+class User(TimestampMixin,Base):
+    __tablename__ = "users"
+    
+    username: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
+    email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
+    password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
+    role: Mapped[str] = mapped_column(String(20), default="subscriber")
+    
+    # Relationships
+    posts: Mapped[List["PageOrPost"]] = relationship(back_populates="author")
+    
+    __table_args__ = (
+        CheckConstraint(role.in_(["admin", "editor", "subscriber"]), name="check_valid_role"),
+    )
+
+
+class Category(TimestampMixin,IdentifiableContentMixin,MetaMixin,Base):
+    __tablename__ = "categories"
+    
+    parent_id: Mapped[Optional[int]] = mapped_column(ForeignKey("categories.id", ondelete="SET NULL"))
+
+    # Relationships
+    posts: Mapped[List["PageOrPost"]] = relationship(back_populates="category")
+
+
+class PageOrPost(TimestampMixin,StatusWorkflowMixin,IdentifiableContentMixin,MetaMixin,Base):
+    __tablename__ = "pages_or_posts"
+    
+    author_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="RESTRICT"), nullable=False)
+    category_id: Mapped[Optional[int]] = mapped_column(ForeignKey("categories.id", ondelete="SET NULL"))
+    content: Mapped[str] = mapped_column(nullable=False)
+
+    # --- Self-Referential Pillar-Cluster Properties ---
+    # If pillar_id is NULL, this post acts as a primary Pillar Page.
+    # If pillar_id points to another post ID, it is marked as a Cluster Spoke.
+    pillar_id: Mapped[Optional[int]] = mapped_column(ForeignKey("pages_or_posts.id", ondelete="SET NULL"), nullable=True)
+
+    # Relationships
+    # One-to-Many: PageOrPost holds a collection list containing multiple independent MediaAsset instances
+    media_elements: Mapped[List["MediaAsset"]] = relationship(back_populates="post", cascade="all, delete-orphan",order_by="MediaAsset.sort_order")
+    author: Mapped["User"] = relationship(back_populates="posts")
+    category: Mapped[Optional["Category"]] = relationship(back_populates="posts")
+    tags: Mapped[List["Tag"]] = relationship(secondary=post_tags, back_populates="posts")
+
+    # 1. Cluster Spokes link: Fetches all child posts belonging to this pillar page
+    cluster_spokes: Mapped[List["PageOrPost"]] = relationship("PageOrPost",back_populates="pillar_hub",remote_side="PageOrPost.pillar_id")
+    
+    # 2. Pillar Hub link: Backlink pointing from a spoke up to its parent pillar page
+    pillar_hub: Mapped[Optional["PageOrPost"]] = relationship("PageOrPost",back_populates="cluster_spokes",remote_side="PageOrPost.id")
+
+
+    __table_args__ = (
+        CheckConstraint(status.in_(["draft", "published", "archived"]), name="check_valid_status"),
+        CheckConstraint(type.in_(["page", "blog_post"]), name="check_valid_type"),
+    )
+
+
+class Tag(TimestampMixin,IdentifiableContentMixin,MetaMixin,Base):
+    __tablename__ = "tags"
+    
+    # Relationships
+    posts: Mapped[List["PageOrPost"]] = relationship(secondary=post_tags, back_populates="tags")
+
+
+class MediaAsset(TimestampMixin, Base):
+    """Stores multiple explicit rich media content attachments linked to site entities."""
+    __tablename__ = "media_assets"
+
+    # Foreign Key connects this asset back directly to a specific target post
+    # ON DELETE CASCADE ensures if the post is deleted, all its media elements drop instantly
+    post_id: Mapped[int] = mapped_column(ForeignKey("pages_or_posts.id", ondelete="CASCADE"), nullable=False)
+    
+    caption: Mapped[Optional[str]] = mapped_column(String(255), nullable=True) # Descriptive text or title label
+    media_url: Mapped[str] = mapped_column(String(512), nullable=False)        # Streaming layout or asset pointer link
+    sort_order: Mapped[int] = mapped_column(Integer, default=0, server_default="0") # Controls layout hierarchy order
+    
+    media_type: Mapped[str] = mapped_column(String(50), default="video", server_default="video")
+    media_platform: Mapped[str] = mapped_column(String(50), default="local", server_default="local")
+
+    # Relationships
+    post: Mapped["PageOrPost"] = relationship(back_populates="media_elements")
+
+    __table_args__ = (
+        CheckConstraint(
+            "media_type IN ('video', 'audio', 'image', 'document', 'interactive')", 
+            name="check_media_assets_valid_type"
+        ),
+        CheckConstraint(
+            "media_platform IN ('local', 'youtube', 'vimeo', 'soundcloud', 'spotify', 'wistia', 'aws_s3')", 
+            name="check_media_assets_valid_platform"
+        ),
+    )
+
