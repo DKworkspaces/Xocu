@@ -33,12 +33,10 @@ class TimestampMixin:
     id: Mapped[int] = mapped_column(primary_key=True)
     
     # func.now() lets the database handle the default timestamp generation
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now())
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     
     # server_default sets initial time; onupdate updates it whenever rows change
-    modified_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    modified_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     
     # Soft delete flag (False = Active, True = Deleted)
     is_deleted: Mapped[bool] = mapped_column(default=False, server_default="0")
@@ -53,10 +51,8 @@ class StatusWorkflowMixin:
     def __table_args__(cls):
         """Dynamically applies constraints to the table inheriting this mixin."""
         return (
-            CheckConstraint(
-                "status IN ('draft', 'published', 'archived')", name=f"check_{cls.__tablename__}_valid_status"),
-            CheckConstraint(
-                "type IN ('page', 'blog_post', 'landing_page', 'system_category')", name=f"check_{cls.__tablename__}_valid_type"),
+            CheckConstraint("status IN ('draft', 'published', 'archived')", name=f"check_{cls.__tablename__}_valid_status"),
+            CheckConstraint("type IN ('page', 'blog_post', 'landing_page', 'system_category')", name=f"check_{cls.__tablename__}_valid_type"),
         )
 
 class IdentifiableContentMixin:
@@ -70,18 +66,14 @@ class IdentifiableContentMixin:
 
 class MetaMixin:
     
-    og_type: Mapped[str] = mapped_column(
-        String(50), default="website",server_default="website")
-    twitter_card_type: Mapped[str] = mapped_column(
-        String(50), default="summary_large_image",server_default="summary_large_image")
+    og_type: Mapped[str] = mapped_column(String(50),default="website",server_default="website")
+    twitter_card_type: Mapped[str] = mapped_column(String(50),default="summary_large_image",server_default="summary_large_image")
 
     @declared_attr
     def __table_args__(cls):
       return(
-            CheckConstraint(
-                "og_type IN ('website', 'article','video.other')", name="check_valid_og_type"),
-            CheckConstraint(
-                "twitter_card_type IN ('summary', 'summary_large_image', 'player')", name="check_valid_twitter_card_type"),
+            CheckConstraint("og_type IN ('website', 'article','video.other')", name="check_valid_og_type"),
+            CheckConstraint("twitter_card_type IN ('summary', 'summary_large_image', 'player')", name="check_valid_twitter_card_type"),
         )
 
 
