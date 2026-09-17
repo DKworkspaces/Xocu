@@ -61,9 +61,9 @@ class StatusWorkflowMixin:
 
 class IdentifiableContentMixin:
     """Handles standard text grouping, naming conventions, and resource locator slugs."""
-    name: Mapped[str] = mapped_column(String(150), nullable=False)
+    name: Mapped[str] = mapped_column(String(150),unique=True,  nullable=False)
     slug: Mapped[str] = mapped_column(String(150), unique=True, nullable=False)
-    desc: Mapped[Optional[str]] = mapped_column(String(500), nullable=True) # Short summary/description
+    desc: Mapped[Optional[str]] = mapped_column(String(500), nullable=False) # Short summary/description
 
 
 
@@ -118,6 +118,8 @@ class Category(TimestampMixin,IdentifiableContentMixin,MetaMixin,Base):
 
     # Relationships
     posts: Mapped[List["PageOrPost"]] = relationship(back_populates="category")
+
+
 
 
 class PageOrPost(TimestampMixin,StatusWorkflowMixin,IdentifiableContentMixin,MetaMixin,Base):
@@ -179,11 +181,11 @@ class MediaAsset(TimestampMixin, Base):
 
     __table_args__ = (
         CheckConstraint(
-            "media_type IN ('video', 'audio', 'image', 'document', 'interactive')", 
+            "media_type IN ('video', 'image')", 
             name="check_media_assets_valid_type"
         ),
         CheckConstraint(
-            "media_platform IN ('local', 'youtube', 'vimeo', 'soundcloud', 'spotify', 'wistia', 'aws_s3')", 
+            "media_platform IN ('local', 'youtube', 'daliymotion')", 
             name="check_media_assets_valid_platform"
         ),
     )
