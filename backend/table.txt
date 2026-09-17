@@ -190,3 +190,131 @@ class MediaAsset(TimestampMixin, Base):
         ),
     )
 
+
+
+
+
+______________________________________________________
+
+CREATE TABLE categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    slug VARCHAR(120) NOT NULL UNIQUE,
+    description TEXT DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_cats_slug (slug),
+);
+
+
+CREATE TABLE tags (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    slug VARCHAR(120) NOT NULL UNIQUE,
+    description TEXT DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_tags_slug (slug),
+);
+
+
+CREATE TABLE topics (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    type VARCHAR(50) NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    slug VARCHAR(120) NOT NULL UNIQUE,
+    wpedia_url VARCHAR(255) DEFAULT NULL,
+    wdata_url VARCHAR(50) DEFAULT NULL,
+    INDEX idx_topics_type (type),
+    INDEX idx_topics_slug (slug)
+);
+
+CREATE TABLE media_details (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    media_url VARCHAR(512) NOT NULL,
+    width INT NOT NULL,
+    height INT NOT NULL,
+    caption TEXT DEFAULT NULL
+);
+
+CREATE TABLE people (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    slug VARCHAR(255) NOT NULL UNIQUE,
+    name VARCHAR(150) NOT NULL,
+    job_title VARCHAR(100),
+    avatar_url VARCHAR(512),
+    social_profiles JSON,
+    knows_about JSON,
+    INDEX idx_people_slug (slug),
+);
+
+CREATE TABLE video_details (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    post_id INT NOT NULL UNIQUE,
+    video_id VARCHAR(100) NOT NULL,
+    video_platform VARCHAR(50) NOT NULL,
+    width INT,
+    height INT,
+    thumbnail_url VARCHAR(512),
+    upload_time DATETIME,
+    duration INT,
+    INDEX idx_post_id (post_id)
+);
+
+
+CREATE TABLE video_chapters (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    video_id INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    start INT NOT NULL,
+    end INT NOT NULL,
+    url VARCHAR(512),
+    INDEX idx_chapters_video (video_id),   
+    INDEX idx_chapters_timeline (video_id, start_time)
+);
+
+
+CREATE TABLE article_details (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    section VARCHAR(100),
+    tags JSON,
+    author_id INT,
+    summary TEXT,
+);
+
+
+CREATE TABLE posts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    slug VARCHAR(255) NOT NULL UNIQUE,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    hero_image VARCHAR(512) DEFAULT NULL,
+    post_published DATETIME DEFAULT NULL,
+    post_modified DATETIME DEFAULT NULL,
+    post_type ENUM('blogposting', 'techarticle') NOT NULL,
+    language VARCHAR(10) DEFAULT 'en',
+    post_schema JSON DEFAULT NULL,
+    word_count INT DEFAULT 0,
+    robots_type VARCHAR(100) DEFAULT 'index, follow',
+    deleted_at DATETIME DEFAULT NULL,
+    post_status ENUM('draft', 'published', 'archived') NOT NULL DEFAULT 'draft',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_posts_published (post_status, deleted_at, post_published DESC),
+    INDEX idx_sitemap_post (post_status, deleted_at, post_modified DESC)
+);
+
+
+CREATE TABLE standard_pages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    slug VARCHAR(50) NOT NULL UNIQUE,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    page_type ENUM('webpage', 'aboutpage', 'contactpage', 'policypage', 'collectionpage') NOT NULL DEFAULT 'webpage',
+    hero_image VARCHAR(512) DEFAULT NULL,
+    language VARCHAR(10) DEFAULT 'en',
+    robots_type VARCHAR(100) DEFAULT 'index, follow',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_page_slug (slug),
+    INDEX idx_std_pages_sitemap (deleted_at, updated_at DESC);
+);
+
+
