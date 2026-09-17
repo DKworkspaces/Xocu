@@ -310,7 +310,9 @@ CREATE TABLE standard_pages (
     page_type ENUM('webpage', 'aboutpage', 'contactpage', 'policypage', 'collectionpage') NOT NULL DEFAULT 'webpage',
     hero_image VARCHAR(512) DEFAULT NULL,
     language VARCHAR(10) DEFAULT 'en',
-    robots_type VARCHAR(100) DEFAULT 'index, follow',
+    is_index TINYINT(1) NOT NULL DEFAULT 0,
+    is_follow TINYINT(1) NOT NULL DEFAULT 0,
+    is_noarchive TINYINT(1) NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_page_slug (slug),
@@ -318,3 +320,41 @@ CREATE TABLE standard_pages (
 );
 
 
+
+
+
+
+
+
+
+from sqlalchemy import Column, String, Integer, DateTime, Enum, Index, func
+from sqlalchemy.orm import declarative_mixin
+
+
+@declarative_mixin
+class BaseIdentityMixin:
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    created_at = Column(DateTime, server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)
+
+@declarative_mixin
+class SlugMixin:
+    slug = Column(String(255), nullable=False, unique=True)
+
+    @classmethod
+    def __table_cls__(cls, *args, **kwargs):
+        t = super().__table_cls__(*args, **kwargs)
+        Index(f"idx_{t.name}_slug_lookup", t.c.slug)
+        return t
+
+@declarative_mixin
+class StatusTimestampMixin:
+    status = Column(Enum('draft', 'published', 'archived'), default='draft')
+    language = Column(String(5), default='en')
+    published_at = Column(DateTime, nullable=True)
+    deleted_at = Column(DateTime, nullable=True)
+
+    @classmethod
+    def __table_cls__(cls, *args, **kwargs):
+        t = super().__table_cls__(*args, **kwargs)    Index(f"idx_{t.name}_archive_composite", t.c.status, t.c.deleted_at, t.c.published_at.desc())
+        return t
