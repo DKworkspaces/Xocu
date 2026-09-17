@@ -31,41 +31,28 @@ class Base(DeclarativeBase):
 # 2. Reusable Mixin for Common Columns
 class TimestampMixin:
     id: Mapped[int] = mapped_column(primary_key=True)
-    
-    # func.now() lets the database handle the default timestamp generation
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
-    
-    # server_default sets initial time; onupdate updates it whenever rows change
     modified_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
-    
-    # Soft delete flag (False = Active, True = Deleted)
     is_deleted: Mapped[bool] = mapped_column(default=False, server_default="0")
 
 class StatusWorkflowMixin:
-    """Handles publishing lifecycle states, content type categorization, and release dates."""
     status: Mapped[str] = mapped_column(String(20), default="draft")
     type: Mapped[str] = mapped_column(String(20), default="page")
     published_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
 
     @declared_attr
     def __table_args__(cls):
-        """Dynamically applies constraints to the table inheriting this mixin."""
         return (
             CheckConstraint("status IN ('draft', 'published', 'archived')", name=f"check_{cls.__tablename__}_valid_status"),
             CheckConstraint("type IN ('page', 'blog_post', 'landing_page', 'system_category')", name=f"check_{cls.__tablename__}_valid_type"),
         )
 
 class IdentifiableContentMixin:
-    """Handles standard text grouping, naming conventions, and resource locator slugs."""
     name: Mapped[str] = mapped_column(String(150),unique=True,  nullable=False)
     slug: Mapped[str] = mapped_column(String(150), unique=True, nullable=False)
-    desc: Mapped[Optional[str]] = mapped_column(String(500), nullable=False) # Short summary/description
-
-
-
+    desc: Mapped[Optional[str]] = mapped_column(String(500), nullable=False)
 
 class MetaMixin:
-    
     og_type: Mapped[str] = mapped_column(String(50),default="website",server_default="website")
     twitter_card_type: Mapped[str] = mapped_column(String(50),default="summary_large_image",server_default="summary_large_image")
 
@@ -89,7 +76,6 @@ post_tags = Table(
 # 3. Tables Models
 class User(TimestampMixin,Base):
     __tablename__ = "users"
-    
     username: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
@@ -97,7 +83,7 @@ class User(TimestampMixin,Base):
     
     # Relationships
     posts: Mapped[List["PageOrPost"]] = relationship(back_populates="author")
-    
+
     __table_args__ = (
         CheckConstraint(role.in_(["admin", "editor", "subscriber"]), name="check_valid_role"),
     )
@@ -105,7 +91,6 @@ class User(TimestampMixin,Base):
 
 class Category(TimestampMixin,IdentifiableContentMixin,MetaMixin,Base):
     __tablename__ = "categories"
-    
     parent_id: Mapped[Optional[int]] = mapped_column(ForeignKey("categories.id", ondelete="SET NULL"))
 
     # Relationships
@@ -116,7 +101,6 @@ class Category(TimestampMixin,IdentifiableContentMixin,MetaMixin,Base):
 
 class PageOrPost(TimestampMixin,StatusWorkflowMixin,IdentifiableContentMixin,MetaMixin,Base):
     __tablename__ = "pages_or_posts"
-    
     author_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="RESTRICT"), nullable=False)
     category_id: Mapped[Optional[int]] = mapped_column(ForeignKey("categories.id", ondelete="SET NULL"))
     content: Mapped[str] = mapped_column(nullable=False)
@@ -156,15 +140,10 @@ class Tag(TimestampMixin,IdentifiableContentMixin,MetaMixin,Base):
 class MediaAsset(TimestampMixin, Base):
     """Stores multiple explicit rich media content attachments linked to site entities."""
     __tablename__ = "media_assets"
-
-    # Foreign Key connects this asset back directly to a specific target post
-    # ON DELETE CASCADE ensures if the post is deleted, all its media elements drop instantly
     post_id: Mapped[int] = mapped_column(ForeignKey("pages_or_posts.id", ondelete="CASCADE"), nullable=False)
-    
     caption: Mapped[Optional[str]] = mapped_column(String(255), nullable=True) # Descriptive text or title label
     media_url: Mapped[str] = mapped_column(String(512), nullable=False)        # Streaming layout or asset pointer link
     sort_order: Mapped[int] = mapped_column(Integer, default=0, server_default="0") # Controls layout hierarchy order
-    
     media_type: Mapped[str] = mapped_column(String(50), default="video", server_default="video")
     media_platform: Mapped[str] = mapped_column(String(50), default="local", server_default="local")
 
@@ -172,14 +151,8 @@ class MediaAsset(TimestampMixin, Base):
     post: Mapped["PageOrPost"] = relationship(back_populates="media_elements")
 
     __table_args__ = (
-        CheckConstraint(
-            "media_type IN ('video', 'image')", 
-            name="check_media_assets_valid_type"
-        ),
-        CheckConstraint(
-            "media_platform IN ('local', 'youtube', 'daliymotion')", 
-            name="check_media_assets_valid_platform"
-        ),
+        CheckConstraint("media_type IN ('video', 'image')", name="check_media_assets_valid_type"),
+        CheckConstraint("media_platform IN ('local', 'youtube', 'daliymotion')", name="check_media_assets_valid_platform"),
     )
 
 
@@ -188,80 +161,257 @@ class MediaAsset(TimestampMixin, Base):
 
 ______________________________________________________
 
-CREATE TABLE categories (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    slug VARCHAR(120) NOT NULL UNIQUE,
-    description TEXT DEFAULT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    INDEX idx_cats_slug (slug),
-);
+from sqlalchemy import Table, Column, Integer, String, Text, Index,DateTime, func, ForeignKey
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 
-CREATE TABLE tags (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    slug VARCHAR(120) NOT NULL UNIQUE,
-    description TEXT DEFAULT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    INDEX idx_tags_slug (slug),
-);
+    
+Base = declarative_base()
+person_topic_association = Table("person_topics",Base.metadata,Column("person_id", Integer, ForeignKey("people.id", ondelete="CASCADE"), primary_key=True),Column("topic_id", Integer, ForeignKey("topics.id", ondelete="CASCADE"), primary_key=True),)
+category_topic_association = Table("category_topics",Base.metadata,Column("category_id", Integer, ForeignKey("categories.id", ondelete="CASCADE"), primary_key=True),Column("topic_id", Integer, ForeignKey("topics.id", ondelete="CASCADE"), primary_key=True),)
+tag_topic_association = Table("tag_topics",Base.metadata,Column("tag_id", Integer, ForeignKey("tags.id", ondelete="CASCADE"), primary_key=True),Column("topic_id", Integer, ForeignKey("topics.id", ondelete="CASCADE"), primary_key=True),)
+post_category_association = Table("post_categories",Base.metadata,Column("post_id", Integer, ForeignKey("blog_posts.id", ondelete="CASCADE"), primary_key=True),Column("category_id", Integer, ForeignKey("categories.id", ondelete="CASCADE"), primary_key=True),)
+post_tag_association = Table("post_tags",Base.metadata,Column("post_id", Integer, ForeignKey("blog_posts.id", ondelete="CASCADE"), primary_key=True),Column("tag_id", Integer, ForeignKey("tags.id", ondelete="CASCADE"), primary_key=True),)
+post_about_topics = Table("post_about_topics",Base.metadata,Column("post_id", Integer, ForeignKey("blog_posts.id", ondelete="CASCADE"), primary_key=True),Column("topic_id", Integer, ForeignKey("topics.id", ondelete="CASCADE"), primary_key=True),)
+post_mentions_topics = Table("post_mentions_topics",Base.metadata,Column("post_id", Integer, ForeignKey("blog_posts.id", ondelete="CASCADE"), primary_key=True),Column("topic_id", Integer, ForeignKey("topics.id", ondelete="CASCADE"), primary_key=True),)
 
 
-CREATE TABLE topics (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    type VARCHAR(50) NOT NULL,
-    name VARCHAR(100) NOT NULL,
-    slug VARCHAR(120) NOT NULL UNIQUE,
-    wpedia_url VARCHAR(255) DEFAULT NULL,
-    wdata_url VARCHAR(50) DEFAULT NULL,
-    INDEX idx_topics_type (type),
-    INDEX idx_topics_slug (slug)
-);
+    
+class Category(Base):
+    __tablename__ = 'categories'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(100), nullable=False)
+    slug = Column(String(120), unique=True, nullable=False)
+    desc = Column(Text, default=None, nullable=True)
+    created_at = Column(DateTime, server_default=func.now(), nullable=False)                                                       
+    parent_id = Column(Integer, ForeignKey('categories.id', ondelete='CASCADE'), nullable=True, default=None)
+    parent = relationship("Category", remote_side=[id], back_populates="children")
+    children = relationship("Category", back_populates="parent", cascade="all, delete-orphan")
+    blog_posts = relationship("BlogPost", secondary=post_category_association, back_populates="categories")                                                        
+    topics = relationship("Topic", secondary=category_topic_association, back_populates="categories")
+    __table_args__ = (Index('idx_cats_slug', 'slug'),)
+class Tag(Base):
+    __tablename__ = 'tags'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(100), nullable=False)
+    slug = Column(String(120), unique=True, nullable=False)
+    description = Column(Text, default=None, nullable=True)
+    created_at = Column(DateTime, server_default=func.now(), nullable=False)
+    blog_posts = relationship("BlogPost", secondary=post_tag_association, back_populates="tags")
+    topics = relationship("Topic", secondary=tag_topic_association, back_populates="tags")
+    __table_args__ = (Index('idx_tags_slug', 'slug'),)
+class Topic(Base):
+    __tablename__ = "topics"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    type = Column(String(50), nullable=False)
+    name = Column(String(100), nullable=False)
+    slug = Column(String(120), unique=True, nullable=False)
+    wpedia_url = Column(String(255), default=None, nullable=True)
+    wdata_url = Column(String(50), default=None, nullable=True)
+    experts = relationship("Person", secondary=person_topic_association, back_populates="knows_about")
+    categories = relationship("Category", secondary=category_topic_association, back_populates="topics")
+    tags = relationship("Tag", secondary=tag_topic_association, back_populates="topics")
+    posts_about_us = relationship("BlogPost", secondary=post_about_topics, back_populates="about")
+    posts_mentioning_us = relationship("BlogPost", secondary=post_mentions_topics, back_populates="mentions")
+    __table_args__ = (Index("idx_topics_type", "type"),Index("idx_topics_slug", "slug"),)
+ class Person(Base):
+    __tablename__ = "people"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    slug = Column(String(255), unique=True, nullable=False)
+    name = Column(String(150), nullable=False)
+    job_title = Column(String(100), default=None, nullable=True)
+    avatar_url = Column(String(512), default=None, nullable=True)
+    social_profiles = relationship("PersonSocial", back_populates="person", cascade="all, delete-orphan")
+    knows_about = relationship("Topic", secondary=person_topic_association, back_populates="experts")
+    __table_args__ = (Index("idx_people_slug", "slug"),)
+class PersonSocial(Base):
+    __tablename__ = "person_socials"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    person_id = Column(Integer, ForeignKey("people.id", ondelete="CASCADE"), nullable=False)
+    url = Column(String(512), nullable=False)
+    person = relationship("Person", back_populates="social_profiles")
+class Image(Base):
+    __tablename__ = "images"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    media_url = Column(String(512), nullable=False)
+    width = Column(Integer, nullable=False)
+    height = Column(Integer, nullable=False)
+    caption = Column(Text, default=None, nullable=True)
+    blog_post_id = Column(Integer, ForeignKey('blog_posts.id', ondelete='CASCADE'), nullable=True)
+    blog_post = relationship("BlogPost", back_populates="images")
+ class Video(Base):
+    __tablename__ = 'videos'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    post_id = Column(Integer, ForeignKey('blog_posts.id', ondelete='CASCADE'), unique=True, nullable=False)
+    video_id = Column(String(100), nullable=False)
+    video_platform = Column(String(50), nullable=False)
+    width = Column(Integer, default=None, nullable=True)
+    height = Column(Integer, default=None, nullable=True)
+    thumbnail_url = Column(String(512), default=None, nullable=True)
+    upload_time = Column(DateTime, default=None, nullable=True)
+    duration = Column(Integer, default=None, nullable=True)
+    blog_post = relationship("BlogPost", back_populates="video")
+    chapters = relationship("Video", back_populates="video", cascade="all, delete-orphan")
+    __table_args__ = (Index('idx_post_id', 'post_id'),)
+class VideoChapter(Base):
+    __tablename__ = 'video_chapters'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    video_id = Column(Integer, ForeignKey('video_details.id', ondelete='CASCADE'), nullable=False)
+    name = Column(String(255), nullable=False)
+    start = Column(Integer, nullable=False)
+    end = Column(Integer, nullable=False)
+    url = Column(String(512), default=None, nullable=True)
+    video = relationship("Video", back_populates="chapters")
+    __table_args__ = (Index('idx_chapters_video', 'video_id'),Index('idx_chapters_timeline', 'video_id', 'start'),)
+    
+ class BlogPost(Base):
+    __tablename__ = 'blog_posts'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    title = Column(String(200), nullable=False)
+    content = Column(Text, nullable=False)
+    created_at = Column(DateTime, server_default=func.now(), nullable=False)
+    
+    video = relationship("Video", back_populates="blog_post", uselist=False, cascade="all, delete-orphan")
+    images = relationship("Image", back_populates="blog_post", cascade="all, delete-orphan")   
+    categories = relationship("Category", secondary=post_category_association, back_populates="blog_posts")
+    tags = relationship("Tag", secondary=post_tag_association, back_populates="blog_posts")
+    about = relationship("Topic", secondary=post_about_topics, back_populates="posts_about_us")
+    mentions = relationship("Topic", secondary=post_mentions_topics, back_populates="posts_mentioning_us")
 
-CREATE TABLE media_details (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    media_url VARCHAR(512) NOT NULL,
-    width INT NOT NULL,
-    height INT NOT NULL,
-    caption TEXT DEFAULT NULL
-);
+    
+or
+    
 
-CREATE TABLE people (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    slug VARCHAR(255) NOT NULL UNIQUE,
-    name VARCHAR(150) NOT NULL,
-    job_title VARCHAR(100),
-    avatar_url VARCHAR(512),
-    social_profiles JSON,
-    knows_about JSON,
-    INDEX idx_people_slug (slug),
-);
+from datetime import datetime
+from typing import Dict, List, Optional
+from sqlalchemy import Table, Column, ForeignKey, Index, String, Text, func
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
-CREATE TABLE video_details (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    post_id INT NOT NULL UNIQUE,
-    video_id VARCHAR(100) NOT NULL,
-    video_platform VARCHAR(50) NOT NULL,
-    width INT,
-    height INT,
-    thumbnail_url VARCHAR(512),
-    upload_time DATETIME,
-    duration INT,
-    INDEX idx_post_id (post_id)
-);
+    
+class Base(DeclarativeBase):
+    pass
+person_topic_association = Table("person_topics",Base.metadata,Column("person_id", ForeignKey("people.id", ondelete="CASCADE"), primary_key=True),Column("topic_id", ForeignKey("topics.id", ondelete="CASCADE"), primary_key=True),)
+category_topic_association = Table("category_topics",Base.metadata,Column("category_id", ForeignKey("categories.id", ondelete="CASCADE"), primary_key=True),Column("topic_id", ForeignKey("topics.id", ondelete="CASCADE"), primary_key=True),)
+tag_topic_association = Table("tag_topics",Base.metadata,Column("tag_id", ForeignKey("tags.id", ondelete="CASCADE"), primary_key=True),Column("topic_id", ForeignKey("topics.id", ondelete="CASCADE"), primary_key=True),)
+post_category_association = Table("post_categories",Base.metadata,Column("post_id", ForeignKey("blog_posts.id", ondelete="CASCADE"), primary_key=True),Column("category_id", ForeignKey("categories.id", ondelete="CASCADE"), primary_key=True),)
+post_tag_association = Table("post_tags",Base.metadata,Column("post_id", ForeignKey("blog_posts.id", ondelete="CASCADE"), primary_key=True),Column("tag_id", ForeignKey("tags.id", ondelete="CASCADE"), primary_key=True),)
+post_about_topics = Table("post_about_topics",Base.metadata,Column("post_id", ForeignKey("blog_posts.id", ondelete="CASCADE"), primary_key=True),Column("topic_id", ForeignKey("topics.id", ondelete="CASCADE"), primary_key=True),)
+post_mentions_topics = Table("post_mentions_topics",Base.metadata,Column("post_id", ForeignKey("blog_posts.id", ondelete="CASCADE"), primary_key=True),Column("topic_id", ForeignKey("topics.id", ondelete="CASCADE"), primary_key=True),)
+    
+    
+class Category(Base):
+    __tablename__ = "categories"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
+    slug: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+    desc: Mapped[Optional[str]] = mapped_column(Text, default=None)
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+    parent_id: Mapped[Optional[int]] = mapped_column(ForeignKey("categories.id", ondelete="CASCADE"), default=None)
+    parent: Mapped[Optional["Category"]] = relationship(remote_side=[id], back_populates="children")
+    children: Mapped[List["Category"]] = relationship(back_populates="parent", cascade="all, delete-orphan")
+    blog_posts: Mapped[List["BlogPost"]] = relationship(secondary=post_category_association, back_populates="categories")
+    topics: Mapped[List[Topic]] = relationship(secondary=category_topic_association, back_populates="categories")
+    __table_args__ = (Index("idx_cats_slug", "slug"),)
+class Tag(Base):
+    __tablename__ = "tags"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
+    slug: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(Text, default=None)
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+    blog_posts: Mapped[List["BlogPost"]] = relationship(secondary=post_tag_association, back_populates="tags")
+    topics: Mapped[List[Topic]] = relationship(secondary=tag_topic_association, back_populates="tags")
+    __table_args__ = (Index("idx_tags_slug", "slug"),)
+class Topic(Base):
+    __tablename__ = "topics"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    type: Mapped[str] = mapped_column(String(50), nullable=False)
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
+    slug: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+    wpedia_url: Mapped[Optional[str]] = mapped_column(String(255), default=None)
+    wdata_url: Mapped[Optional[str]] = mapped_column(String(50), default=None)
+    experts: Mapped[List["Person"]] = relationship(secondary=person_topic_association, back_populates="knows_about")
+    categories: Mapped[List["Category"]] = relationship(secondary=category_topic_association, back_populates="topics")
+    tags: Mapped[List["Tag"]] = relationship(secondary=tag_topic_association, back_populates="topics")
+    posts_about_us: Mapped[List["BlogPost"]] = relationship(secondary=post_about_topics, back_populates="about")
+    posts_mentioning_us: Mapped[List["BlogPost"]] = relationship(secondary=post_mentions_topics, back_populates="mentions")
+    __table_args__ = (Index("idx_topics_type", "type"),Index("idx_topics_slug", "slug"),)
+class Person(Base):
+    __tablename__ = "people"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    slug: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
+    name: Mapped[str] = mapped_column(String(150), nullable=False)
+    job_title: Mapped[Optional[str]] = mapped_column(String(100), default=None)
+    avatar_url: Mapped[Optional[str]] = mapped_column(String(512), default=None)
+    social_profiles: Mapped[List["PersonSocial"]] = relationship(back_populates="person", cascade="all, delete-orphan")
+    knows_about: Mapped[List[Topic]] = relationship(secondary=person_topic_association, back_populates="experts")
+    __table_args__ = (Index("idx_people_slug", "slug"),)
+class PersonSocial(Base):
+    __tablename__ = "person_socials"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    person_id: Mapped[int] = mapped_column(ForeignKey("people.id", ondelete="CASCADE"), nullable=False)
+    url: Mapped[str] = mapped_column(String(512), nullable=False)
+    person: Mapped["Person"] = relationship(back_populates="social_profiles")
+class Image(Base):
+    __tablename__ = "images"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    media_url: Mapped[str] = mapped_column(String(512), nullable=False)
+    width: Mapped[int] = mapped_column(nullable=False)
+    height: Mapped[int] = mapped_column(nullable=False)
+    caption: Mapped[Optional[str]] = mapped_column(Text, default=None)
+    blog_post_id: Mapped[Optional[int]] = mapped_column(ForeignKey("blog_posts.id", ondelete="CASCADE"), default=None)
+    blog_post: Mapped[Optional[BlogPost]] = relationship(back_populates="images")                                                         
+class Video(Base):
+    __tablename__ = "videos"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    post_id: Mapped[int] = mapped_column(ForeignKey("blog_posts.id", ondelete="CASCADE"), unique=True, nullable=False)
+    video_id: Mapped[str] = mapped_column(String(100), nullable=False)
+    video_platform: Mapped[str] = mapped_column(String(50), nullable=False)
+    width: Mapped[Optional[int]] = mapped_column(default=None)
+    height: Mapped[Optional[int]] = mapped_column(default=None)
+    thumbnail_url: Mapped[Optional[str]] = mapped_column(String(512), default=None)
+    upload_time: Mapped[Optional[datetime]] = mapped_column(DateTime, default=None)
+    duration: Mapped[Optional[int]] = mapped_column(default=None)
+    blog_post: Mapped["BlogPost"] = relationship(back_populates="video")
+    chapters: Mapped[List["VideoChapter"]] = relationship(back_populates="video",cascade="all, delete-orphan")
+    __table_args__ = (Index("idx_post_id", "post_id"),)
+class VideoChapter(Base):
+    __tablename__ = "video_chapters"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    video_id: Mapped[int] = mapped_column(ForeignKey("video_details.id", ondelete="CASCADE"), nullable=False)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    start: Mapped[int] = mapped_column(nullable=False)
+    end: Mapped[int] = mapped_column(nullable=False)
+    url: Mapped[Optional[str]] = mapped_column(String(512), default=None)
+    video: Mapped["Video"] = relationship(back_populates="chapters")
+    __table_args__ = (Index("idx_chapters_video", "video_id"),Index("idx_chapters_timeline", "video_id", "start"),)
 
+    
+class BlogPost(Base):
+    __tablename__ = "blog_posts"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(String(200), nullable=False)
+    content: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
 
-CREATE TABLE video_chapters (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    video_id INT NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    start INT NOT NULL,
-    end INT NOT NULL,
-    url VARCHAR(512),
-    INDEX idx_chapters_video (video_id),   
-    INDEX idx_chapters_timeline (video_id, start_time)
-);
+    
+    images: Mapped[List["Image"]] = relationship(back_populates="blog_post",cascade="all, delete-orphan")
+    video: Mapped[Optional["Video"]] = relationship(back_populates="blog_post", cascade="all, delete-orphan")
+    categories: Mapped[List[Category]] = relationship(secondary=post_category_association, back_populates="blog_posts")
+    tags: Mapped[List[Tag]] = relationship(secondary=post_tag_association, back_populates="blog_posts")                                                       
+    about: Mapped[List[Topic]] = relationship(secondary=post_about_topics, back_populates="posts_about_us")
+    mentions: Mapped[List[Topic]] = relationship(secondary=post_mentions_topics, back_populates="posts_mentioning_us")
+    
+or
+    
+CREATE TABLE categories (id INT AUTO_INCREMENT PRIMARY KEY,name VARCHAR(100) NOT NULL,slug VARCHAR(120) NOT NULL UNIQUE,description TEXT DEFAULT NULL,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,INDEX idx_cats_slug (slug),);
+CREATE TABLE tags (id INT AUTO_INCREMENT PRIMARY KEY,name VARCHAR(100) NOT NULL,slug VARCHAR(120) NOT NULL UNIQUE,description TEXT DEFAULT NULL,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,INDEX idx_tags_slug (slug),);
+CREATE TABLE topics (id INT AUTO_INCREMENT PRIMARY KEY,type VARCHAR(50) NOT NULL,name VARCHAR(100) NOT NULL,slug VARCHAR(120) NOT NULL UNIQUE,wpedia_url VARCHAR(255) DEFAULT NULL,wdata_url VARCHAR(50) DEFAULT NULL,INDEX idx_topics_type (type),INDEX idx_topics_slug (slug));
+CREATE TABLE media_details (id INT AUTO_INCREMENT PRIMARY KEY,media_url VARCHAR(512) NOT NULL,width INT NOT NULL,height INT NOT NULL,caption TEXT DEFAULT NULL);
+CREATE TABLE people (id INT AUTO_INCREMENT PRIMARY KEY,slug VARCHAR(255) NOT NULL UNIQUE,name VARCHAR(150) NOT NULL,job_title VARCHAR(100),avatar_url VARCHAR(512),social_profiles JSON,knows_about JSON,INDEX idx_people_slug (slug),);
+CREATE TABLE video_details (id INT AUTO_INCREMENT PRIMARY KEY,post_id INT NOT NULL UNIQUE,video_id VARCHAR(100) NOT NULL,video_platform VARCHAR(50) NOT NULL,width INT,height INT,thumbnail_url VARCHAR(512),upload_time DATETIME,duration INT,INDEX idx_post_id (post_id));
+CREATE TABLE video_chapters (id INT AUTO_INCREMENT PRIMARY KEY,video_id INT NOT NULL,name VARCHAR(255) NOT NULL,start INT NOT NULL,end INT NOT NULL,url VARCHAR(512),INDEX idx_chapters_video (video_id),   INDEX idx_chapters_timeline (video_id, start_time));
 
 
 CREATE TABLE article_details (
@@ -319,15 +469,16 @@ CREATE TABLE standard_pages (
 
 
 
-from sqlalchemy import Column, String, Integer, DateTime, Enum, Index, func
+from sqlalchemy import Column, String, Integer,text,Boolean, DateTime, Enum, Index, func
 from sqlalchemy.orm import declarative_mixin
-
+from sqlalchemy.dialects.mysql import TINYINT
+    
 
 @declarative_mixin
 class BaseIdentityMixin:
     id = Column(Integer, primary_key=True, autoincrement=True)
-    created_at = Column(DateTime, server_default=func.now(), nullable=False)
-    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)
+    _created_at = Column(DateTime, server_default=func.now(), nullable=False)
+    _updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)
 
 @declarative_mixin
 class SlugMixin:
@@ -344,8 +495,14 @@ class StatusTimestampMixin:
     status = Column(Enum('draft', 'published', 'archived'), default='draft')
     language = Column(String(5), default='en')
     published_at = Column(DateTime, nullable=True)
+    modifed_at = Column(DateTime, nullable=True)
     deleted_at = Column(DateTime, nullable=True)
 
+    is_index = Column(Boolean, nullable=False, server_default=text("0"))
+    is_follow = Column(Boolean, nullable=False, server_default=text("0"))
+    is_noarchive = Column(Boolean, nullable=False, server_default=text("0"))
+    
+    
     @classmethod
     def __table_cls__(cls, *args, **kwargs):
         t = super().__table_cls__(*args, **kwargs)    Index(f"idx_{t.name}_archive_composite", t.c.status, t.c.deleted_at, t.c.published_at.desc())
