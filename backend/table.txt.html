@@ -161,8 +161,8 @@ class MediaAsset(TimestampMixin, Base):
 
 ______________________________________________________
 
-from sqlalchemy import Table, Column, Integer, String, Text, Index,DateTime, func, ForeignKey,Boolean
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Table, Column, Integer, String, Text, Index,DateTime, func, ForeignKey,Boolean, CheckConstraint
+from sqlalchemy.ext.declarative import declarative_base,declared_attr
 from sqlalchemy.orm import relationship
 
   
@@ -178,38 +178,39 @@ post_mentions_topics = Table("post_mentions_topics",Base.metadata,Column("post_i
 
 class IDMixin:
     id = Column(Integer, primary_key=True, autoincrement=True)
-    
-class TimestampMixin:
+class TimestampMixin(object):
     id = Column(Integer, primary_key=True, autoincrement=True)
     _created_at = Column(DateTime, server_default=func.now())
     _modified_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
     is_deleted = Column(Boolean, default=False, server_default="0")
+class StatusWorkflowMixin(object):
+    status = Column(String(20), default="draft")
+    published_at = Column(DateTime, nullable=True)  # Removed timezone=True
+    @declared_attr
+    def __table_args__(cls):
+        return (CheckConstraint("status IN ('draft', 'published', 'archived')", name="check_{}_valid_status".format(cls.__tablename__)),)
+ class IdentifiableContentMixin(object):
+    name = Column(String(150), unique=True, nullable=False)
+    slug = Column(String(150), unique=True, nullable=False)
+    desc = Column(Text, default=None, nullable=True)
 
     
-class Category(TimestampMixin,Base):
+class Category(TimestampMixin,IdentifiableContentMixin,Base):
     __tablename__ = 'categories'
-    name = Column(String(100), nullable=False)
-    slug = Column(String(120), unique=True, nullable=False)
-    desc = Column(Text, default=None, nullable=True)                                                       
     parent_id = Column(Integer, ForeignKey('categories.id', ondelete='CASCADE'), nullable=True, default=None)
     parent = relationship("Category", remote_side=[id], back_populates="children")
     children = relationship("Category", back_populates="parent", cascade="all, delete-orphan")
     blog_posts = relationship("BlogPost", secondary=post_category_association, back_populates="categories")                                                        
     topics = relationship("Topic", secondary=category_topic_association, back_populates="categories")
     __table_args__ = (Index('idx_cats_slug', 'slug'),)
-class Tag(TimestampMixin,Base):
+class Tag(TimestampMixin,IdentifiableContentMixin,Base):
     __tablename__ = 'tags'
-    name = Column(String(100), nullable=False)
-    slug = Column(String(120), unique=True, nullable=False)
-    description = Column(Text, default=None, nullable=True)
     blog_posts = relationship("BlogPost", secondary=post_tag_association, back_populates="tags")
     topics = relationship("Topic", secondary=tag_topic_association, back_populates="tags")
     __table_args__ = (Index('idx_tags_slug', 'slug'),)
-class Topic(TimestampMixin,Base):
+class Topic(TimestampMixin,IdentifiableContentMixin,Base):
     __tablename__ = "topics"
     type = Column(String(50), nullable=False)
-    name = Column(String(100), nullable=False)
-    slug = Column(String(120), unique=True, nullable=False)
     wpedia_url = Column(String(255), default=None, nullable=True)
     wdata_url = Column(String(50), default=None, nullable=True)
     experts = relationship("Person", secondary=person_topic_association, back_populates="knows_about")
@@ -218,10 +219,8 @@ class Topic(TimestampMixin,Base):
     posts_about_us = relationship("BlogPost", secondary=post_about_topics, back_populates="about")
     posts_mentioning_us = relationship("BlogPost", secondary=post_mentions_topics, back_populates="mentions")
     __table_args__ = (Index("idx_topics_type", "type"),Index("idx_topics_slug", "slug"),)
- class Person(TimestampMixin,Base):
+ class Person(TimestampMixin,IdentifiableContentMixin,Base):
     __tablename__ = "people"
-    slug = Column(String(255), unique=True, nullable=False)
-    name = Column(String(150), nullable=False)
     job_title = Column(String(100), default=None, nullable=True)
     avatar_url = Column(String(512), default=None, nullable=True)
     social_profiles = relationship("PersonSocial", back_populates="person", cascade="all, delete-orphan")
@@ -263,9 +262,8 @@ class VideoChapter(IDMixin,Base):
     video = relationship("Video", back_populates="chapters")
     __table_args__ = (Index('idx_chapters_video', 'video_id'),Index('idx_chapters_timeline', 'video_id', 'start'),)
     
- class BlogPost(TimestampMixin,Base):
+ class BlogPost(TimestampMixin,StatusWorkflowMixin,IdentifiableContentMixin,Base):
     __tablename__ = 'blog_posts'
-    title = Column(String(200), nullable=False)
     content = Column(Text, nullable=False)
 
     
@@ -294,7 +292,17 @@ class TimestampMixin:
     _created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     _modified_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     is_deleted: Mapped[bool] = mapped_column(default=False, server_default="0")
-
+class StatusWorkflowMixin:
+    status: Mapped[str] = mapped_column(String(20), default="draft")
+    published_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    @declared_attr
+    def __table_args__(cls):
+        return (CheckConstraint("status IN ('draft', 'published', 'archived')", name=f"check_{cls.__tablename__}_valid_status"),)
+class IdentifiableContentMixin:
+    name: Mapped[str] = mapped_column(String(150), unique=True)
+    slug: Mapped[str] = mapped_column(String(150), unique=True)
+    desc: Mapped[Optional[str]] = mapped_column(Text, default=None, nullable=True)
+                                                             
     
 person_topic_association = Table("person_topics",Base.metadata,Column("person_id", ForeignKey("people.id", ondelete="CASCADE"), primary_key=True),Column("topic_id", ForeignKey("topics.id", ondelete="CASCADE"), primary_key=True),)
 category_topic_association = Table("category_topics",Base.metadata,Column("category_id", ForeignKey("categories.id", ondelete="CASCADE"), primary_key=True),Column("topic_id", ForeignKey("topics.id", ondelete="CASCADE"), primary_key=True),)
@@ -305,30 +313,23 @@ post_about_topics = Table("post_about_topics",Base.metadata,Column("post_id", Fo
 post_mentions_topics = Table("post_mentions_topics",Base.metadata,Column("post_id", ForeignKey("blog_posts.id", ondelete="CASCADE"), primary_key=True),Column("topic_id", ForeignKey("topics.id", ondelete="CASCADE"), primary_key=True),)
     
  
-class Category(TimestampMixin,Base):
+class Category(TimestampMixin,IdentifiableContentMixin,Base):
     __tablename__ = "categories"
-    name: Mapped[str] = mapped_column(String(100), nullable=False)
-    slug: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
-    desc: Mapped[Optional[str]] = mapped_column(Text, default=None)
     parent_id: Mapped[Optional[int]] = mapped_column(ForeignKey("categories.id", ondelete="CASCADE"), default=None)
     parent: Mapped[Optional["Category"]] = relationship(remote_side=[id], back_populates="children")
     children: Mapped[List["Category"]] = relationship(back_populates="parent", cascade="all, delete-orphan")
     blog_posts: Mapped[List["BlogPost"]] = relationship(secondary=post_category_association, back_populates="categories")
     topics: Mapped[List[Topic]] = relationship(secondary=category_topic_association, back_populates="categories")
     __table_args__ = (Index("idx_cats_slug", "slug"),)
-class Tag(TimestampMixin,Base):
+class Tag(TimestampMixin,IdentifiableContentMixin,Base):
     __tablename__ = "tags"
-    name: Mapped[str] = mapped_column(String(100), nullable=False)
-    slug: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
-    description: Mapped[Optional[str]] = mapped_column(Text, default=None)
     blog_posts: Mapped[List["BlogPost"]] = relationship(secondary=post_tag_association, back_populates="tags")
     topics: Mapped[List[Topic]] = relationship(secondary=tag_topic_association, back_populates="tags")
     __table_args__ = (Index("idx_tags_slug", "slug"),)
-class Topic(TimestampMixin,Base):
+class Topic(TimestampMixin,IdentifiableContentMixin,Base):
     __tablename__ = "topics"
-    type: Mapped[str] = mapped_column(String(50), nullable=False)
-    name: Mapped[str] = mapped_column(String(100), nullable=False)
-    slug: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+    type: Mapped[str] = mapped_column(String(50))
+
     wpedia_url: Mapped[Optional[str]] = mapped_column(String(255), default=None)
     wdata_url: Mapped[Optional[str]] = mapped_column(String(50), default=None)
     experts: Mapped[List["Person"]] = relationship(secondary=person_topic_association, back_populates="knows_about")
@@ -337,10 +338,8 @@ class Topic(TimestampMixin,Base):
     posts_about_us: Mapped[List["BlogPost"]] = relationship(secondary=post_about_topics, back_populates="about")
     posts_mentioning_us: Mapped[List["BlogPost"]] = relationship(secondary=post_mentions_topics, back_populates="mentions")
     __table_args__ = (Index("idx_topics_type", "type"),Index("idx_topics_slug", "slug"),)
-class Person(TimestampMixin,Base):
+class Person(TimestampMixin,IdentifiableContentMixin,Base):
     __tablename__ = "people"
-    slug: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
-    name: Mapped[str] = mapped_column(String(150), nullable=False)
     job_title: Mapped[Optional[str]] = mapped_column(String(100), default=None)
     avatar_url: Mapped[Optional[str]] = mapped_column(String(512), default=None)
     social_profiles: Mapped[List["PersonSocial"]] = relationship(back_populates="person", cascade="all, delete-orphan")
@@ -383,9 +382,8 @@ class VideoChapter(IDMixin,Base):
     __table_args__ = (Index("idx_chapters_video", "video_id"),Index("idx_chapters_timeline", "video_id", "start"),)
 
     
-class BlogPost(TimestampMixin,Base):
+class BlogPost(TimestampMixin,StatusWorkflowMixin,IdentifiableContentMixin,Base):
     __tablename__ = "blog_posts"
-    title: Mapped[str] = mapped_column(String(200), nullable=False)
     content: Mapped[str] = mapped_column(Text, nullable=False)
     
     
