@@ -164,7 +164,7 @@ ______________________________________________________
 import datetime
 from sqlalchemy import Table, Column, Integer, String, Text, Index,DateTime, func, ForeignKey,Boolean, CheckConstraint
 from sqlalchemy.ext.declarative import declarative_base,declared_attr
-from sqlalchemy.orm import relationship,validates
+from sqlalchemy.orm import relationship,validates,backref
 
   
 Base = declarative_base()
@@ -184,6 +184,14 @@ class TimestampMixin(object):
     _created_at = Column(DateTime, server_default=func.now())
     _modified_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
     is_deleted = Column(Boolean, default=False, server_default="0")
+    _deleted_at = Column(DateTime, default=None, nullable=True)
+    @validates('is_deleted')
+    def validate_is_deleted_changes(self, key, value):
+        if value is True:
+            self._deleted_at = datetime.datetime.utcnow()
+        else:
+            self._deleted_at = None
+        return value
 class StatusWorkflowMixin(object):
     status = Column(String(20), default="draft")
     published_at = Column(DateTime, nullable=True)  # Removed timezone=True
@@ -201,8 +209,13 @@ class IdentifiableContentMixin(object):
     name = Column(String(150), unique=True, nullable=False)
     slug = Column(String(150), unique=True, nullable=False)
     desc = Column(Text, default=None, nullable=True)
-
-    
+    @validates('name')
+    def generate_slug_from_name(self, key, value):
+        if value and not self.slug:
+            clean_text = value.lower().strip()
+            clean_text = re.sub(r'[^a-z0-9\s-]', '', clean_text)
+            self.slug = re.sub(r'[\s-]+', '-', clean_text)
+        return value
 class Category(TimestampMixin,IdentifiableContentMixin,Base):
     __tablename__ = 'categories'
     parent_id = Column(Integer, ForeignKey('categories.id', ondelete='CASCADE'), nullable=True, default=None)
@@ -245,11 +258,11 @@ class Image(TimestampMixin,Base):
     width = Column(Integer, nullable=False)
     height = Column(Integer, nullable=False)
     caption = Column(Text, default=None, nullable=True)
-    blog_post_id = Column(Integer, ForeignKey('blog_posts.id', ondelete='CASCADE'), nullable=True)
+    blog_post_id = Column(Integer, ForeignKey('blog_posts.id', ondelete='SET NULL'), nullable=True)
     blog_post = relationship("BlogPost", back_populates="images")
  class Video(TimestampMixin,Base):
     __tablename__ = 'videos'
-    post_id = Column(Integer, ForeignKey('blog_posts.id', ondelete='CASCADE'), unique=True, nullable=False)
+    post_id = Column(Integer, ForeignKey('blog_posts.id', ondelete='SET NULL'), unique=True, nullable=True)
     video_id = Column(String(100), nullable=False)
     video_platform = Column(String(50), nullable=False)
     width = Column(Integer, default=None, nullable=True)
@@ -269,14 +282,23 @@ class VideoChapter(IDMixin,Base):
     url = Column(String(512), default=None, nullable=True)
     video = relationship("Video", back_populates="chapters")
     __table_args__ = (Index('idx_chapters_video', 'video_id'),Index('idx_chapters_timeline', 'video_id', 'start'),)
-    
+
+
 class BlogPost(TimestampMixin,StatusWorkflowMixin,IdentifiableContentMixin,Base):
     __tablename__ = 'blog_posts'
     content = Column(Text, nullable=False)
 
+    page_type = Column(String(30), default="post", server_default="post", nullable=False)
+                                                             
+
+
+    is_pillar = Column(Boolean, default=False, server_default="0", nullable=False)
+    pillar_id = Column(Integer, ForeignKey('blog_posts.id', ondelete='SET NULL'), nullable=True, default=None)
+    pillar = relationship("BlogPost",remote_side="BlogPost.id", backref=backref("clusters"))
+
     
-    video = relationship("Video", back_populates="blog_post", uselist=False, cascade="all, delete-orphan")
-    images = relationship("Image", back_populates="blog_post", cascade="all, delete-orphan")   
+    video = relationship("Video", back_populates="blog_post", uselist=False)
+    images = relationship("Image", back_populates="blog_post")   
     categories = relationship("Category", secondary=post_category_association, back_populates="blog_posts")
     tags = relationship("Tag", secondary=post_tag_association, back_populates="blog_posts")
     about = relationship("Topic", secondary=post_about_topics, back_populates="posts_about_us")
