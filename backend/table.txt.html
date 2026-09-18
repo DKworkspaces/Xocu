@@ -161,9 +161,10 @@ class MediaAsset(TimestampMixin, Base):
 
 ______________________________________________________
 
+import datetime
 from sqlalchemy import Table, Column, Integer, String, Text, Index,DateTime, func, ForeignKey,Boolean, CheckConstraint
 from sqlalchemy.ext.declarative import declarative_base,declared_attr
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship,validates
 
   
 Base = declarative_base()
@@ -176,7 +177,7 @@ post_tag_association = Table("post_tags",Base.metadata,Column("post_id", Integer
 post_about_topics = Table("post_about_topics",Base.metadata,Column("post_id", Integer, ForeignKey("blog_posts.id", ondelete="CASCADE"), primary_key=True),Column("topic_id", Integer, ForeignKey("topics.id", ondelete="CASCADE"), primary_key=True),)
 post_mentions_topics = Table("post_mentions_topics",Base.metadata,Column("post_id", Integer, ForeignKey("blog_posts.id", ondelete="CASCADE"), primary_key=True),Column("topic_id", Integer, ForeignKey("topics.id", ondelete="CASCADE"), primary_key=True),)
 
-class IDMixin:
+class Idmixin(object):
     id = Column(Integer, primary_key=True, autoincrement=True)
 class TimestampMixin(object):
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -189,7 +190,14 @@ class StatusWorkflowMixin(object):
     @declared_attr
     def __table_args__(cls):
         return (CheckConstraint("status IN ('draft', 'published', 'archived')", name="check_{}_valid_status".format(cls.__tablename__)),)
- class IdentifiableContentMixin(object):
+    @validates('status')
+    def validate_status_changes(self, key, value):
+        if value == "published":
+            self.published_at = datetime.datetime.utcnow()
+        elif value == "draft":
+            self.published_at = None
+        return value
+class IdentifiableContentMixin(object):
     name = Column(String(150), unique=True, nullable=False)
     slug = Column(String(150), unique=True, nullable=False)
     desc = Column(Text, default=None, nullable=True)
@@ -198,7 +206,7 @@ class StatusWorkflowMixin(object):
 class Category(TimestampMixin,IdentifiableContentMixin,Base):
     __tablename__ = 'categories'
     parent_id = Column(Integer, ForeignKey('categories.id', ondelete='CASCADE'), nullable=True, default=None)
-    parent = relationship("Category", remote_side=[id], back_populates="children")
+    parent = relationship("Category", remote_side=Category.id, back_populates="children")
     children = relationship("Category", back_populates="parent", cascade="all, delete-orphan")
     blog_posts = relationship("BlogPost", secondary=post_category_association, back_populates="categories")                                                        
     topics = relationship("Topic", secondary=category_topic_association, back_populates="categories")
@@ -250,11 +258,11 @@ class Image(TimestampMixin,Base):
     upload_time = Column(DateTime, default=None, nullable=True)
     duration = Column(Integer, default=None, nullable=True)
     blog_post = relationship("BlogPost", back_populates="video")
-    chapters = relationship("Video", back_populates="video", cascade="all, delete-orphan")
+    chapters = relationship("VideoChapter", back_populates="video", cascade="all, delete-orphan")
     __table_args__ = (Index('idx_post_id', 'post_id'),)
 class VideoChapter(IDMixin,Base):
     __tablename__ = 'video_chapters'
-    video_id = Column(Integer, ForeignKey('video_details.id', ondelete='CASCADE'), nullable=False)
+    video_id = Column(Integer, ForeignKey('videos.id', ondelete='CASCADE'), nullable=False)
     name = Column(String(255), nullable=False)
     start = Column(Integer, nullable=False)
     end = Column(Integer, nullable=False)
@@ -262,7 +270,7 @@ class VideoChapter(IDMixin,Base):
     video = relationship("Video", back_populates="chapters")
     __table_args__ = (Index('idx_chapters_video', 'video_id'),Index('idx_chapters_timeline', 'video_id', 'start'),)
     
- class BlogPost(TimestampMixin,StatusWorkflowMixin,IdentifiableContentMixin,Base):
+class BlogPost(TimestampMixin,StatusWorkflowMixin,IdentifiableContentMixin,Base):
     __tablename__ = 'blog_posts'
     content = Column(Text, nullable=False)
 
@@ -281,7 +289,7 @@ or
 from datetime import datetime
 from typing import Dict, List, Optional
 from sqlalchemy import Table, Column, ForeignKey, Index, String, Text, func
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship,declared_attr, validates
     
 class Base(DeclarativeBase):
     pass
@@ -298,6 +306,13 @@ class StatusWorkflowMixin:
     @declared_attr
     def __table_args__(cls):
         return (CheckConstraint("status IN ('draft', 'published', 'archived')", name=f"check_{cls.__tablename__}_valid_status"),)
+    @validates('status')
+    def validate_status_changes(self, key: str, value: str) -> str:
+        if value == "published":
+            self.published_at = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
+        elif value == "draft":
+            self.published_at = None
+        return value
 class IdentifiableContentMixin:
     name: Mapped[str] = mapped_column(String(150), unique=True)
     slug: Mapped[str] = mapped_column(String(150), unique=True)
