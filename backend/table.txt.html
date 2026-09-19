@@ -187,11 +187,46 @@ post_mentions_topics = Table("post_mentions_topics",Base.metadata,Column("post_i
 
     
     
-
-    
 class Idmixin(object):
     id = Column(Integer, primary_key=True, autoincrement=True)
-class CRUDMixin(Idmixin):
+class TimestampMixin(IdMixin): 
+    _created_at = Column(DateTime, server_default=func.now())
+    _modified_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+    is_deleted = Column(Boolean, default=False, server_default="0")
+    _deleted_at = Column(DateTime, default=None, nullable=True)
+    @validates('is_deleted')
+    def validate_is_deleted_changes(self, key, value):
+        if value is True:
+            self._deleted_at = datetime.datetime.utcnow()
+        else:
+            self._deleted_at = None
+        return value
+class StatusWorkflowMixin(TimestampMixin):
+    status = Column(String(20), default="draft")
+    published_at = Column(DateTime, nullable=True)
+    @declared_attr
+    def __table_args__(cls):
+        return (CheckConstraint("status IN ('draft', 'published', 'archived')", name="check_{}_valid_status".format(cls.__tablename__)),)
+    @validates('status')
+    def validate_status_changes(self, key, value):
+        if value == "published":
+            self.published_at = datetime.datetime.utcnow()
+        elif value == "draft":
+            self.published_at = None
+        return value
+class IdentifiableContentMixin(TimestampMixin):
+    name = Column(String(150), unique=True, nullable=False)
+    slug = Column(String(150), unique=True, nullable=False)
+    desc = Column(Text, default=None, nullable=True)
+    @validates('name')
+    def generate_slug_from_name(self, key, value):
+        if value and not self.slug:
+            clean_text = value.lower().strip()
+            clean_text = re.sub(r'[^a-z0-9\s-]', '', clean_text)
+            self.slug = re.sub(r'[\s-]+', '-', clean_text)
+        return value
+
+class CRUDMixin(object):
     @classmethod
     def _base_query(cls, db: Session):
         query = db.query(cls)
@@ -229,21 +264,7 @@ class CRUDMixin(Idmixin):
         db.delete(self)
         db.commit()
         return self
-    
-class TimestampMixin(CRUDMixin): 
-    _created_at = Column(DateTime, server_default=func.now())
-    _modified_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
-    is_deleted = Column(Boolean, default=False, server_default="0")
-    _deleted_at = Column(DateTime, default=None, nullable=True)
-    @validates('is_deleted')
-    def validate_is_deleted_changes(self, key, value):
-        if value is True:
-            self._deleted_at = datetime.datetime.utcnow()
-        else:
-            self._deleted_at = None
-        return value
-   
-class CRUDAdvMixin(TimestampMixin):
+class CRUDAdvMixin(CRUDMixin):
     @classmethod
     def _base_deleted_query(cls, db: Session):
         query = db.query(cls)
@@ -277,20 +298,7 @@ class CRUDAdvMixin(TimestampMixin):
         db.commit()
         return self
 
-class StatusWorkflowMixin(CRUDAdvMixin):
-    status = Column(String(20), default="draft")
-    published_at = Column(DateTime, nullable=True)
-    @declared_attr
-    def __table_args__(cls):
-        return (CheckConstraint("status IN ('draft', 'published', 'archived')", name="check_{}_valid_status".format(cls.__tablename__)),)
-    @validates('status')
-    def validate_status_changes(self, key, value):
-        if value == "published":
-            self.published_at = datetime.datetime.utcnow()
-        elif value == "draft":
-            self.published_at = None
-        return value
-
+class StatusCRUDMixin(CRUDAdvMixin):
     @classmethod
     def get_draft(cls, db: Session, id: Any):
         return cls._base_query(db).filter(cls.id == id, cls.status == "draft").first()
@@ -354,21 +362,7 @@ class StatusWorkflowMixin(CRUDAdvMixin):
     @classmethod
     def count_published_by_date_range(cls, db: Session, start_date: datetime, end_date: datetime) -> int:
         return (cls._base_query(db).filter(cls.status == "published",cls.published_at >= start_date,cls.published_at <= end_date).count())
-
-
-    
-    
-class IdentifiableContentMixin(CRUDAdvMixin):
-    name = Column(String(150), unique=True, nullable=False)
-    slug = Column(String(150), unique=True, nullable=False)
-    desc = Column(Text, default=None, nullable=True)
-    @validates('name')
-    def generate_slug_from_name(self, key, value):
-        if value and not self.slug:
-            clean_text = value.lower().strip()
-            clean_text = re.sub(r'[^a-z0-9\s-]', '', clean_text)
-            self.slug = re.sub(r'[\s-]+', '-', clean_text)
-        return value
+class IdentifiableCRUDMixin(CRUDAdvMixin):
     @classmethod
     def get_by_slug(cls, db: Session, slug: str):
         return cls._base_query(db).filter(cls.slug == slug).first()
@@ -430,8 +424,13 @@ class IdentifiableContentMixin(CRUDAdvMixin):
         return query.all()
 
 
+
+                                                             Idmixin(object)
+
+
             
-class Category(IdentifiableContentMixin,ContentRelationMixin,Base):
+            
+class Category(IdentifiableContentMixin,IdentifiableCRUDMixin,ContentRelationMixin,Base):
     __tablename__ = 'categories'
     parent_id = Column(Integer, ForeignKey('categories.id', ondelete='CASCADE'), nullable=True, default=None)
     parent = relationship("Category", remote_side=Category.id, back_populates="children")
@@ -457,13 +456,13 @@ class Category(IdentifiableContentMixin,ContentRelationMixin,Base):
         db.add(self)
         db.commit()
         return self
-class Tag(IdentifiableContentMixin,ContentRelationMixin,Base):
+class Tag(IdentifiableContentMixin,IdentifiableCRUDMixin,ContentRelationMixin,Base):
     __tablename__ = 'tags'
     blog_posts = relationship("BlogPost", secondary=post_tag_association, back_populates="tags")
     topics = relationship("Topic", secondary=tag_topic_association, back_populates="tags")
     __table_args__ = (Index('idx_tags_slug', 'slug'),)
 
-class Topic(IdentifiableContentMixin,Base):
+class Topic(IdentifiableContentMixin,IdentifiableCRUDMixin,Base):
     __tablename__ = "topics"
     type = Column(String(50), nullable=False)
     wpedia_url = Column(String(255), default=None, nullable=True)
@@ -474,19 +473,63 @@ class Topic(IdentifiableContentMixin,Base):
     posts_about_us = relationship("BlogPost", secondary=post_about_topics, back_populates="about")
     posts_mentioning_us = relationship("BlogPost", secondary=post_mentions_topics, back_populates="mentions")
     __table_args__ = (Index("idx_topics_type", "type"),Index("idx_topics_slug", "slug"),)
- class Person(IdentifiableContentMixin,Base):
+
+    def get_all_categories(self, db: Session) -> List[Any]:
+        return (db.query(Category).join(Category.topics).filter(Topic.id == self.id).filter(Category.is_deleted == False).all())
+    def get_all_tags(self, db: Session) -> List[Any]:
+        return (db.query(Tag).join(Tag.topics).filter(Topic.id == self.id).filter(Tag.is_deleted == False).all())
+    def get_posts_about(self, db: Session) -> List[Any]:
+        return (db.query(BlogPost).join(BlogPost.about).filter(Topic.id == self.id).filter(BlogPost.is_deleted == False).filter(BlogPost.status == "published").all())
+    def get_posts_mentioning(self, db: Session) -> List[Any]:
+        return (db.query(BlogPost).join(BlogPost.mentions).filter(Topic.id == self.id).filter(BlogPost.is_deleted == False).filter(BlogPost.status == "published").all())
+    def get_all_categories_deleted(self, db: Session) -> List[Any]:
+        return (db.query(Category).join(Category.topics).filter(Topic.id == self.id).filter(Category.is_deleted == True).all())
+    def get_all_tags_deleted(self, db: Session) -> List[Any]:
+        return (db.query(Tag).join(Tag.topics).filter(Topic.id == self.id).filter(Tag.is_deleted == True).all())
+    def get_posts_about_deleted(self, db: Session) -> List[Any]:
+        return (db.query(BlogPost).join(BlogPost.about).filter(Topic.id == self.id).filter(BlogPost.is_deleted == True).all())
+    def get_posts_mentioning_deleted(self, db: Session) -> List[Any]:
+        return (db.query(BlogPost).join(BlogPost.mentions).filter(Topic.id == self.id).filter(BlogPost.is_deleted == True).all())
+
+            
+
+
+            
+ class Person(IdentifiableContentMixin,IdentifiableCRUDMixin,Base):
     __tablename__ = "people"
     job_title = Column(String(100), default=None, nullable=True)
     avatar_url = Column(String(512), default=None, nullable=True)
     social_profiles = relationship("PersonSocial", back_populates="person", cascade="all, delete-orphan")
     knows_about = relationship("Topic", secondary=person_topic_association, back_populates="experts")
     __table_args__ = (Index("idx_people_slug", "slug"),)
-class PersonSocial(CRUDMixin,Base):
+
+    def soft_delete(self, db: Session):
+        super(Person, self).soft_delete(db)
+        for profile in self.social_profiles:
+            if not profile.is_deleted:
+                profile.is_deleted = True
+                db.add(profile) 
+        db.add(self)
+        db.commit()
+        return self
+    def get_social_profiles(self, db: Session) -> List["PersonSocial"]:
+        return (db.query(PersonSocial).filter(PersonSocial.person_id == self.id).filter(PersonSocial.is_deleted == False).all())
+    def get_topics_expertise(self, db: Session) -> List[Any]:
+        return (db.query(Topic).join(Topic.experts).filter(Person.id == self.id).filter(Topic.is_deleted == False).all())
+    def get_social_profiles_deleted(self, db: Session) -> List["PersonSocial"]:
+        return (db.query(PersonSocial).filter(PersonSocial.person_id == self.id).filter(PersonSocial.is_deleted == True).all())
+    def get_topics_expertise_deleted(self, db: Session) -> List[Any]:
+        return (db.query(Topic).join(Topic.experts).filter(Person.id == self.id).filter(Topic.is_deleted == True).all())
+            
+
+
+            
+class PersonSocial(IdMixin,CRUDMixin,Base):
     __tablename__ = "person_socials"
     person_id = Column(Integer, ForeignKey("people.id", ondelete="CASCADE"), nullable=False)
     url = Column(String(512), nullable=False)
     person = relationship("Person", back_populates="social_profiles")
-class Image(CRUDAdvMixin,Base):
+class Image(TimestampMixin,CRUDAdvMixin,Base):
     __tablename__ = "images"
     media_url = Column(String(512), nullable=False)
     width = Column(Integer, nullable=False)
@@ -494,7 +537,7 @@ class Image(CRUDAdvMixin,Base):
     caption = Column(Text, default=None, nullable=True)
     blog_post_id = Column(Integer, ForeignKey('blog_posts.id', ondelete='SET NULL'), nullable=True)
     blog_post = relationship("BlogPost", back_populates="images")
- class Video(CRUDAdvMixin,Base):
+ class Video(TimestampMixin,CRUDAdvMixin,Base):
     __tablename__ = 'videos'
     post_id = Column(Integer, ForeignKey('blog_posts.id', ondelete='SET NULL'), unique=True, nullable=True)
     video_id = Column(String(100), nullable=False)
@@ -507,7 +550,22 @@ class Image(CRUDAdvMixin,Base):
     blog_post = relationship("BlogPost", back_populates="video")
     chapters = relationship("VideoChapter", back_populates="video", cascade="all, delete-orphan")
     __table_args__ = (Index('idx_post_id', 'post_id'),)
-class VideoChapter(CRUDMixin,Base):
+
+    def soft_delete(self, db: Session):
+        super(Video, self).soft_delete(db)
+        for chapter in self.chapters:
+            if not chapter.is_deleted:
+                chapter.is_deleted = True
+                db.add(chapter)
+        db.add(self)
+        db.commit()
+        return self
+    def get_chapters(self, db: Session) -> List["VideoChapter"]:
+        return (db.query(VideoChapter).filter(VideoChapter.video_id == self.id).filter(VideoChapter.is_deleted == False).order_by(VideoChapter.start.asc()).all())
+    def get_chapters_deleted(self, db: Session) -> List["VideoChapter"]:
+        return (db.query(VideoChapter).filter(VideoChapter.video_id == self.id).filter(VideoChapter.is_deleted == True).all())
+            
+class VideoChapter(IdMixin,CRUDMixin,Base):
     __tablename__ = 'video_chapters'
     video_id = Column(Integer, ForeignKey('videos.id', ondelete='CASCADE'), nullable=False)
     name = Column(String(255), nullable=False)
@@ -518,7 +576,10 @@ class VideoChapter(CRUDMixin,Base):
     __table_args__ = (Index('idx_chapters_video', 'video_id'),Index('idx_chapters_timeline', 'video_id', 'start'),)
 
 
-class BlogPost(TimestampMixin,StatusWorkflowMixin,IdentifiableContentMixin,Base):
+
+
+            
+class BlogPost(StatusWorkflowMixin,IdentifiableContentMixin,StatusCRUDMixin,IdentifiableCRUDMixin,Base):
     __tablename__ = 'blog_posts'
     content = Column(Text, nullable=False)
 
