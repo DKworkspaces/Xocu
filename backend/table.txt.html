@@ -497,10 +497,14 @@ class Topic(IdentifiableContentMixin,IdentifiableCRUDMixin,Base):
             
  class Person(IdentifiableContentMixin,IdentifiableCRUDMixin,Base):
     __tablename__ = "people"
+    bio = Column(Text)
     job_title = Column(String(100), default=None, nullable=True)
     avatar_url = Column(String(512), default=None, nullable=True)
     social_profiles = relationship("PersonSocial", back_populates="person", cascade="all, delete-orphan")
     knows_about = relationship("Topic", secondary=person_topic_association, back_populates="experts")
+    posts = relationship('BlogPost', back_populates='author')
+
+            
     __table_args__ = (Index("idx_people_slug", "slug"),)
 
     def soft_delete(self, db: Session):
@@ -582,7 +586,13 @@ class VideoChapter(IdMixin,CRUDMixin,Base):
 class BlogPost(StatusWorkflowMixin,IdentifiableContentMixin,StatusCRUDMixin,IdentifiableCRUDMixin,Base):
     __tablename__ = 'blog_posts'
     content = Column(Text, nullable=False)
+    author_id = Column(Integer, ForeignKey('authors.author_id'))
+    author = relationship('Person', back_populates='posts')
 
+    summary = Column(String(500))
+    featured_image_url = Column(String(255))
+
+            
     page_type = Column(String(30), default="post", server_default="post", nullable=False)
     
     is_pillar = Column(Boolean, default=False, server_default="0", nullable=False)
