@@ -352,6 +352,53 @@ class IdentifiableContentMixin(object):
             clean_text = re.sub(r'[^a-z0-9\s-]', '', clean_text)
             self.slug = re.sub(r'[\s-]+', '-', clean_text)
         return value
+    @classmethod
+    def _identifiable_base_query(cls, db: Session):
+        query = db.query(cls)
+        if hasattr(cls, "is_deleted"):
+            query = query.filter(cls.is_deleted == False)
+        return query
+    @classmethod
+    def _identifiable_base_deleted_query(cls, db: Session):
+        query = db.query(cls)
+        if hasattr(cls, "is_deleted"):
+            query = query.filter(cls.is_deleted == True)
+        else:
+            query = query.filter(False)
+        return query
+          @classmethod
+    def get_by_slug(cls, db: Session, slug: str):
+        return cls._identifiable_base_query(db).filter(cls.slug == slug).first()
+    @classmethod
+    def get_by_name(cls, db: Session, name: str):
+        return cls._identifiable_base_query(db).filter(cls.name == name).first()
+    @classmethod
+    def get_by_name_deleted(cls, db: Session, name: str):
+        return cls._identifiable_base_deleted_query(db).filter(cls.name == name).first()
+    @classmethod
+    def get_by_slug_deleted(cls, db: Session, slug: str):
+        return cls._identifiable_base_deleted_query(db).filter(cls.slug == slug).first()      
+    @classmethod
+    def get_published_by_slug(cls, db: Session, slug: str):
+        query = cls._identifiable_base_query(db).filter(cls.slug == slug)
+        if hasattr(cls, "status"):
+            query = query.filter(cls.status == "published")
+        return query.first()
+    @classmethod
+    def get_draft_by_slug(cls, db: Session, slug: str):
+        query = cls._identifiable_base_query(db).filter(cls.slug == slug)
+        if hasattr(cls, "status"):
+            query = query.filter(cls.status == "draft")
+        return query.first()
+    @classmethod
+    def get_archive_by_slug(cls, db: Session, slug: str):
+        query = cls._identifiable_base_query(db).filter(cls.slug == slug)
+        if hasattr(cls, "status"):
+            query = query.filter(cls.status == "archived")
+        return query.first()
+
+
+            
 class Category(TimestampMixin,IdentifiableContentMixin,Base):
     __tablename__ = 'categories'
     parent_id = Column(Integer, ForeignKey('categories.id', ondelete='CASCADE'), nullable=True, default=None)
