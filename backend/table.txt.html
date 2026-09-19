@@ -177,10 +177,64 @@ post_tag_association = Table("post_tags",Base.metadata,Column("post_id", Integer
 post_about_topics = Table("post_about_topics",Base.metadata,Column("post_id", Integer, ForeignKey("blog_posts.id", ondelete="CASCADE"), primary_key=True),Column("topic_id", Integer, ForeignKey("topics.id", ondelete="CASCADE"), primary_key=True),)
 post_mentions_topics = Table("post_mentions_topics",Base.metadata,Column("post_id", Integer, ForeignKey("blog_posts.id", ondelete="CASCADE"), primary_key=True),Column("topic_id", Integer, ForeignKey("topics.id", ondelete="CASCADE"), primary_key=True),)
 
+class CRUDMixin():
+    @classmethod
+    def get(cls, db: Session, id: Any):
+        return db.query(cls).filter(cls.id == id, cls.is_deleted == False).first()
+    @classmethod
+    def get_deleted(cls, db: Session, id: Any):
+        return db.query(cls).filter(cls.id == id, cls.is_deleted == True).first()
+    @classmethod
+    def get_multi(cls, db: Session, skip: int = 0, limit: int = 100):
+        return db.query(cls).filter(cls.is_deleted == False).offset(skip).limit(limit).all()
+    @classmethod
+    def create(cls, db: Session, obj_in: SchemaType):
+        data = obj_in.dict() if isinstance(obj_in, BaseModel) else obj_in
+        db_obj = cls(**data)
+        db.add(db_obj)
+        db.commit()
+        db.refresh(db_obj)
+        return db_obj
+    @classmethod
+    def update(self, db: Session, obj_in: SchemaType):
+        data = obj_in.dict(exclude_unset=True) if isinstance(obj_in, BaseModel) else obj_in
+        for field in data:
+            if hasattr(self, field):
+                setattr(self, field, data[field])
+        db.add(self)
+        db.commit()
+        db.refresh(self)
+        return self
+    @classmethod
+    def soft_delete(self, db: Session):
+        self.is_deleted = True
+        db.add(self)
+        db.commit()
+        return self
+    @classmethod
+    def restore(self, db: Session):
+        self.is_deleted = False
+        db.add(self)
+        db.commit()
+        return self
+    @classmethod
+    def hard_delete(self, db: Session):
+        db.delete(self)
+        db.commit()
+        return self
+    @classmethod
+    def count(cls, db: Session) -> int:
+        return db.query(cls).filter(cls.is_deleted == False).count()
+    @classmethod
+    def count_deleted(cls, db: Session) -> int:
+        return db.query(cls).filter(cls.is_deleted == True).count()
+
+    
+
+    
 class Idmixin(object):
     id = Column(Integer, primary_key=True, autoincrement=True)
-class TimestampMixin(object):
-    id = Column(Integer, primary_key=True, autoincrement=True)
+class TimestampMixin(Idmixin): 
     _created_at = Column(DateTime, server_default=func.now())
     _modified_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
     is_deleted = Column(Boolean, default=False, server_default="0")
@@ -205,6 +259,88 @@ class StatusWorkflowMixin(object):
         elif value == "draft":
             self.published_at = None
         return value
+    @classmethod
+    def _base_query(cls, db: Session):
+        query = db.query(cls)
+        if hasattr(cls, "is_deleted"):
+            query = query.filter(cls.is_deleted == False)
+        return query
+    @classmethod
+    def _base_deleted_query(cls, db: Session):
+        query = db.query(cls)
+        if hasattr(cls, "is_deleted"):
+            query = query.filter(cls.is_deleted == True)
+        else:
+            query = query.filter(False)
+        return query
+    
+    @classmethod
+    def get_draft(cls, db: Session, id: Any):
+        return cls._base_query(db).filter(cls.id == id, cls.status == "draft").first()
+    @classmethod
+    def get_published(cls, db: Session, id: Any):
+        return cls._base_query(db).filter(cls.id == id, cls.status == "published").first()
+    @classmethod
+    def get_archive(cls, db: Session, id: Any):
+        return cls._base_query(db).filter(cls.id == id, cls.status == "archived").first()
+    @classmethod
+    def get_draft_deleted(cls, db: Session, id: Any):
+        return cls._base_deleted_query(db).filter(cls.id == id, cls.status == "draft").first()
+    @classmethod
+    def get_published_deleted(cls, db: Session, id: Any):
+        return cls._base_deleted_query(db).filter(cls.id == id, cls.status == "published").first()
+    @classmethod
+    def get_archive_deleted(cls, db: Session, id: Any):
+        return cls._base_deleted_query(db).filter(cls.id == id, cls.status == "archived").first()
+    @classmethod
+    def get_multiple_draft(cls, db: Session, skip: int = 0, limit: int = 100) -> List[Any]:
+        return cls._base_query(db).filter(cls.status == "draft").offset(skip).limit(limit).all()
+    @classmethod
+    def get_multiple_published(cls, db: Session, skip: int = 0, limit: int = 100) -> List[Any]:
+        return cls._base_query(db).filter(cls.status == "published").offset(skip).limit(limit).all()
+    @classmethod
+    def get_multiple_archive(cls, db: Session, skip: int = 0, limit: int = 100) -> List[Any]:
+        return cls._base_query(db).filter(cls.status == "archived").offset(skip).limit(limit).all()
+    @classmethod
+    def get_multiple_draft_deleted(cls, db: Session, skip: int = 0, limit: int = 100) -> List[Any]:
+        return cls._base_deleted_query(db).filter(cls.status == "draft").offset(skip).limit(limit).all()
+    @classmethod
+    def get_multiple_published_deleted(cls, db: Session, skip: int = 0, limit: int = 100) -> List[Any]:
+        return cls._base_deleted_query(db).filter(cls.status == "published").offset(skip).limit(limit).all()
+    @classmethod
+    def get_multiple_archive_deleted(cls, db: Session, skip: int = 0, limit: int = 100) -> List[Any]:
+        return cls._base_deleted_query(db).filter(cls.status == "archived").offset(skip).limit(limit).all()
+    @classmethod
+    def count_draft(cls, db: Session) -> int:
+        return cls._base_query(db).filter(cls.status == "draft").count()
+    @classmethod
+    def count_published(cls, db: Session) -> int:
+        return cls._base_query(db).filter(cls.status == "published").count()
+    @classmethod
+    def count_archive(cls, db: Session) -> int:
+        return cls._base_query(db).filter(cls.status == "archived").count()
+    @classmethod
+    def count_draft_deleted(cls, db: Session) -> int:
+        return cls._base_deleted_query(db).filter(cls.status == "draft").count()
+    @classmethod
+    def count_published_deleted(cls, db: Session) -> int:
+        return cls._base_deleted_query(db).filter(cls.status == "published").count()
+    @classmethod
+    def count_archive_deleted(cls, db: Session) -> int:
+        return cls._base_deleted_query(db).filter(cls.status == "archived").count()
+    @classmethod
+    def get_multiple_published_by_date_range(cls, db: Session, start_date: datetime, end_date: datetime, skip: int = 0, limit: int = 100) -> List[Any]:
+        return (cls._base_query(db).filter(cls.status == "published",cls.published_at >= start_date,cls.published_at <= end_date).order_by(desc(cls.published_at)).offset(skip).limit(limit).all())
+    @classmethod
+    def get_multiple_published_latest(cls, db: Session, skip: int = 0, limit: int = 100) -> List[Any]:
+        return (cls._base_query(db).filter(cls.status == "published").order_by(desc(cls.published_at)).offset(skip).limit(limit).all())
+    @classmethod
+    def count_published_by_date_range(cls, db: Session, start_date: datetime, end_date: datetime) -> int:
+        return (cls._base_query(db).filter(cls.status == "published",cls.published_at >= start_date,cls.published_at <= end_date).count())
+
+
+    
+    
 class IdentifiableContentMixin(object):
     name = Column(String(150), unique=True, nullable=False)
     slug = Column(String(150), unique=True, nullable=False)
