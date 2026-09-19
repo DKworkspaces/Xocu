@@ -584,13 +584,10 @@ class BlogPost(StatusWorkflowMixin,IdentifiableContentMixin,StatusCRUDMixin,Iden
     content = Column(Text, nullable=False)
 
     page_type = Column(String(30), default="post", server_default="post", nullable=False)
-                                                             
-
-
+    
     is_pillar = Column(Boolean, default=False, server_default="0", nullable=False)
     pillar_id = Column(Integer, ForeignKey('blog_posts.id', ondelete='SET NULL'), nullable=True, default=None)
     pillar = relationship("BlogPost",remote_side="BlogPost.id", backref=backref("clusters"))
-
     
     video = relationship("Video", back_populates="blog_post", uselist=False)
     images = relationship("Image", back_populates="blog_post")   
@@ -599,7 +596,24 @@ class BlogPost(StatusWorkflowMixin,IdentifiableContentMixin,StatusCRUDMixin,Iden
     about = relationship("Topic", secondary=post_about_topics, back_populates="posts_about_us")
     mentions = relationship("Topic", secondary=post_mentions_topics, back_populates="posts_mentioning_us")
 
-    
+    @classmethod
+    def get_pillars_published(cls, db: Session, skip: int = 0, limit: int = 100) -> List["BlogPost"]:
+        return (db.query(cls).filter(cls.is_pillar == True).filter(cls.status == "published").filter(cls.is_deleted == False).offset(skip).limit(limit).all())
+    @classmethod
+    def get_cluster_posts_by_pillar(cls, db: Session, pillar_id: int) -> List["BlogPost"]:
+        return (db.query(cls).filter(cls.pillar_id == pillar_id).filter(cls.status == "published").filter(cls.is_deleted == False).all())
+    @classmethod
+    def get_post_media_assets(cls, db: Session, post_id: int) -> dict:
+        active_video = db.query(Video).filter(Video.post_id == post_id, Video.is_deleted == False).first()
+        active_images = db.query(Image).filter(Image.blog_post_id == post_id, Image.is_deleted == False).all()
+        return {"video": active_video,"images": active_images}
+    @classmethod
+    def get_post_metadata_taxonomies(cls, db: Session, post_id: int) -> dict:
+        active_categories = db.query(Category).join(Category.blog_posts).filter(cls.id == post_id).filter(Category.is_deleted == False).all()
+        active_tags = db.query(Tag).join(Tag.blog_posts).filter(cls.id == post_id).filter(Tag.is_deleted == False).all()
+        return {"categories": active_categories,"tags": active_tags}
+                                                             
+            
 or
     
 
