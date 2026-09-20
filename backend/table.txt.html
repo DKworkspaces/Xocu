@@ -247,14 +247,15 @@ post_mentions_topics = Table("post_mentions_topics",Base.metadata,Column("post_i
     
 
 
-class JSONSerializableMixin:
+class JSONSerialMixin(object):
+    __api_hidden__ = ['is_deleted']
     def to_dict(self, exclude_fields=None):
-        if exclude_fields is None:
-            exclude_fields = set()
-        else:
-            exclude_fields = set(exclude_fields)
+        runtime_exclude = set(exclude_fields) if exclude_fields else set()
+        mixin_hidden = set(JSONSerializableMixin.__api_hidden__)                                                             
+        model_hidden = set(getattr(self, '__api_hidden__', []))
+        all_excluded = runtime_exclude.union(model_hidden).union(mixin_hidden)
         inst = inspect(self)
-        return { c.key: getattr(self, c.key)for c in inst.mapper.column_attrs if not c.key.startswith('_') and c.key not in exclude_fields }
+        return { c.key: getattr(self, c.key)for c in inst.mapper.column_attrs if not c.key.startswith('_') and c.key not in all_excluded }
 
 
     
@@ -502,7 +503,7 @@ class IdentifiableCRUDMixin(CRUDAdvMixin):
 
             
             
-class Category(IdentifiableContentMixin,IdentifiableCRUDMixin,ContentRelationMixin,Base):
+class Category(IdentifiableContentMixin,IdentifiableCRUDMixin,ContentRelationMixin,JSONSerialMixin,Base):
     __tablename__ = 'categories'
     parent_id = Column(Integer, ForeignKey('categories.id', ondelete='CASCADE'), nullable=True, default=None)
     parent = relationship("Category", remote_side=Category.id, back_populates="children")
@@ -528,13 +529,13 @@ class Category(IdentifiableContentMixin,IdentifiableCRUDMixin,ContentRelationMix
         db.add(self)
         db.commit()
         return self
-class Tag(IdentifiableContentMixin,IdentifiableCRUDMixin,ContentRelationMixin,Base):
+class Tag(IdentifiableContentMixin,IdentifiableCRUDMixin,ContentRelationMixin,JSONSerialMixin,Base):
     __tablename__ = 'tags'
     blog_posts = relationship("BlogPost", secondary=post_tag_association, back_populates="tags")
     topics = relationship("Topic", secondary=tag_topic_association, back_populates="tags")
     __table_args__ = (Index('idx_tags_slug', 'slug'),)
 
-class Topic(IdentifiableContentMixin,IdentifiableCRUDMixin,Base):
+class Topic(IdentifiableContentMixin,IdentifiableCRUDMixin,JSONSerialMixin,Base):
     __tablename__ = "topics"
     type = Column(String(50), nullable=False)
     wpedia_url = Column(String(255), default=None, nullable=True)
@@ -567,7 +568,7 @@ class Topic(IdentifiableContentMixin,IdentifiableCRUDMixin,Base):
 
 
             
- class Person(IdentifiableContentMixin,IdentifiableCRUDMixin,Base):
+ class Person(IdentifiableContentMixin,IdentifiableCRUDMixin,JSONSerialMixin,Base):
     __tablename__ = "people"
     bio = Column(Text)
     job_title = Column(String(100), default=None, nullable=True)
@@ -600,12 +601,12 @@ class Topic(IdentifiableContentMixin,IdentifiableCRUDMixin,Base):
 
 
             
-class PersonSocial(IdMixin,CRUDMixin,Base):
+class PersonSocial(IdMixin,CRUDMixin,JSONSerialMixin,Base):
     __tablename__ = "person_socials"
     person_id = Column(Integer, ForeignKey("people.id", ondelete="CASCADE"), nullable=False)
     url = Column(String(512), nullable=False)
     person = relationship("Person", back_populates="social_profiles")
-class Image(TimestampMixin,CRUDAdvMixin,Base):
+class Image(TimestampMixin,CRUDAdvMixin,JSONSerialMixin,Base):
     __tablename__ = "images"
     media_url = Column(String(512), nullable=False)
     width = Column(Integer, nullable=False)
@@ -613,7 +614,7 @@ class Image(TimestampMixin,CRUDAdvMixin,Base):
     caption = Column(Text, default=None, nullable=True)
     blog_post_id = Column(Integer, ForeignKey('blog_posts.id', ondelete='SET NULL'), nullable=True)
     blog_post = relationship("BlogPost", back_populates="images")
- class Video(TimestampMixin,CRUDAdvMixin,Base):
+ class Video(TimestampMixin,CRUDAdvMixin,JSONSerialMixin,Base):
     __tablename__ = 'videos'
     post_id = Column(Integer, ForeignKey('blog_posts.id', ondelete='SET NULL'), unique=True, nullable=True)
     video_id = Column(String(100), nullable=False)
@@ -641,7 +642,7 @@ class Image(TimestampMixin,CRUDAdvMixin,Base):
     def get_chapters_deleted(self, db: Session) -> List["VideoChapter"]:
         return (db.query(VideoChapter).filter(VideoChapter.video_id == self.id).filter(VideoChapter.is_deleted == True).all())
             
-class VideoChapter(IdMixin,CRUDMixin,Base):
+class VideoChapter(IdMixin,CRUDMixin,JSONSerialMixin,Base):
     __tablename__ = 'video_chapters'
     video_id = Column(Integer, ForeignKey('videos.id', ondelete='CASCADE'), nullable=False)
     name = Column(String(255), nullable=False)
@@ -655,7 +656,7 @@ class VideoChapter(IdMixin,CRUDMixin,Base):
 
 
             
-class BlogPost(StatusWorkflowMixin,IdentifiableContentMixin,StatusCRUDMixin,IdentifiableCRUDMixin,Base):
+class BlogPost(StatusWorkflowMixin,IdentifiableContentMixin,StatusCRUDMixin,IdentifiableCRUDMixin,JSONSerialMixin,Base):
     __tablename__ = 'blog_posts'
     content = Column(Text, nullable=False)
     author_id = Column(Integer, ForeignKey('authors.author_id'))
