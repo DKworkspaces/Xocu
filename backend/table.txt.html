@@ -13,209 +13,70 @@ post_id,tag_id
 
 
 
-from flask import Blueprint, request, jsonify, render_template, abort, Response
-from typing import Type, Any
+from flask import Blueprint, request, jsonify, abort
 
-class CrudMixinRouterFactory:
-    """
-    Generates Flask Blueprints by pairing a structural Table class 
-    with a decoupled CrudMixin execution engine.
-    """
-    @classmethod
-    def create_blueprint(
-        cls, 
-        resource_name: str, 
-        model_class: Type[Any],  # e.g., your table class (class abc)
-        crud_mixin: Type[Any],   # your standalone CrudMixin class
-        list_template: str, 
-        detail_template: str
-    ) -> Blueprint:
+def create_crud_router(model_class, url_prefix):
+    bp = Blueprint(f"{model_class.__name__.lower()}_api", __name__, url_prefix=url_prefix)
+    @bp.route('', methods=['GET'])
+    def get_all():
+        records = model_class.get_all()
+        return jsonify([record.to_dict() for record in records]), 200
+    @bp.route('/<int:id>', methods=['GET'])
+    def get_one(id):
+        record = model_class.get_by_id(id)
+        if not record:
+            abort(404, description=f"{model_class.__name__} record not found.")
+        return jsonify(record.to_dict()), 200
+    @bp.route('', methods=['POST'])
+    def create():
+        data = request.get_json() or {}
+        if not data:
+            abort(400, description="Missing JSON payload request body.")
+        try:
+            new_record = model_class.create(**data)
+            return jsonify(new_record.to_dict()), 201
+        except Exception as e:
+            db.session.rollback()
+            abort(400, description=str(e))
+    @bp.route('/<int:id>', methods=['PUT', 'PATCH'])
+    def update(id):
+        record = model_class.get_by_id(id)
+        if not record:
+            abort(404, description=f"{model_class.__name__} record not found.")
+        data = request.get_json() or {}
+        try:
+            updated_record = record.update(**data)
+            return jsonify(updated_record.to_dict()), 200
+        except Exception as e:
+            db.session.rollback()
+            abort(400, description=str(e))
+    @bp.route('/<int:id>', methods=['DELETE'])
+    def delete(id):
+        record = model_class.get_by_id(id)
+        if not record:
+            abort(404, description=f"{model_class.__name__} record not found.")
+        record.delete()
+        return jsonify({"message": f"{model_class.__name__} deleted successfully."}), 200
+    return bp
         
-        bp = Blueprint(resource_name, __name__, url_prefix=f"/{resource_name}")
+from models import db, Company, Employee
+from routes import create_crud_router     
+app = Flask(__name__)
+db.init_app(app)
+company_router = create_crud_router(Company, url_prefix='/api/companies')
+employee_router = create_crud_router(Employee, url_prefix='/api/employees')
 
-        # ---- GET ALL ENTRIES / POST NEW ENTRY ----
-        @bp.route("/", methods=["GET", "POST"], endpoint="collection")
-        def handle_collection():
-            if request.method == "GET":
-                filters = {k: v for k, v in request.args.items() if k != "format"}
-                
-                # Call CrudMixin, passing your specific table class into the lookup function
-                items = crud_mixin.get_all(model_class, filters=filters if filters else None)
-                
-                if request.args.get("format") == "json":
-                    return jsonify([dict(i) if not isinstance(i, dict) else i for i in items]), 200
-                return render_template(list_template, items=items)
-                
-            elif request.method == "POST":
-                body = request.get_json(silent=True) or request.form.to_dict()
-                if not body:
-                    return jsonify({"error": "Payload content missing"}), 400
-                
-                # Call CrudMixin creation logic scoped to your table class
-                new_item = crud_mixin.create(model_class, body)
-                return jsonify(dict(new_item) if not isinstance(new_item, dict) else new_item), 201
+app.register_blueprint(company_router)
+app.register_blueprint(employee_router)
 
-        # ---- GET, UPDATE, DELETE INDIVIDUAL RECORD ----
-        @bp.route("/<int:id>", methods=["GET", "PUT", "DELETE"], endpoint="instance")
-        def handle_instance(id: int):
-            # Fetch the active record context via CrudMixin
-            record = crud_mixin.get_by_id(model_class, id)
-            if not record: 
-                abort(404)
-                
-            if request.method == "GET":
-                if request.args.get("format") == "json":
-                    return jsonify(dict(record) if not isinstance(record, dict) else record), 200
-                return render_template(detail_template, item=record)
-                
-            elif request.method == "PUT":
-                body = request.get_json(silent=True) or request.form.to_dict()
-                
-                # Update the active record via CrudMixin
-                updated_record = crud_mixin.update(model_class, id, body)
-                return jsonify(dict(updated_record) if not isinstance(updated_record, dict) else updated_record), 200
-                
-            elif request.method == "DELETE":
-                # Remove the entry from the database via CrudMixin
-                crud_mixin.delete(model_class, id)
-                return Response(status=204)
-
-        return bp
-import os
-import sys
-from flask import Flask
-from factory import CrudMixinRouterFactory
-            from flask import Blueprint, request, jsonify, render_template, abort, Response
-from typing import Type, Any
-
-class DirectModelRouterFactory:
-    """Generates Flask Blueprints by interacting directly with Table models that inherit a CrudMixin."""
-    
-    @classmethod
-    def create_blueprint(
-        cls, 
-        resource_name: str, 
-        model_class: Type[Any],  # Pass your table class directly (e.g., class abc)
-        list_template: str, 
-        detail_template: str
-    ) -> Blueprint:
+Generated API Access Schema
+Method    Endpoint
+GET       /api/companies
+POST      /api/companies
+GET       /api/companies/1
+PUT       /api/companies/1
+DELETE    /api/companies/1
         
-        bp = Blueprint(resource_name, __name__, url_prefix=f"/{resource_name}")
-
-        # ---- GET ALL (LIST) / POST (CREATE) ----
-        @bp.route("/", methods=["GET", "POST"], endpoint="collection")
-        def handle_collection():
-            if request.method == "GET":
-                filters = {k: v for k, v in request.args.items() if k != "format"}
-                
-                # Executed directly on your table model class: e.g., abc.get_all()
-                items = model_class.get_all(filters=filters if filters else None)
-                
-                if request.args.get("format") == "json":
-                    return jsonify([dict(i) if not isinstance(i, dict) else i for i in items]), 200
-                return render_template(list_template, items=items)
-                
-            elif request.method == "POST":
-                body = request.get_json(silent=True) or request.form.to_dict()
-                if not body:
-                    return jsonify({"error": "Payload content missing"}), 400
-                
-                # Executed directly: e.g., abc.create(body)
-                new_item = model_class.create(body)
-                return jsonify(dict(new_item) if not isinstance(new_item, dict) else new_item), 201
-
-        # ---- GET (DETAIL) / PUT (UPDATE) / DELETE ----
-        @bp.route("/<int:id>", methods=["GET", "PUT", "DELETE"], endpoint="instance")
-        def handle_instance(id: int):
-            # Fetch using your model's native method: e.g., abc.get_by_id(id)
-            record = model_class.get_by_id(id)
-            if not record: 
-                abort(404)
-                
-            if request.method == "GET":
-                if request.args.get("format") == "json":
-                    return jsonify(dict(record) if not isinstance(record, dict) else record), 200
-                return render_template(detail_template, item=record)
-                
-            elif request.method == "PUT":
-                body = request.get_json(silent=True) or request.form.to_dict()
-                
-                # If your mixin updates from the class level, e.g., abc.update(id, body)
-                if hasattr(model_class, 'update'):
-                    updated_record = model_class.update(id, body)
-                # If your mixin updates from the instance level, e.g., record.update(body)
-                else:
-                    record.update(body)
-                    updated_record = record
-                    
-                return jsonify(dict(updated_record) if not isinstance(updated_record, dict) else updated_record), 200
-                
-            elif request.method == "DELETE":
-                # If class level delete: abc.delete(id). If instance level: record.delete()
-                if hasattr(model_class, 'delete_by_id'):
-                    model_class.delete_by_id(id)
-                else:
-                    record.delete()
-                return Response(status=204)
-
-        return bp
-
-import os
-import sys
-from flask import Flask
-from factory import DirectModelRouterFactory
-
-app = Flask(__name__, template_folder="templates")
-
-# =====================================================================
-# SIMULATED CODEBASE BASELINES (YOUR ACTUAL INHERITED MODELS)
-# =====================================================================
-class CrudMixin:
-    """The actual working mixin inherited by your database tables."""
-    @classmethod
-    def get_all(cls, filters=None):
-        # 'cls' references the subclass table automatically (abc or xyz)
-        print(f"[DB ENGINE] Native call executed via: {cls.__name__}.get_all()")
-        return [{"id": 1, "title": f"Static Page from {cls.__name__}", "body": "Content Layer"}]
-
-    @classmethod
-    def get_by_id(cls, pk):
-        print(f"[DB ENGINE] Native call executed via: {cls.__name__}.get_by_id({pk})")
-        return {"id": pk, "title": f"Static Page from {cls.__name__}", "body": "Content Layer"}
-
-    @classmethod
-    def create(cls, data): pass
-
-
-# YOUR LIVE ACTIVE DATA TABLES INHERITING THE MIXIN
-class abc(CrudMixin):
-    __tablename__ = "abc_table"
-
-class xyz(CrudMixin):
-    __tablename__ = "xyz_table"
-
-
-# =====================================================================
-# AUTO-REGISTRATION TO THE ROUTING SYSTEM
-# =====================================================================
-abc_blueprint = DirectModelRouterFactory.create_blueprint(
-    resource_name="abc",
-    model_class=abc,  # Direct assignment to the class calling abc.get_all()
-    list_template="abc_list.html",
-    detail_template="abc_detail.html"
-)
-
-xyz_blueprint = DirectModelRouterFactory.create_blueprint(
-    resource_name="xyz",
-    model_class=xyz,  # Direct assignment to the class calling xyz.get_all()
-    list_template="xyz_list.html",
-    detail_template="xyz_detail.html"
-)
-
-app.register_blueprint(abc_blueprint)
-app.register_blueprint(xyz_blueprint)
-
-            
 
 
 
@@ -386,7 +247,14 @@ post_mentions_topics = Table("post_mentions_topics",Base.metadata,Column("post_i
     
 
 
-
+class JSONSerializableMixin:
+    def to_dict(self, exclude_fields=None):
+        if exclude_fields is None:
+            exclude_fields = set()
+        else:
+            exclude_fields = set(exclude_fields)
+        inst = inspect(self)
+        return { c.key: getattr(self, c.key)for c in inst.mapper.column_attrs if not c.key.startswith('_') and c.key not in exclude_fields }
 
 
     
@@ -467,7 +335,7 @@ class CRUDMixin(object):
     def hard_delete(self, db: Session):
         db.delete(self)
         db.commit()
-        return self
+        return True
 class CRUDAdvMixin(CRUDMixin):
     @classmethod
     def _base_deleted_query(cls, db: Session):
@@ -493,7 +361,7 @@ class CRUDAdvMixin(CRUDMixin):
             self.status = "archived"
         db.add(self)
         db.commit()
-        return self
+        return True
     def restore(self, db: Session):
         self.is_deleted = False
         if hasattr(self, "status"):
