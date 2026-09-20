@@ -15,12 +15,13 @@ post_id,tag_id
 
 from flask import Blueprint, request, jsonify, abort
 
-def create_crud_router(model_class, url_prefix):
+def create_crud_router(model_class, url_prefix, enable_list_route=True):
     bp = Blueprint(f"{model_class.__name__.lower()}_api", __name__, url_prefix=url_prefix)
-    @bp.route('', methods=['GET'])
-    def get_all():
-        records = model_class.get_all()
-        return jsonify([record.to_dict() for record in records]), 200
+    if enable_list_route:
+        @bp.route('', methods=['GET'])
+        def get_all():
+            records = model_class.get_all()
+            return jsonify([record.to_dict() for record in records]), 200
     @bp.route('/<int:id>', methods=['GET'])
     def get_one(id):
         record = model_class.get_by_id(id)
@@ -58,7 +59,54 @@ def create_crud_router(model_class, url_prefix):
         record.delete()
         return jsonify({"message": f"{model_class.__name__} deleted successfully."}), 200
     return bp
+
+from flask import request, jsonify
+from sqlalchemy import desc, asc
+import math
+
+def create_advanced_crud_router(model_class, url_prefix):
+    bp = create_crud_router(model_class, url_prefix=url_prefix, enable_list_route=False)
+    @bp.route('', methods=['GET'])
+    def get_all_advanced():
+        query = model_class.query
+        columns = model_class.__table__.columns.keys()
+        # Dynamic Filtering (Matches column keys in URL parameters)
+        for key, value in request.args.items():
+            if key in columns and not key.startswith('_'):
+                query = query.filter(getattr(model_class, key) == value)
+        # Dynamic Sorting
+        sort_by = request.args.get('sort_by', 'id')
+        order = request.args.get('order', 'asc').lower()
+        if sort_by in columns:
+            sort_attr = getattr(model_class, sort_by)
+            query = query.order_by(desc(sort_attr) if order == 'desc' else asc(sort_attr))
+        # Pagination Engine
+        try:
+            page = int(request.args.get('page', 1))
+            per_page = int(request.args.get('per_page', 20))
+        except ValueError:
+            page, per_page = 1, 20
+        page = max(1, page)
+        per_page = max(1, per_page)
+        total_items = query.count()
+        total_pages = math.ceil(total_items / per_page) if total_items > 0 else 1
+        page = min(page, total_pages)
+        records = query.offset((page - 1) * per_page).limit(per_page).all()
         
+        return jsonify({
+            "data": [record.to_dict() for record in records],
+            "meta": {
+                "total_items": total_items,
+                "total_pages": total_pages,
+                "current_page": page,
+                "per_page": per_page,
+                "has_next": page < total_pages,
+                "has_prev": page > 1
+            }
+        }), 200
+    return bp
+
+
 from models import db, Company, Employee
 from routes import create_crud_router     
 app = Flask(__name__)
@@ -77,7 +125,16 @@ GET       /api/companies/1
 PUT       /api/companies/1
 DELETE    /api/companies/1
         
-
+URL Cheat Sheet
+Feature                  Production URL for list of all
+Default List             GET     /api/employees
+Change Page Size         GET     /api/employees?per_page=50
+Pagination Loop          GET     /api/employees?page=3&per_page=10
+Single Column Filter     GET     /api/employees?role=Manager
+Multi-Column Filter      GET     /api/employees?role=Engineer&company_id=4
+Reverse Chronological    GET     /api/employees?sort_by=id&order=desc
+Alphabetical Sorting     GET     /api/employees?sort_by=name&order=asc
+                    
 
 
 
