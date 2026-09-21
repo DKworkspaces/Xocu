@@ -1,0 +1,78 @@
+
+from datetime import datetime, timedelta
+from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey, DateTime, event
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.engine import Engine
+from sqlalchemy.orm import sessionmaker
+
+DATABASE_URL = "sqlite:///website_data.db"
+engine = create_engine(DATABASE_URL)
+Base = declarative_base()
+@event.listens_for(Engine, "connect")
+def set_sqlite_pragma(dbapi_connection, connection_record):
+    cursor = dbapi_connection.cursor()
+    cursor.execute("PRAGMA foreign_keys = ON;")
+    cursor.close()
+
+# --- Tables ---
+class User(Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    username = Column(String, unique=True, nullable=False)
+class Product(Base):
+    __tablename__ = 'products'
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False)
+    price = Column(Float, nullable=False)
+class Order(Base):
+    __tablename__ = 'orders'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    total = Column(Float)
+    # Track when the entry was created for purging logic
+    created_at = Column(DateTime, default=datetime.utcnow)
+class Article(Base):
+    __tablename__ = 'articles'
+    id = Column(Integer, primary_key=True)
+    title = Column(String, nullable=False)
+    content = Column(String)
+class Config(Base):
+    __tablename__ = 'site_config'
+    id = Column(Integer, primary_key=True)
+    setting_key = Column(String, unique=True)
+    setting_value = Column(String)
+
+# --- Purge Logic ---
+def execute_self_purge(engine):
+    """Safely purges old records without deleting the tables or essential data."""
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    try:
+        thirty_days_ago = datetime.utcnow() - timedelta(days=30)
+        deleted_rows = session.query(Order).filter(Order.created_at < thirty_days_ago).delete()
+        session.commit()
+        print(f"Purge Active: Successfully removed {deleted_rows} expired records.")
+    except Exception as e:
+        session.rollback()
+        print(f"Purge Error: Automation failed to clean records safely. Reason: {e}")
+        raise
+    finally:
+        session.close()
+    with engine.connect() as conn:
+        conn.execute("VACUUM;")
+        print("Database Optimization: VACUUM execution completed.")
+def main():
+    Base.metadata.create_all(engine)
+    execute_self_purge(engine)
+if __name__ == "__main__":
+    main()
+
+
+
+
+
+
+# Alternative: Keep only the latest 1000 orders
+subquery = session.query(Order.id).order_by(Order.created_at.desc()).limit(1000).subquery()
+deleted_rows = session.query(Order).filter(~Order.id.in_(subquery)).delete(synchronize_session=False)
+          
