@@ -39,18 +39,15 @@ const views = document.querySelectorAll('.spa-view');
 function navigateTo(hashTarget) {
     const cleanedHash = hashTarget.replace('#', '') || 'home';
     let viewFound = false;
-
     // 1. Manage Active Class across views
     views.forEach(view => {
         if (view.id === `view-${cleanedHash}`) {
             view.classList.add('active');
             document.title = view.getAttribute('data-title') || 'CMS Dashboard';
             viewFound = true;
-        } else {
-            view.classList.remove('active');
-        }
+        } 
+        else {view.classList.remove('active');}
     });
-
     // Fallback route logic if page matching fails
     if (!viewFound) {
         const homeView = document.getElementById('view-home');
@@ -59,39 +56,18 @@ function navigateTo(hashTarget) {
             document.title = homeView.getAttribute('data-title') || 'CMS Dashboard';
         }
     }
-
     // 2. Synchronize navigation links highlighting
     navItems.forEach(item => {
         const itemHash = item.getAttribute('href');
-        if (itemHash === `#${cleanedHash}` || (cleanedHash === 'home' && itemHash === '#home')) {
-            item.classList.add('active');
-        } else {
-            item.classList.remove('active');
-        }
+        if (itemHash === `#${cleanedHash}` || (cleanedHash === 'home' && itemHash === '#home')) {item.classList.add('active');}
+        else {item.classList.remove('active');}
     });
 }
-
-// 3. REMOVED direct navigation call from click handler. 
-// The HTML anchor tag naturally changes the hash, which triggers 'hashchange'.
-navItems.forEach(item => {
-    item.addEventListener('click', (e) => {
-        // If your tags are actual <a> links with href="#route", you don't need any code here.
-        // The browser handles the URL update naturally.
-    });
-});
-
 // 4. Centralized event listener handles initial load AND history navigation (back/forward arrows)
-window.addEventListener('hashchange', () => {
-    navigateTo(window.location.hash);
-});
-
+window.addEventListener('hashchange', () => {navigateTo(window.location.hash);});
 // Handle initial page load setup
-if (window.location.hash) {
-    navigateTo(window.location.hash);
-} else {
-    // This will trigger the hashchange event naturally for the default state
-    window.location.hash = '#home'; 
-}
+if (window.location.hash) {navigateTo(window.location.hash);}
+else {window.location.hash = '#home'; }
 
         
         
