@@ -39,7 +39,7 @@ const views = document.querySelectorAll('.spa-view');
 function navigateTo(hashTarget) {
     const cleanedHash = hashTarget.replace('#', '') || 'home';
     let viewFound = false;
-    // 1. Manage Active Class across views
+// 1. Manage Active Class across views
     views.forEach(view => {
         if (view.id === `view-${cleanedHash}`) {
             view.classList.add('active');
@@ -48,7 +48,7 @@ function navigateTo(hashTarget) {
         } 
         else {view.classList.remove('active');}
     });
-    // Fallback route logic if page matching fails
+// Fallback route logic if page matching fails
     if (!viewFound) {
         const homeView = document.getElementById('view-home');
         if (homeView) {
@@ -56,27 +56,24 @@ function navigateTo(hashTarget) {
             document.title = homeView.getAttribute('data-title') || 'CMS Dashboard';
         }
     }
-    // 2. Synchronize navigation links highlighting
+// 2. Synchronize navigation links highlighting
     navItems.forEach(item => {
         const itemHash = item.getAttribute('href');
         if (itemHash === `#${cleanedHash}` || (cleanedHash === 'home' && itemHash === '#home')) {item.classList.add('active');}
         else {item.classList.remove('active');}
     });
-    // 3. Condition check using cleanedHash
+// 3. Condition check using cleanedHash
         if (cleanedHash === 'home') {fetchBlogPosts()
 // Your home logic goes here
             } 
             else if (cleanedHash === 'tag') {
-                console.log('Executing tag view actions');
-                // Your tag logic goes here
+// Your tag logic goes here
             } 
             else if (cleanedHash === 'categories') {
-                console.log('Executing categories view actions');
-                // Your categories logic goes here
+// Your categories logic goes here
             } 
             else if (cleanedHash === 'topics') {
-                console.log('Executing topics view actions');
-                // Your topics logic goes here
+// Your topics logic goes here
         }
 }
 // 4. Centralized event listener handles initial load AND history navigation (back/forward arrows)
