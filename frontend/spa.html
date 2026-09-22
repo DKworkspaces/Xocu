@@ -88,13 +88,13 @@
 
 
 // Base configuration targeting a real public testing API endpoint
-const API_BASE_URL = 'https://reqres.in';
+const API_BASE_URL = 'https://jsonplaceholder.typicode.com/';
 // A. Core Function: Asynchronously Fetch Data From Your Server API
 async function fetchBlogPosts() {
     const tbody = document.getElementById('table-body-posts');
     const headerRow = document.getElementById('table-headers');
     tbody.innerHTML = `<tr><td colspan="3" class="table-empty-state">Loading latest records...</td></tr>`;
-    const columns = [{ name: "Name" }, { name: "Email" }, { name: "Control Actions" }];
+    const columns = [{ name: "Title" }, { name: "Complete" }, { name: "Control Actions" }];
     headerRow.innerHTML = columns.map(col => `<th>${col.name}</th>`).join('');
     try {
         const response = await fetch(API_BASE_URL);
@@ -116,8 +116,8 @@ function renderTableRows(posts) {
     if (posts && posts.length > 0) {
         tbody.innerHTML = posts.map(post => {
             return`<tr id="post-row-${post.id}">
-                    <td><strong>${post.first_name} ${user.last_name}</strong></td>
-                    <td><code>${post.email}</code></td>
+                    <td><strong>${post.title}</strong></td>
+                    <td><code>${post.complete}</code></td>
                     <td class="actions">
                         <a href="/edit-user/${post.id}" class="btn-edit" onclick="handleEditAction(event, ${post.id})">Edit</a>
                         <form action="/delete-user/${post.id}" method="POST" class="delete-form" onsubmit="return handleDeleteAction(event, ${post.id});">
