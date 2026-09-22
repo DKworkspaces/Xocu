@@ -22,26 +22,20 @@
     <script>
         const navItems = document.querySelectorAll('.nav-item');
         const views = document.querySelectorAll('.spa-view');
-
         function navigateTo(hashTarget) {
-            // Standard fallback option if an invalid hash string lands
             const cleanedHash = hashTarget.replace('#', '') || 'home';
-            
             let viewFound = false;
-
-            // 1. Manage Active Class across permanent HTML views
+// 1. Manage Active Class across permanent HTML views
             views.forEach(view => {
                 if (view.id === `view-${cleanedHash}`) {
                     view.classList.add('active');
-                    // Update document title dynamically using the template data attribute tokens
                     document.title = view.getAttribute('data-title') || 'CMS Dashboard';
                     viewFound = true;
                 } else {
                     view.classList.remove('active');
                 }
             });
-
-            // Fallback route context logic if page matching signature fails
+// Fallback route context logic if page matching signature fails
             if (!viewFound) {
                 const homeView = document.getElementById('view-home');
                 if (homeView) {
@@ -49,8 +43,7 @@
                     document.title = homeView.getAttribute('data-title');
                 }
             }
-
-            // 2. Synchronize navigation links highlighting indicator classes
+// 2. Synchronize navigation links highlighting indicator classes
             navItems.forEach(item => {
                 const itemHash = item.getAttribute('href');
                 if (itemHash === `#${cleanedHash}` || (cleanedHash === 'home' && itemHash === '#home')) {
@@ -60,26 +53,20 @@
                 }
             });
         }
-
-        // 3. Event Listeners for explicit navigational link actions
+// 3. Event Listeners for explicit navigational link actions
         navItems.forEach(item => {
             item.addEventListener('click', (e) => {
-                // Let standard hash navigation handle the history state
                 const targetHash = item.getAttribute('href');
                 navigateTo(targetHash);
             });
         });
-
-        // 4. Initial Routing Initialization Setup
-        // Check if user loaded the URL directly with a hash parameter preset (e.g. index.html#topic)
+// 4. Initial Routing Initialization Setup
         if (window.location.hash) {
             navigateTo(window.location.hash);
         } else {
-            // Fallback default setup targeting home automatically
             navigateTo('#home');
         }
-
-        // Optional: Listen to browser history arrow transitions natively
+// Optional: Listen to browser history arrow transitions natively
         window.addEventListener('hashchange', () => {
             navigateTo(window.location.hash);
         });
