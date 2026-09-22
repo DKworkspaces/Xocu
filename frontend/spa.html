@@ -70,6 +70,74 @@
         window.addEventListener('hashchange', () => {
             navigateTo(window.location.hash);
         });
+
+
+
+// Base configuration targeting a real public testing API endpoint
+const API_BASE_URL = 'https://typicode.com';
+// A. Core Function: Asynchronously Fetch Data From Your Server API
+async function fetchBlogPosts() {
+    const tbody = document.getElementById('table-body-posts');
+    const headerRow = document.getElementById('table-headers');
+    tbody.innerHTML = `<tr><td colspan="3" class="table-empty-state">Loading latest records...</td></tr>`;
+    const columns = [{ name: "Post Title" }, { name: "Slug Pathway" }, { name: "Control Actions" }];
+    headerRow.innerHTML = columns.map(col => `<th>${col.name}</th>`).join('');
+    try {
+        const response = await fetch(API_BASE_URL);
+        if (!response.ok) {throw new Error(`HTTP network error code returned: ${response.status}`);}
+        const postsData = await response.json();
+        renderTableRows(postsData);
+    } catch (error) {
+        console.error("API Fetch Exception:", error);
+        tbody.innerHTML = `<tr>
+            <td colspan="3" class="table-empty-state" style="color:red;">
+            <strong>Failed to Load Content</strong>
+            <p>${error.message}. Please check your connection or endpoint configurations.</p>
+            </td></tr>`;
+    }
+}
+// B. Structural Rendering Loop
+function renderTableRows(posts) {
+    const tbody = document.getElementById('table-body-posts');
+    if (posts && posts.length > 0) {
+        tbody.innerHTML = posts.map(post => {
+            return`<tr id="post-row-${post.id}">
+                    <td><strong>${post.title}</strong></td>
+                    <td><code>${post.id}</code></td>
+                    <td class="actions">
+                        <a href="/edit-post/${post.id}" class="btn-edit" onclick="handleEditAction(event, ${post.id})">Edit</a>
+                        <form action="/delete-post/${post.id}" method="POST" class="delete-form" onsubmit="return handleDeleteAction(event, ${post.id});">
+                            <button type="submit" class="btn-delete">Delete</button>
+                        </form>
+        </td></tr>`;}).join('');
+    } else {
+        tbody.innerHTML = `<tr><td colspan="3" class="table-empty-state"><p>No Entries found on network database.</p></td></tr>`;
+    }
+}
+// C. Functional Action Utilities (Connecting HTTP requests back out to your server)
+function handleEditAction(event, id) {
+    event.preventDefault();
+    alert(`Trigger internal SPA layout window change routing context targeting Edit Mode for ID: ${id}`);
+}
+
+async function handleDeleteAction(event, id) {
+    event.preventDefault();
+    if (!confirm('Are you absolutely sure you want to delete this record permanently?')) {return false;}
+    try {
+        const response = await fetch(`https://typicode.com{id}`, {method: 'DELETE'});
+        if (response.ok) {
+            const targetRow = document.getElementById(`post-row-${id}`);
+            if (targetRow) {
+                targetRow.style.transition = 'opacity 0.25s ease';
+                targetRow.style.opacity = '0';
+                setTimeout(() => targetRow.remove(), 250);
+            }
+            alert(`Record #${id} successfully dropped from remote server instance.`);
+        } else {alert('Server rejected the delete operational sequence script logic parameters.');}
+    } catch (err) {alert(`Network connection failure caught during deletion: ${err.message}`);}
+}
+                        
+            
   </script>
   
 <!-- 
