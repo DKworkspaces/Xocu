@@ -78,6 +78,7 @@
             navigateTo(window.location.hash);
         } else {
             navigateTo('#home');
+            fetchBlogPosts();
         }
 // Optional: Listen to browser history arrow transitions natively
         window.addEventListener('hashchange', () => {
