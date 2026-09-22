@@ -12,7 +12,20 @@
 </nav></div>
 
 <div class="main-content">
-<section id="view-home" class="spa-view" data-title="CMS Panel"><h2>Home Workspace</h2></section>
+<section id="view-home" class="spa-view" data-title="CMS Panel"><h2>Home Workspace</h2>
+
+<div class="data-table-container"><div class="data-table-header-box">
+    <h3>Existing Blog Posts</h3>
+    <a href="/create-post" class="btn-create-new" onclick="event.preventDefault(); alert('Redirecting to post creation page workflow...');">Create New Post</a>
+    </div>
+        <table><thead><tr id="table-headers">
+<!-- Populated dynamically via script execution -->
+        </tr></thead>
+        <tbody id="table-body-posts">
+<!-- API elements map directly inside here -->
+        </tbody></table></div>
+
+</section>
 <section id="view-topic" class="spa-view" data-title="Topics Directory — CMS Panel"><h2>Topic Workspace</h2></section>
 <section id="view-category" class="spa-view" data-title="Categories Directory — CMS Panel"><h2>Category Workspace</h2></section>
 <section id="view-tag" class="spa-view" data-title="Tags Directory — CMS Panel"><h2>Tag Workspace</h2></section>
