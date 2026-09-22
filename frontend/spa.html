@@ -62,6 +62,22 @@ function navigateTo(hashTarget) {
         if (itemHash === `#${cleanedHash}` || (cleanedHash === 'home' && itemHash === '#home')) {item.classList.add('active');}
         else {item.classList.remove('active');}
     });
+    // 3. Condition check using cleanedHash
+        if (cleanedHash === 'home') {fetchBlogPosts()
+// Your home logic goes here
+            } 
+            else if (cleanedHash === 'tag') {
+                console.log('Executing tag view actions');
+                // Your tag logic goes here
+            } 
+            else if (cleanedHash === 'categories') {
+                console.log('Executing categories view actions');
+                // Your categories logic goes here
+            } 
+            else if (cleanedHash === 'topics') {
+                console.log('Executing topics view actions');
+                // Your topics logic goes here
+        }
 }
 // 4. Centralized event listener handles initial load AND history navigation (back/forward arrows)
 window.addEventListener('hashchange', () => {navigateTo(window.location.hash);});
