@@ -6,7 +6,6 @@
 <div class="sidebar"><h2>CMS Dashboard</h2>
 <nav id="main-navigation">
 <a href="#home" class="nav-item">Blog Post</a>
-<a href="#blog" class="nav-item">Create Blog Post</a>
 <a href="#topic" class="nav-item">Topic</a>
 <a href="#category" class="nav-item">Category</a>
 <a href="#tag" class="nav-item">Tag</a>
@@ -16,7 +15,7 @@
 <section id="view-home" class="spa-view" data-title="CMS Panel"><h2>Home Workspace</h2>
     <div class="data-table-container"><div class="data-table-header-box">
         <h3>Existing Blog Posts</h3>
-        <a href="/create-post" class="btn-create-new" onclick="event.preventDefault(); alert('Redirecting to post creation page workflow...');">Create New Post</a>
+        <a href="#createblog" class="btn-create-new" onclick="event.preventDefault(); alert('Redirecting to post creation page workflow...');">Create New Post</a>
         </div>
         <table><thead><tr id="table-headers">
 <!-- Populated dynamically via script execution -->
@@ -25,14 +24,14 @@
 <!-- API elements map directly inside here -->
         </tbody></table></div>
 </section>
-<section id="view-blog" class="spa-view" data-title="Create Post-CMS Panel">
-    <h2>Create Blogpost</h2>
-</section>
+<section id="view-createblog" class="spa-view" data-title="Create Post-CMS Panel"><h2>Create/Update Blogpost</h2></section>
+<section id="view-topic" class="spa-view" data-title="Topics Directory — CMS Panel"><h2>Topic Workspace</h2><a href="#createtopic" class="btn-create-new" onclick="event.preventDefault(); alert('Redirecting to post creation page workflow...');">Create New Topic</a></section>
+<section id="view-createtopic" class="spa-view" data-title="Create Topic-CMS Panel"><h2>Create/Update Topic</h2></section>
+<section id="view-category" class="spa-view" data-title="Categories Directory — CMS Panel"><h2>Category Workspace</h2><a href="#createcategory" class="btn-create-new" onclick="event.preventDefault(); alert('Redirecting to post creation page workflow...');">Create New Category</a></section>
+<section id="view-createcategory" class="spa-view" data-title="Create Category-CMS Panel"><h2>Create/Update Category</h2></section>
+<section id="view-tag" class="spa-view" data-title="Tags Directory — CMS Panel"><h2>Tag Workspace</h2><a href="#createtag" class="btn-create-new" onclick="event.preventDefault(); alert('Redirecting to post creation page workflow...');">Create New Tag</a></section>
+<section id="view-createtag" class="spa-view" data-title="Create Tag-CMS Panel"><h2>Create/Update Tag</h2></section>
 
-    
-<section id="view-topic" class="spa-view" data-title="Topics Directory — CMS Panel"><h2>Topic Workspace</h2></section>
-<section id="view-category" class="spa-view" data-title="Categories Directory — CMS Panel"><h2>Category Workspace</h2></section>
-<section id="view-tag" class="spa-view" data-title="Tags Directory — CMS Panel"><h2>Tag Workspace</h2></section>
 </div>
 
 
