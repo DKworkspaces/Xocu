@@ -31,7 +31,21 @@
 <section id="view-category" class="spa-view" data-title="Categories Directory — CMS Panel"><h2>Category Workspace</h2><a href="#createcategory" class="btn-create-new">Create New Category</a></section>
 <section id="view-tag" class="spa-view" data-title="Tags Directory — CMS Panel"><h2>Tag Workspace</h2><a href="#createtag" class="btn-create-new">Create New Tag</a></section>
 
-<section id="view-createblog" class="spa-view" data-title="Create Post-CMS Panel"><h2>Create/Update Blogpost</h2></section>
+<section id="view-createblog" class="spa-view" data-title="Create Post-CMS Panel"><h2>Create/Update Blogpost</h2>
+    <div class="data-table-container">
+        <form id="simple-form" novalidate>
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="userName" required minlength="2">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="userEmail" required>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</section>
 <section id="view-createtopic" class="spa-view" data-title="Create Topic-CMS Panel"><h2>Create/Update Topic</h2></section>
 <section id="view-createcategory" class="spa-view" data-title="Create Category-CMS Panel"><h2>Create/Update Category</h2></section>
 <section id="view-createtag" class="spa-view" data-title="Create Tag-CMS Panel"><h2>Create/Update Tag</h2></section>
