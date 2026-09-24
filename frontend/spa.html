@@ -210,9 +210,10 @@ function generateFormWrapperHTML(form, innerFieldsHTML) {
 function createBlog(id=null) {
     const parentView = document.getElementById('view-createblog');
     if (!parentView) return;
+    return `<h2>Test Panel</h2>`;
     const container = parentView.querySelector('.data-table-container');
     if (!container) return;
-    return `<h2>Test Panel</h2>`;
+    
 
         
     const formParameters = {
