@@ -26,15 +26,32 @@
         </tbody></table></div>
 </section>
     
-<section id="view-blog" class="spa-view" data-title="Blogs Directory — CMS Panel"><h2>Blogpost Workspace</h2><a href="#createblog" class="btn-create-new">Create New Blog</a></section>
+<section id="view-blog" class="spa-view" data-title="Blogs Directory — CMS Panel"><h2>Blogpost Workspace</h2>
+    <a href="#createblog" class="btn-create-new">Create New Blog</a>
+    <a href="#updateblog/1" class="btn-create-new">Update Blog</a>
+</section>
 <section id="view-topic" class="spa-view" data-title="Topics Directory — CMS Panel"><h2>Topic Workspace</h2><a href="#createtopic" class="btn-create-new">Create New Topic</a></section>
 <section id="view-category" class="spa-view" data-title="Categories Directory — CMS Panel"><h2>Category Workspace</h2><a href="#createcategory" class="btn-create-new">Create New Category</a></section>
 <section id="view-tag" class="spa-view" data-title="Tags Directory — CMS Panel"><h2>Tag Workspace</h2><a href="#createtag" class="btn-create-new">Create New Tag</a></section>
 
-<section id="view-createblog" class="spa-view" data-title="Create Post-CMS Panel"><h2>Create/Update Blogpost</h2><div class="data-table-container"></div></section>
-<section id="view-createtopic" class="spa-view" data-title="Create Topic-CMS Panel"><h2>Create/Update Topic</h2><div class="data-table-container"></div></section>
-<section id="view-createcategory" class="spa-view" data-title="Create Category-CMS Panel"><h2>Create/Update Category</h2><div class="data-table-container"></div></section>
-<section id="view-createtag" class="spa-view" data-title="Create Tag-CMS Panel"><h2>Create/Update Tag</h2><div class="data-table-container"></div></section>
+<section id="view-createblog" class="spa-view" data-title="Create Post-CMS Panel"><h2>Create/Update Blogpost</h2>
+    <div class="data-table-container">
+        <form id="simple-form" novalidate>
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="userName" required minlength="2">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="userEmail" required>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</section>
+<section id="view-createtopic" class="spa-view" data-title="Create Topic-CMS Panel"><h2>Create/Update Topic</h2></section>
+<section id="view-createcategory" class="spa-view" data-title="Create Category-CMS Panel"><h2>Create/Update Category</h2></section>
+<section id="view-createtag" class="spa-view" data-title="Create Tag-CMS Panel"><h2>Create/Update Tag</h2></section>
 
 </div>
 
@@ -48,6 +65,7 @@ function navigateTo(hashTarget) {
     const pathParts = hashTarget.split('/');
     const urlParamId = pathParts[1] || null;
     const cleanedHash = pathParts[0].replace('#', '') || 'home';
+
     if (cleanedHash === 'updateblog') {cleanedHash = 'createblog';}
     else if (cleanedHash === 'updatecategory') {cleanedHash = 'createcategory';}
     else if (cleanedHash === 'updatetag') {cleanedHash = 'createtag';}
@@ -89,8 +107,11 @@ function navigateTo(hashTarget) {
         else if (cleanedHash === 'createtag') {tagForm(urlParamId)} 
         else if (cleanedHash === 'createcategory') {categoryForm(urlParamId)} 
         else if (cleanedHash === 'createtopic') {topicForm(urlParamId)}
-        
-        
+
+    else if (cleanedHash === 'editblog') {blogForm(urlParamId)}
+        else if (cleanedHash === 'createtag') {tagForm(urlParamId)} 
+        else if (cleanedHash === 'createcategory') {categoryForm(urlParamId)} 
+        else if (cleanedHash === 'createtopic') {topicForm(urlParamId)}
 }
 // 4. Centralized event listener handles initial load AND history navigation (back/forward arrows)
 window.addEventListener('hashchange', () => {navigateTo(window.location.hash);});
@@ -105,37 +126,7 @@ function tagLists(){}
 function topicLists(){}
 function categoryLists(){}
 
-
-function blogForm(id=null){
-    const parentView = document.getElementById('view-createblog');
-    if (!parentView) return;
-    const container = parentView.querySelector('.data-table-container');
-    if (!container) return;
-    const fields = [
-    { id:'id',label:'ID:',type:'hidden'},
-    { id:'title',label:'Title:',type:'text',required:true },
-    { id:'desc',label:'Description:',type:'textarea',required:true }
-    ];
-    const rawJoinedContent = fields.map(row => row.map(ele => generateFieldHTML(ele)).join('')).join('');
-    if (!id) {
-        const formcreate = {id:'blog-create-form',action:'create',method:'POST',title:'Create Blog Post',submit:'Create New'};
-        container.innerHTML = generateFormWrapperHTML(formcreate, rawJoinedContent);
-        return;
-    }
-    try {
-        const record = await readRecord(id);
-        if (!record) throw new Error("No data found");
-        const formupdate = {id:'blog-update-form',action:'update',method:'PUT',title:'Update Blog Post Information',submit:'Save Changes'};
-        container.innerHTML = generateFormWrapperHTML(formupdate, rawJoinedContent);
-// AUTO-FILL LOOP: Maps keys dynamically across all elements matching data-field attributes
-        Object.keys(record).forEach(key => {
-            const field = container.querySelector(`[data-field="${key}"]`);
-            if (field) {field.value = record[key] ?? '';}
-        });
-    } catch (error) {console.error('Auto-fill container assignment error:', error);}
-
-}
-
+function blogForm(id){}
 function tagForm(id){}
 function topicForm(id){}
 function categoryForm(id){}
@@ -174,16 +165,16 @@ async function deleteRecord(id) {
 function generateFieldHTML(fields) {
     const isRequired = fields.required ? 'required' : '';
     if (fields.type === 'checkbox') {
-        return `<div class="field radio-check"><input type="checkbox" data-field="${fields.id}" name="${fields.id}" ${isRequired}><label>${fields.label}</label></div>`;}
+        return `<div class="field radio-check"><input type="checkbox" id="${fields.id}" name="${fields.id}" ${isRequired}><label for="${fields.id}">${fields.label}</label></div>`;}
     if (fields.type === 'textarea') {
-        return `<div class="field"><label>${fields.label}</label><textarea data-field="${fields.id}" name="${fields.id}" ${isRequired}></textarea></div>`;}
-    return `<div class="field"><label>${fields.label}</label><input type="${fields.type}" data-field="${fields.id}" name="${fields.id}" ${isRequired}></div>`;
+        return `<div class="field"><label for="${fields.id}">${fields.label}</label><textarea id="${fields.id}" name="${fields.id}" ${isRequired}></textarea></div>`;}
+    return `<div class="field"><label for="${fields.id}">${fields.label}</label><input type="${fields.type}" id="${fields.id}" name="${fields.id}" ${isRequired}></div>`;
 }
 function generateFormWrapperHTML(form, innerFieldsHTML) {
     const enctypeAttr = form.enctype ? `enctype="${form.enctype}"` : ''; 
-    return `<form id="${form.id}" method="${form.method}" ${enctypeAttr} onsubmit="handleFormSubmit(event,${form.action})"><h3>${form.title}</h3>${innerFieldsHTML}<button type="submit">${form.submit}</button><button type="reset">Clear Form</button></form>`;
+    return `<form id="${form.id}" action="${form.action}" method="${form.method}" ${enctypeAttr} onsubmit="handleFormSubmit(event)"><h3>${form.title}</h3>${innerFieldsHTML}<button type="submit">${form.submit}</button></form>`;
 }
-function handleFormSubmit(event,action) {
+function handleFormSubmit(event) {
     event.preventDefault();
     const submittedForm = event.target;
     const formId = submittedForm.id;
@@ -192,23 +183,38 @@ function handleFormSubmit(event,action) {
     const jsonPayload = Object.fromEntries(formData.entries());
     submitButton.disabled = true;
     try {
-        if(action==='create')
-        {
-            await createRecord(jsonPayload);
-            alert("New Data Added successfully.");
-        }
-        else if (action==='update')
-        {
-            const id= jsonPayload.id
-            await updateRecord(id, jsonPayload);
-            alert("Data Updated successfully.");
-            form.reset();
-        }
+        const response = await fetch(form.action, {method: form.method || 'POST',headers: {'Content-Type': 'application/json','Accept': 'application/json'},body: JSON.stringify(jsonPayload)});
+        if (!response.ok) {throw new Error(`Server returned status code: ${response.status}`);}
+        const result = await response.json();
+        console.log(`Success response from ${form.id}:`, result);
+        alert("Data successfully sent as JSON! Check dev console to see details.");
+        form.reset();
     } catch (error) {
         console.error(`Error submitting ${form.id}:`, error);
         alert(`Submission failed: ${error.message}`);
     } finally {submitButton.disabled = false;}
 }
+      
+function createBlog(elem_id,id=0) {
+    const parentView = document.getElementById(elem_id);
+    if (!container) return;
+    const container = parentView.querySelector('.data-table-container');
+    if (!container) return;
+    const formParameters = {
+    id: 'user-profile-form',action: '/api/v1/profile',
+    method: 'POST',
+    title: 'Update Profile Information',submit: 'Save Changes'};
+    const fields = [
+    { id: 'username', label: 'Username:', type: 'text', required: true },
+    { id: 'email', label: 'Email Address:', type: 'email', required: true }
+  ];
+    const rawJoinedContent = fields.map(row => row.map(ele => generateFieldHTML(ele)).join('')).join('');
+    container.innerHTML = generateFormWrapperHTML(formParameters, rawJoinedContent);
+}
+
+function createCategory(cats) {}
+function createTag(tags) {}
+function createTopic(topics) {}
 
 
 
@@ -248,8 +254,8 @@ function renderTableRows(posts) {
                     <td><strong>${post.title}</strong></td>
                     <td><code>${post.complete}</code></td>
                     <td class="actions">
-                        <a href="#updateblog/${post.id}" class="btn-edit" onclick="handleEditAction(event, '\${post.id}')">Edit</a>
-                        <a href="#deleteblog/${post.id}" class="btn-delete" onclick="handleDeleteAction(event, '\${post.id}')">Delete</a>
+                        <a href="#edit-user/${post.id}" class="btn-edit">Edit</a>
+                        <a href="#delete-user/${post.id}" class="btn-delete">Delete</a>
         </td></tr>`;}).join('');
     } else {
         tbody.innerHTML = `<tr><td colspan="3" class="table-empty-state"><p>No Entries found on network database.</p></td></tr>`;
@@ -258,7 +264,7 @@ function renderTableRows(posts) {
 // C. Functional Action Utilities (Connecting HTTP requests back out to your server)
 function handleEditAction(event, id) {
     event.preventDefault();
-    navigateTo('updateblog', postId);
+    navigateTo('createblog', postId);
 }
 async function handleDeleteAction(event, id) {
     event.preventDefault();
