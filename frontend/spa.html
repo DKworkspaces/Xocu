@@ -74,10 +74,7 @@ function navigateTo(hashTarget) {
         if (cleanedHash === 'home') {fetchBlogPosts()
 // Your home logic goes here
             }
-        else if (cleanedHash === 'createblog')
-        {
-            createBlog(urlParamId)
-        }
+        else if (cleanedHash === 'createblog'){createBlog(urlParamId);}
             else if (cleanedHash === 'tag') {
 // Your tag logic goes here
             } 
@@ -218,6 +215,7 @@ function createBlog(id=null) {
     method: 'POST',
     title: 'Update Profile Information',submit: 'Save Changes'};
     const fields = [
+    { id: 'id', label: 'Id:', type: 'text', required: true },
     { id: 'username', label: 'Username:', type: 'text', required: true },
     { id: 'email', label: 'Email Address:', type: 'email', required: true }
   ];
