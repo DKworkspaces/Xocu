@@ -209,7 +209,7 @@ function generateFormWrapperHTML(form, innerFieldsHTML) {
 }
 function createBlog(id=null) {
     const parentView = document.getElementById('view-createblog');
-    if (!container) return;
+    if (!parentView) return;
     const container = parentView.querySelector('.data-table-container');
     if (!container) return;
     const formParameters = {
@@ -224,17 +224,6 @@ function createBlog(id=null) {
     const rawJoinedContent = fields.map(row => row.map(ele => generateFieldHTML(ele)).join('')).join('');
     container.innerHTML = generateFormWrapperHTML(formParameters, rawJoinedContent);
 }
-
-
-
-
-
-
-
-        
-
-        
-
                             
   </script>
   
@@ -242,32 +231,3 @@ function createBlog(id=null) {
   <script src="/global.js"></script>
   -->
 </body></html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
-
-      
