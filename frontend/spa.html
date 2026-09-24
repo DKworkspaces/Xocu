@@ -210,12 +210,10 @@ function generateFormWrapperHTML(form, innerFieldsHTML) {
 function createBlog(id=null) {
     const parentView = document.getElementById('view-createblog');
     if (!parentView) return;
-    return `<h2>Test Panel</h2>`;
     const container = parentView.querySelector('.data-table-container');
     if (!container) return;
-    
-
-        
+    container.innerHTML =  `<h2>Test Panel</h2>`;
+    return;
     const formParameters = {
     id: 'user-profile-form',action: '/api/v1/profile',
     method: 'POST',
