@@ -212,6 +212,9 @@ function createBlog(id=null) {
     if (!parentView) return;
     const container = parentView.querySelector('.data-table-container');
     if (!container) return;
+    return `<h2>Test Panel</h2>`;
+
+        
     const formParameters = {
     id: 'user-profile-form',action: '/api/v1/profile',
     method: 'POST',
