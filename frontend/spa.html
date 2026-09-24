@@ -97,17 +97,21 @@ function navigateTo(hashTarget) {
     });
 // 3. Condition check using cleanedHash
         if (cleanedHash === 'home') {fetchBlogPosts()}
-        else if (cleanedHash === 'blog') {fetchBlogPosts()}
-        else if (cleanedHash === 'tag') {} 
-        else if (cleanedHash === 'category') {} 
-        else if (cleanedHash === 'topic') {}
-        
-        else if (cleanedHash === 'createblog') {
-//renderBlogFormView(urlParamId);
-}
-        else if (cleanedHash === 'createtag') {} 
-        else if (cleanedHash === 'createcategory') {} 
-        else if (cleanedHash === 'createtopic') {}
+
+        else if (cleanedHash === 'blog') {blogLists()}
+        else if (cleanedHash === 'tag') {tagLists()} 
+        else if (cleanedHash === 'category') {categoryLists()} 
+        else if (cleanedHash === 'topic') {topicLists()}
+
+        else if (cleanedHash === 'createblog') {blogForm(urlParamId)}
+        else if (cleanedHash === 'createtag') {tagForm(urlParamId)} 
+        else if (cleanedHash === 'createcategory') {categoryForm(urlParamId)} 
+        else if (cleanedHash === 'createtopic') {topicForm(urlParamId)}
+
+    else if (cleanedHash === 'editblog') {blogForm(urlParamId)}
+        else if (cleanedHash === 'createtag') {tagForm(urlParamId)} 
+        else if (cleanedHash === 'createcategory') {categoryForm(urlParamId)} 
+        else if (cleanedHash === 'createtopic') {topicForm(urlParamId)}
 }
 // 4. Centralized event listener handles initial load AND history navigation (back/forward arrows)
 window.addEventListener('hashchange', () => {navigateTo(window.location.hash);});
@@ -117,25 +121,38 @@ else {window.location.hash = '#home'; }
 
 
 
+function blogLists(){}
+function tagLists(){}
+function topicLists(){}
+function categoryLists(){}
 
-
+function blogForm(id){}
+function tagForm(id){}
+function topicForm(id){}
+function categoryForm(id){}
+        
 
 const API_BASE_URL = 'https://example.com';
 
 async function createRecord(payload) {
     const res = await fetch(API_BASE_URL, {method: 'POST',headers: { 'Content-Type': 'application/json' },body: JSON.stringify(payload)});
     if (!res.ok) throw new Error('Failed to create');
-    return res.json();
+    return await res.json();
+}
+async function readAllRecords() {
+    const res = await fetch(API_BASE_URL);
+    if (!res.ok) throw new Error('Database server returned connection error status.');
+    return await res.json();
 }
 async function readRecord(id) {
     const res = await fetch(`${API_BASE_URL}/${id}`);
     if (!res.ok) throw new Error('Failed to read');
-    return res.json();
+    return await res.json();
 }
 async function updateRecord(id, payload) {
     const res = await fetch(`${API_BASE_URL}/${id}`, {method: 'PUT',headers: { 'Content-Type': 'application/json' },body: JSON.stringify(payload)});
     if (!res.ok) throw new Error('Failed to update');
-    return res.json();
+    return await res.json();
 }
 async function deleteRecord(id) {
     const res = await fetch(`${API_BASE_URL}/${id}`, { method: 'DELETE' });
