@@ -56,26 +56,24 @@
     <script>
 const navItems = document.querySelectorAll('.nav-item');
 const views = document.querySelectorAll('.spa-view');
-
+    
+        
 function navigateTo(hashTarget) {
-    const cleanedHash = hashTarget.replace('#', '') || 'home';
+    const pathParts = hashTarget.split('/');
+    const urlParamId = pathParts[1] || null;
+    const cleanedHash = pathParts[0].replace('#', '') || 'home'if (cleanedHash === 'updateblog') {cleanedHash = 'createblog';}
+    if (cleanedHash === 'updateblog') {cleanedHash = 'createblog';}
+    
     let viewFound = false;
 // 1. Manage Active Class across views
     views.forEach(view => {
-        if (view.id === `view-${cleanedHash}`) {
-            view.classList.add('active');
-            document.title = view.getAttribute('data-title') || 'CMS Dashboard';
-            viewFound = true;
-        } 
+        if (view.id === `view-${cleanedHash}`) {view.classList.add('active');document.title = view.getAttribute('data-title') || 'CMS Dashboard';viewFound = true;} 
         else {view.classList.remove('active');}
     });
 // Fallback route logic if page matching fails
     if (!viewFound) {
         const homeView = document.getElementById('view-home');
-        if (homeView) {
-            homeView.classList.add('active');
-            document.title = homeView.getAttribute('data-title') || 'CMS Dashboard';
-        }
+        if (homeView) {homeView.classList.add('active');document.title = homeView.getAttribute('data-title') || 'CMS Dashboard';}
     }
 // 2. Synchronize navigation links highlighting
     navItems.forEach(item => {
