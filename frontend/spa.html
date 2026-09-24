@@ -26,7 +26,10 @@
         </tbody></table></div>
 </section>
     
-<section id="view-blog" class="spa-view" data-title="Blogs Directory — CMS Panel"><h2>Blogpost Workspace</h2><a href="#createblog" class="btn-create-new">Create New Blog</a></section>
+<section id="view-blog" class="spa-view" data-title="Blogs Directory — CMS Panel"><h2>Blogpost Workspace</h2>
+    <a href="#createblog" class="btn-create-new">Create New Blog</a>
+    <a href="#updateblog/1" class="btn-create-new">Update Blog</a>
+</section>
 <section id="view-topic" class="spa-view" data-title="Topics Directory — CMS Panel"><h2>Topic Workspace</h2><a href="#createtopic" class="btn-create-new">Create New Topic</a></section>
 <section id="view-category" class="spa-view" data-title="Categories Directory — CMS Panel"><h2>Category Workspace</h2><a href="#createcategory" class="btn-create-new">Create New Category</a></section>
 <section id="view-tag" class="spa-view" data-title="Tags Directory — CMS Panel"><h2>Tag Workspace</h2><a href="#createtag" class="btn-create-new">Create New Tag</a></section>
@@ -58,7 +61,16 @@ const navItems = document.querySelectorAll('.nav-item');
 const views = document.querySelectorAll('.spa-view');
 
 function navigateTo(hashTarget) {
-    const cleanedHash = hashTarget.replace('#', '') || 'home';
+    window.location.hash = hashTarget;
+    const pathParts = hashTarget.split('/');
+    const urlParamId = pathParts[1] || null;
+    const cleanedHash = pathParts[0].replace('#', '') || 'home';
+
+    if (cleanedHash === 'updateblog') {cleanedHash = 'createblog';}
+    else if (cleanedHash === 'updatecategory') {cleanedHash = 'createcategory';}
+    else if (cleanedHash === 'updatetag') {cleanedHash = 'createtag';}
+    else if (cleanedHash === 'updatetopic') {cleanedHash = 'createtopic';}
+    
     let viewFound = false;
 // 1. Manage Active Class across views
     views.forEach(view => {
@@ -84,18 +96,18 @@ function navigateTo(hashTarget) {
         else {item.classList.remove('active');}
     });
 // 3. Condition check using cleanedHash
-        if (cleanedHash === 'home') {fetchBlogPosts()
-// Your home logic goes here
-            } 
-            else if (cleanedHash === 'tag') {
-// Your tag logic goes here
-            } 
-            else if (cleanedHash === 'categories') {
-// Your categories logic goes here
-            } 
-            else if (cleanedHash === 'topics') {
-// Your topics logic goes here
-        }
+        if (cleanedHash === 'home') {fetchBlogPosts()}
+        else if (cleanedHash === 'blog') {fetchBlogPosts()}
+        else if (cleanedHash === 'tag') {} 
+        else if (cleanedHash === 'category') {} 
+        else if (cleanedHash === 'topic') {}
+        
+        else if (cleanedHash === 'createblog') {
+//renderBlogFormView(urlParamId);
+}
+        else if (cleanedHash === 'createtag') {} 
+        else if (cleanedHash === 'createcategory') {} 
+        else if (cleanedHash === 'createtopic') {}
 }
 // 4. Centralized event listener handles initial load AND history navigation (back/forward arrows)
 window.addEventListener('hashchange', () => {navigateTo(window.location.hash);});
@@ -108,14 +120,84 @@ else {window.location.hash = '#home'; }
 
 
 
-function createBlog(posts) {
+const API_BASE_URL = 'https://example.com';
+
+async function createRecord(payload) {
+    const res = await fetch(API_BASE_URL, {method: 'POST',headers: { 'Content-Type': 'application/json' },body: JSON.stringify(payload)});
+    if (!res.ok) throw new Error('Failed to create');
+    return res.json();
 }
-function createCategory(cats) {
+async function readRecord(id) {
+    const res = await fetch(`${API_BASE_URL}/${id}`);
+    if (!res.ok) throw new Error('Failed to read');
+    return res.json();
 }
-function createTag(tags) {
+async function updateRecord(id, payload) {
+    const res = await fetch(`${API_BASE_URL}/${id}`, {method: 'PUT',headers: { 'Content-Type': 'application/json' },body: JSON.stringify(payload)});
+    if (!res.ok) throw new Error('Failed to update');
+    return res.json();
 }
-function createTopic(topics) {
+async function deleteRecord(id) {
+    const res = await fetch(`${API_BASE_URL}/${id}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('Failed to delete');
+    return true;
 }
+
+
+            
+function generateFieldHTML(fields) {
+    const isRequired = fields.required ? 'required' : '';
+    if (fields.type === 'checkbox') {
+        return `<div class="field radio-check"><input type="checkbox" id="${fields.id}" name="${fields.id}" ${isRequired}><label for="${fields.id}">${fields.label}</label></div>`;}
+    if (fields.type === 'textarea') {
+        return `<div class="field"><label for="${fields.id}">${fields.label}</label><textarea id="${fields.id}" name="${fields.id}" ${isRequired}></textarea></div>`;}
+    return `<div class="field"><label for="${fields.id}">${fields.label}</label><input type="${fields.type}" id="${fields.id}" name="${fields.id}" ${isRequired}></div>`;
+}
+function generateFormWrapperHTML(form, innerFieldsHTML) {
+    const enctypeAttr = form.enctype ? `enctype="${form.enctype}"` : ''; 
+    return `<form id="${form.id}" action="${form.action}" method="${form.method}" ${enctypeAttr} onsubmit="handleFormSubmit(event)"><h3>${form.title}</h3>${innerFieldsHTML}<button type="submit">${form.submit}</button></form>`;
+}
+function handleFormSubmit(event) {
+    event.preventDefault();
+    const submittedForm = event.target;
+    const formId = submittedForm.id;
+    const submitButton = form.querySelector('button[type="submit"]');
+    const formData = new FormData(submittedForm);
+    const jsonPayload = Object.fromEntries(formData.entries());
+    submitButton.disabled = true;
+    try {
+        const response = await fetch(form.action, {method: form.method || 'POST',headers: {'Content-Type': 'application/json','Accept': 'application/json'},body: JSON.stringify(jsonPayload)});
+        if (!response.ok) {throw new Error(`Server returned status code: ${response.status}`);}
+        const result = await response.json();
+        console.log(`Success response from ${form.id}:`, result);
+        alert("Data successfully sent as JSON! Check dev console to see details.");
+        form.reset();
+    } catch (error) {
+        console.error(`Error submitting ${form.id}:`, error);
+        alert(`Submission failed: ${error.message}`);
+    } finally {submitButton.disabled = false;}
+}
+      
+function createBlog(elem_id,id=0) {
+    const parentView = document.getElementById(elem_id);
+    if (!container) return;
+    const container = parentView.querySelector('.data-table-container');
+    if (!container) return;
+    const formParameters = {
+    id: 'user-profile-form',action: '/api/v1/profile',
+    method: 'POST',
+    title: 'Update Profile Information',submit: 'Save Changes'};
+    const fields = [
+    { id: 'username', label: 'Username:', type: 'text', required: true },
+    { id: 'email', label: 'Email Address:', type: 'email', required: true }
+  ];
+    const rawJoinedContent = fields.map(row => row.map(ele => generateFieldHTML(ele)).join('')).join('');
+    container.innerHTML = generateFormWrapperHTML(formParameters, rawJoinedContent);
+}
+
+function createCategory(cats) {}
+function createTag(tags) {}
+function createTopic(topics) {}
 
 
 
@@ -155,8 +237,8 @@ function renderTableRows(posts) {
                     <td><strong>${post.title}</strong></td>
                     <td><code>${post.complete}</code></td>
                     <td class="actions">
-                        <a href="/edit-user/${post.id}" class="btn-edit" onclick="handleEditAction(event, ${post.id})">Edit</a>
-                        <a href="/delete-user/${post.id}" class="btn-delete" onclick="handleDeleteAction(event, ${post.id})">Delete</a>
+                        <a href="#edit-user/${post.id}" class="btn-edit">Edit</a>
+                        <a href="#delete-user/${post.id}" class="btn-delete">Delete</a>
         </td></tr>`;}).join('');
     } else {
         tbody.innerHTML = `<tr><td colspan="3" class="table-empty-state"><p>No Entries found on network database.</p></td></tr>`;
@@ -165,7 +247,7 @@ function renderTableRows(posts) {
 // C. Functional Action Utilities (Connecting HTTP requests back out to your server)
 function handleEditAction(event, id) {
     event.preventDefault();
-    alert(`Trigger internal SPA layout window change routing context targeting Edit Mode for ID: ${id}`);
+    navigateTo('createblog', postId);
 }
 async function handleDeleteAction(event, id) {
     event.preventDefault();
