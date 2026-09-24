@@ -61,8 +61,8 @@ const views = document.querySelectorAll('.spa-view');
 function navigateTo(hashTarget) {
     const pathParts = hashTarget.split('/');
     const urlParamId = pathParts[1] || null;
-    const cleanedHash = pathParts[0].replace('#', '') || 'home'if (cleanedHash === 'updateblog') {cleanedHash = 'createblog';}
-    if (cleanedHash === 'updateblog') {cleanedHash = 'createblog';}
+    const cleanedHash = pathParts[0].replace('#', '') || 'home';
+    //if (cleanedHash === 'updateblog') {cleanedHash = 'createblog';}
     
     let viewFound = false;
 // 1. Manage Active Class across views
