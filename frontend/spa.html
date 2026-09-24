@@ -198,7 +198,7 @@ async function refreshListView() {
 function generateFieldHTML(fields) {
     const isRequired = fields.required ? 'required' : '';
     if (fields.type === 'checkbox') {
-        return `<div class="field radio-check"><input type="checkbox" id="${fields.id}" name="${fields.id}" ${isRequired}><label for="${fields.id}">${fields.label}</label></div>`;}
+        return `<div class="field radio-check"><input type="checkbox" id="${fields.id}" name="${fields.id}" value="${fields.id}" ${isRequired}><label for="${fields.id}">${fields.label}</label></div>`;}
     if (fields.type === 'textarea') {
         return `<div class="field"><label for="${fields.id}">${fields.label}</label><textarea id="${fields.id}" name="${fields.id}" ${isRequired}></textarea></div>`;}
     return `<div class="field"><label for="${fields.id}">${fields.label}</label><input type="${fields.type}" id="${fields.id}" name="${fields.id}" ${isRequired}></div>`;
@@ -212,8 +212,6 @@ function createBlog(id=null) {
     if (!parentView) return;
     const container = parentView.querySelector('.data-table-container');
     if (!container) return;
-    container.innerHTML =  `<h2>Test Panel</h2>`;
-    return;
     const formParameters = {
     id: 'user-profile-form',action: '/api/v1/profile',
     method: 'POST',
@@ -225,6 +223,7 @@ function createBlog(id=null) {
   ];
     let rawJoinedContent = fields.map(ele => generateFieldHTML(ele)).join('');
     container.innerHTML = generateFormWrapperHTML(formParameters, rawJoinedContent);
+    return;
 }
                             
   </script>
