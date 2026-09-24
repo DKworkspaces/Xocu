@@ -84,7 +84,11 @@ function navigateTo(hashTarget) {
 // 3. Condition check using cleanedHash
         if (cleanedHash === 'home') {fetchBlogPosts()
 // Your home logic goes here
-            } 
+            }
+        else if (cleanedHash === 'createblog')
+        {
+            createBlog(urlParamId)
+        }
             else if (cleanedHash === 'tag') {
 // Your tag logic goes here
             } 
