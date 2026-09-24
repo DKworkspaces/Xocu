@@ -67,9 +67,9 @@ function navigateTo(hashTarget) {
     const cleanedHash = pathParts[0].replace('#', '') || 'home';
 
     if (cleanedHash === 'updateblog') {cleanedHash = 'createblog';}
-    else if (cleanedHash === 'updatecategory') {cleanedHash = 'createcategory';}
-    else if (cleanedHash === 'updatetag') {cleanedHash = 'createtag';}
-    else if (cleanedHash === 'updatetopic') {cleanedHash = 'createtopic';}
+    //else if (cleanedHash === 'updatecategory') {cleanedHash = 'createcategory';}
+    //else if (cleanedHash === 'updatetag') {cleanedHash = 'createtag';}
+    //else if (cleanedHash === 'updatetopic') {cleanedHash = 'createtopic';}
     
     let viewFound = false;
 // 1. Manage Active Class across views
@@ -98,20 +98,20 @@ function navigateTo(hashTarget) {
 // 3. Condition check using cleanedHash
         if (cleanedHash === 'home') {fetchBlogPosts()}
 
-        else if (cleanedHash === 'blog') {blogLists()}
-        else if (cleanedHash === 'tag') {tagLists()} 
-        else if (cleanedHash === 'category') {categoryLists()} 
-        else if (cleanedHash === 'topic') {topicLists()}
+        //else if (cleanedHash === 'blog') {blogLists()}
+        //else if (cleanedHash === 'tag') {tagLists()} 
+        //else if (cleanedHash === 'category') {categoryLists()} 
+        //else if (cleanedHash === 'topic') {topicLists()}
 
-        else if (cleanedHash === 'createblog') {blogForm(urlParamId)}
-        else if (cleanedHash === 'createtag') {tagForm(urlParamId)} 
-        else if (cleanedHash === 'createcategory') {categoryForm(urlParamId)} 
-        else if (cleanedHash === 'createtopic') {topicForm(urlParamId)}
+        else if (cleanedHash === 'createblog') {createBlog(urlParamId)}
+        //else if (cleanedHash === 'createtag') {tagForm(urlParamId)} 
+        //else if (cleanedHash === 'createcategory') {categoryForm(urlParamId)} 
+        //else if (cleanedHash === 'createtopic') {topicForm(urlParamId)}
 
-    else if (cleanedHash === 'editblog') {blogForm(urlParamId)}
-        else if (cleanedHash === 'createtag') {tagForm(urlParamId)} 
-        else if (cleanedHash === 'createcategory') {categoryForm(urlParamId)} 
-        else if (cleanedHash === 'createtopic') {topicForm(urlParamId)}
+    //else if (cleanedHash === 'editblog') {blogForm(urlParamId)}
+        //else if (cleanedHash === 'createtag') {tagForm(urlParamId)} 
+        //else if (cleanedHash === 'createcategory') {categoryForm(urlParamId)} 
+        //else if (cleanedHash === 'createtopic') {topicForm(urlParamId)}
 }
 // 4. Centralized event listener handles initial load AND history navigation (back/forward arrows)
 window.addEventListener('hashchange', () => {navigateTo(window.location.hash);});
@@ -121,37 +121,28 @@ else {window.location.hash = '#home'; }
 
 
 
-function blogLists(){}
-function tagLists(){}
-function topicLists(){}
-function categoryLists(){}
 
-function blogForm(id){}
-function tagForm(id){}
-function topicForm(id){}
-function categoryForm(id){}
-        
+
+
+
 
 const API_BASE_URL = 'https://example.com';
 
-async function createRecord(payload) {
-    const res = await fetch(API_BASE_URL, {method: 'POST',headers: { 'Content-Type': 'application/json' },body: JSON.stringify(payload)});
-    if (!res.ok) throw new Error('Failed to create');
+
+async function readRecords(id = null) {
+    const url = id ? `${API_BASE_URL}/${id}` : API_BASE_URL;
+    const res = await fetch(url);
+    if (!res.ok) {
+        const errorMsg = id ? `Failed to read database record payload for ID: ${id}` : 'Database server returned connection error status.';
+        throw new Error(errorMsg);
+    }
     return await res.json();
 }
-async function readAllRecords() {
-    const res = await fetch(API_BASE_URL);
-    if (!res.ok) throw new Error('Database server returned connection error status.');
-    return await res.json();
-}
-async function readRecord(id) {
-    const res = await fetch(`${API_BASE_URL}/${id}`);
-    if (!res.ok) throw new Error('Failed to read');
-    return await res.json();
-}
-async function updateRecord(id, payload) {
-    const res = await fetch(`${API_BASE_URL}/${id}`, {method: 'PUT',headers: { 'Content-Type': 'application/json' },body: JSON.stringify(payload)});
-    if (!res.ok) throw new Error('Failed to update');
+async function saveRecord(payload, id = null) {
+    const url = id ? `${API_BASE_URL}/${id}` : API_BASE_URL;
+    const method = id ? 'PUT' : 'POST';
+    const res = await fetch(url, {method: method,headers: { 'Content-Type': 'application/json' },body: JSON.stringify(payload)});
+    if (!res.ok) {throw new Error(`Failed to ${id ? 'update' : 'create'} record.`);}
     return await res.json();
 }
 async function deleteRecord(id) {
@@ -160,7 +151,18 @@ async function deleteRecord(id) {
     return true;
 }
 
-
+// eg
+async function refreshListView() {
+    try {
+        const allRecords = await readRecords();alert('All Records load successfully!');
+        const singleRecord = await readRecords(id);alert('Record load successfully!');
+        const result = await saveRecord(payload, targetId);alert('Record updated successfully!');
+        const response = await saveRecord(payload);alert('New Record added successfully!');
+        await deleteRecord(id);alert('Record deleted successfully!');
+        }
+    catch (err) {console.error(err.message);}
+}
+        
             
 function generateFieldHTML(fields) {
     const isRequired = fields.required ? 'required' : '';
@@ -195,8 +197,8 @@ function handleFormSubmit(event) {
     } finally {submitButton.disabled = false;}
 }
       
-function createBlog(elem_id,id=0) {
-    const parentView = document.getElementById(elem_id);
+function createBlog(id=null) {
+    const parentView = document.getElementById('view-createblog');
     if (!container) return;
     const container = parentView.querySelector('.data-table-container');
     if (!container) return;
