@@ -125,6 +125,8 @@ function renderTableRows(posts) {
                     <td><strong>${post.title}</strong></td>
                     <td><code>${post.complete}</code></td>
                     <td class="actions">
+                    <a href="#updateblog/${post.id}" class="btn-edit">Edit</a>
+                       
                         <a href="/edit-user/${post.id}" class="btn-edit" onclick="handleEditAction(event, ${post.id})">Edit</a>
                         <a href="/delete-user/${post.id}" class="btn-delete" onclick="handleDeleteAction(event, ${post.id})">Delete</a>
         </td></tr>`;}).join('');
