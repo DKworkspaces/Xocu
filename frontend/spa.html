@@ -221,7 +221,7 @@ function createBlog(id=null) {
     { id: 'username', label: 'Username:', type: 'text', required: true },
     { id: 'email', label: 'Email Address:', type: 'email', required: true }
   ];
-    const rawJoinedContent = fields.map(row => row.map(ele => generateFieldHTML(ele)).join('')).join('');
+    let rawJoinedContent = fields.map(ele => generateFieldHTML(ele)).join('');
     container.innerHTML = generateFormWrapperHTML(formParameters, rawJoinedContent);
 }
                             
