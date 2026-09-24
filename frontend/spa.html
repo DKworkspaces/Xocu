@@ -26,7 +26,7 @@
         </tbody></table></div>
 </section>
     
-<section id="view-blog" class="spa-view" data-title="Blogs Directory — CMS Panel"><h2>Blogpost Workspace</h2><a href="#createblog" class="btn-create-new">Create New Blog</a>    <a href="#updateblog" class="btn-create-new">Update Blog</a></section>
+<section id="view-blog" class="spa-view" data-title="Blogs Directory — CMS Panel"><h2>Blogpost Workspace</h2><a href="#createblog" class="btn-create-new">Create New Blog</a><a href="#updateblog" class="btn-create-new">Update Blog</a></section>
 <section id="view-topic" class="spa-view" data-title="Topics Directory — CMS Panel"><h2>Topic Workspace</h2><a href="#createtopic" class="btn-create-new">Create New Topic</a></section>
 <section id="view-category" class="spa-view" data-title="Categories Directory — CMS Panel"><h2>Category Workspace</h2><a href="#createcategory" class="btn-create-new">Create New Category</a></section>
 <section id="view-tag" class="spa-view" data-title="Tags Directory — CMS Panel"><h2>Tag Workspace</h2><a href="#createtag" class="btn-create-new">Create New Tag</a></section>
@@ -62,7 +62,7 @@ function navigateTo(hashTarget) {
     const pathParts = hashTarget.split('/');
     const urlParamId = pathParts[1] || null;
     const cleanedHash = pathParts[0].replace('#', '') || 'home';
-    if (cleanedHash === 'updateblog') {cleanedHash = 'createtag';}
+    if (cleanedHash === 'updateblog') {cleanedHash = 'createblog';}
     
     let viewFound = false;
 // 1. Manage Active Class across views
