@@ -47,7 +47,7 @@ const navItems = document.querySelectorAll('.nav-item');
 const views = document.querySelectorAll('.spa-view');
     
         
-function navigateTo(hashTarget) {
+async function navigateTo(hashTarget) {
     const pathParts = hashTarget.split('/');
     const urlParamId = pathParts[1] || null;
     let cleanedHash = pathParts[0].replace('#', '') || 'home';
@@ -198,16 +198,16 @@ async function refreshListView() {
 function generateFieldHTML(fields) {
     const isRequired = fields.required ? 'required' : '';
     if (fields.type === 'checkbox') {
-        return `<div class="field radio-check"><input type="checkbox" id="${fields.id}" name="${fields.id}" value="${fields.id}" ${isRequired}><label for="${fields.id}">${fields.label}</label></div>`;}
+        return `<div class="field radio-check"><input type="checkbox" name="${fields.id}" value="${fields.id}" ${isRequired}><label>${fields.label}</label></div>`;}
     if (fields.type === 'textarea') {
-        return `<div class="field"><label for="${fields.id}">${fields.label}</label><textarea id="${fields.id}" name="${fields.id}" ${isRequired}></textarea></div>`;}
-    return `<div class="field"><label for="${fields.id}">${fields.label}</label><input type="${fields.type}" id="${fields.id}" name="${fields.id}" ${isRequired}></div>`;
+        return `<div class="field"><label>${fields.label}</label><textarea name="${fields.id}" ${isRequired}></textarea></div>`;}
+    return `<div class="field"><label>${fields.label}</label><input type="${fields.type}" name="${fields.id}" ${isRequired}></div>`;
 }
 function generateFormWrapperHTML(form, innerFieldsHTML) {
     const enctypeAttr = form.enctype ? `enctype="${form.enctype}"` : ''; 
     return `<form id="${form.id}" action="${form.action}" method="${form.method}" ${enctypeAttr} onsubmit="handleFormSubmit(event)"><h3>${form.title}</h3>${innerFieldsHTML}<button type="submit">${form.submit}</button><button type="reset">Clear Form</button></form>`;
 }
-function createBlog(id=null) {
+async function createBlog(id=null) {
     const parentView = document.getElementById('view-createblog');
     if (!parentView) return;
     const container = parentView.querySelector('.data-table-container');
@@ -223,6 +223,18 @@ function createBlog(id=null) {
   ];
     let rawJoinedContent = fields.map(ele => generateFieldHTML(ele)).join('');
     container.innerHTML = generateFormWrapperHTML(formParameters, rawJoinedContent);
+    if (id !== null) {
+        try {
+            const singleRecord = await readRecords(id);
+            alert('Record load successfully!');
+            container.querySelector('input[name="id"]').value=singleRecord.id|| id || '';
+            container.querySelector('input[name="username"]').value=singleRecord.username|| '';
+            container.querySelector('input[name="email"]').value=singleRecord.email|| '';
+        
+        } catch (error) {
+            alert('Failed to load existing records!');
+        }
+    }
     return;
 }
                             
