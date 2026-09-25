@@ -168,29 +168,31 @@ async function listBlogs(){
     const columns = ["Title", "Complete", "Control Actions"];
     const tb = buildTableHead('table-blog-h','table-blog-l',columns);
     try {const lst = await apiRead(Api_blog);renderRows(tb,lst,'blog');}
-    catch (error) {tb.innerHTML = er(error.message);}                                   
-}
+    catch (error) {tb.innerHTML = er(error.message);}}
 async function listTopics(){
     const columns = ["Title", "Complete", "Control Actions"];
     const tb = buildTableHead('table-topic-h','table-topic-l',columns);
     try {const lst = await apiRead(Api_topic);renderRows(tb,lst,'topic');}
-    catch (error) {tb.innerHTML = er(error.message);}                                   
-}
+    catch (error) {tb.innerHTML = er(error.message);}}
 async function listCats(){
     const columns = ["Title", "Complete", "Control Actions"];
     const tb = buildTableHead('table-cat-h','table-cat-l',columns);
     try {const lst = await apiRead(Api_cat);renderRows(tb,lst,'category');}
-    catch (error) {tb.innerHTML = er(error.message);}                                   
-}
+    catch (error) {tb.innerHTML = er(error.message);}}
 async function listTags(){
     const columns = ["Title", "Complete", "Control Actions"];
     const tb = buildTableHead('table-tag-h','table-tag-l',columns);
     try {const lst = await apiRead(Api_tag);renderRows(tb,lst,'tag');}
-    catch (error) {tb.innerHTML = er(error.message);}                                   
-}
-    
+    catch (error) {tb.innerHTML = er(error.message);}}
+
 //form functions
 function homeEle(id){const parentView = document.getElementById(id);if (!parentView) return;return parentView.querySelector('.data-table-container');}
+async function genform(fields,form, container,url,id=null){let rawcont= fields.map(ele => generateField(ele)).join('');container.innerHTML = generateForm(form, rawcont);
+    if (id !== null) {try {
+        const sr = await apiRead(url,id);
+        fields.forEach(field => {container.querySelector(`input[name="${field.id}"]`).value=sr[field.id] || (field.id === 'id' ? id : '');});
+//container.querySelector('input[name="id"]').value=singleRecord.id|| id || '';container.querySelector('input[name="username"]').value=singleRecord.username|| '';container.querySelector('input[name="email"]').value=singleRecord.email|| '';
+        alert('Record load successfully!');} catch (error) {alert('Failed to load existing records!');} } }
 
 async function formBlog(id=null) {
     const container = homeEle('view-createblog');if (!container) return;
@@ -203,24 +205,7 @@ async function formBlog(id=null) {
     { id: 'username', label: 'Username:', type: 'text', required: true },
     { id: 'email', label: 'Email Address:', type: 'email', required: true }
   ];
-    let rawJoinedContent = fields.map(ele => generateField(ele)).join('');
-    container.innerHTML = generateForm(formParameters, rawJoinedContent);
-    if (id !== null) {
-        try {
-            const singleRecord = await readRecords(id);
-            alert('Record load successfully!');
-fields.forEach(field => {container.querySelector(`input[name="${field.id}"]`).value=singleRecord[field.id] || (field.id === 'id' ? id : '');});
-
-
-        
-            //container.querySelector('input[name="id"]').value=singleRecord.id|| id || '';
-            //container.querySelector('input[name="username"]').value=singleRecord.username|| '';
-            //container.querySelector('input[name="email"]').value=singleRecord.email|| '';
-        
-        } catch (error) {
-            alert('Failed to load existing records!');
-        }
-    }
+    await genform(fields,formParameters,container,Api_blog,id);
     return;
 }
 
