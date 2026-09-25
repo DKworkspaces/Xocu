@@ -209,13 +209,13 @@ async function formBlog(id=null) {
         try {
             const singleRecord = await readRecords(id);
             alert('Record load successfully!');
-//fields.forEach(field => {container.querySelector(`input[name="${field.id}"]`).value=singleRecord[field.id] || (field.id === 'id' ? id : '');});
+fields.forEach(field => {container.querySelector(`input[name="${field.id}"]`).value=singleRecord[field.id] || (field.id === 'id' ? id : '');});
 
 
         
-            container.querySelector('input[name="id"]').value=singleRecord.id|| id || '';
-            container.querySelector('input[name="username"]').value=singleRecord.username|| '';
-            container.querySelector('input[name="email"]').value=singleRecord.email|| '';
+            //container.querySelector('input[name="id"]').value=singleRecord.id|| id || '';
+            //container.querySelector('input[name="username"]').value=singleRecord.username|| '';
+            //container.querySelector('input[name="email"]').value=singleRecord.email|| '';
         
         } catch (error) {
             alert('Failed to load existing records!');
