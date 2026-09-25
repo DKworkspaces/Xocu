@@ -89,20 +89,18 @@ async function navigateTo(hashTarget) {
         else {item.classList.remove('active');}
     });
 // 3. Condition check using cleanedHash
-        if (cleanedHash === 'home') {
-            fetchBlogPosts()
-// Your home logic goes here
-            }
+        if (cleanedHash === 'home') {fetchBlogPosts();}
         else if (cleanedHash === 'createblog'){createBlog(urlParamId);}
-            else if (cleanedHash === 'tag') {
-// Your tag logic goes here
-            } 
-            else if (cleanedHash === 'categories') {
-// Your categories logic goes here
-            } 
-            else if (cleanedHash === 'topics') {
-// Your topics logic goes here
-        }
+
+        //else if (cleanedHash === 'createblog'){createBlog(urlParamId);}
+        else if (cleanedHash === 'createtopic'){formBlog(urlParamId);}
+        else if (cleanedHash === 'createcategory'){}
+        else if (cleanedHash === 'createtag'){}
+                    
+        else if (cleanedHash === 'blog') {listBlogs();}
+        else if (cleanedHash === 'tag') {listTags();} 
+        else if (cleanedHash === 'categories') {listCats();} 
+        else if (cleanedHash === 'topics') {listTopics();}
     }
 window.addEventListener('hashchange', () => {navigateTo(window.location.hash);});
 // Handle initial page load setup
@@ -211,6 +209,10 @@ async function formBlog(id=null) {
         try {
             const singleRecord = await readRecords(id);
             alert('Record load successfully!');
+//fields.forEach(field => {container.querySelector(`input[name="${field.id}"]`).value=singleRecord[field.id] || (field.id === 'id' ? id : '');});
+
+
+        
             container.querySelector('input[name="id"]').value=singleRecord.id|| id || '';
             container.querySelector('input[name="username"]').value=singleRecord.username|| '';
             container.querySelector('input[name="email"]').value=singleRecord.email|| '';
