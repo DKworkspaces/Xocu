@@ -178,7 +178,7 @@ function homeEle(id){const parentView = document.getElementById(id);if (!parentV
 async function genform(fields,form, container,url,id=null){let rawcont= fields.map(ele => generateField(ele)).join('');container.innerHTML = generateForm(form, rawcont);
     if (id !== null) {try {
         const sr = await apiRead(url,id);
-        fields.forEach(field => {container.querySelector(`input[name="${field.id}"]`).value=sr[field.id] || (field.id === 'id' ? id : '');});
+        fields.forEach(field => {container.querySelector(`input[name="${field.id}"]`).value=sr[field.id] ?? (field.id === 'id' ? id : '');});
 //container.querySelector('input[name="id"]').value=singleRecord.id|| id || '';container.querySelector('input[name="username"]').value=singleRecord.username|| '';container.querySelector('input[name="email"]').value=singleRecord.email|| '';
         alert('Record load successfully!');} catch (error) {alert('Failed to load existing records!');} } }
 
