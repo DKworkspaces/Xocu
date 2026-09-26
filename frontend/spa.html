@@ -101,7 +101,7 @@ const F_blog = [
 const F_topic = [
     { id: 'id', label: 'Id', type: 'text', required: true },
     { id: 'title', label: 'Title', type: 'text', required: true },
-    { id: 'url', label: 'Url', type: 'text', required: true }
+    { id: 'albumId', label: 'Album Id', type: 'text', required: true }
 ];
 const F_cat = [
     { id: 'id', label: 'Id', type: 'text', required: true },
@@ -115,14 +115,19 @@ const F_tag = [
 ];
 const fields = {blog: F_blog,topic: F_topic,tag: F_tag,category: F_cat};
     //form basic list for create as well as update form
-const Form_c_blog = {id: 'user-form',action: '/api/v1/profile',method: 'POST',title: 'Create New User',submit: 'Save New'};
-const Form_u_blog = {id: 'user-update-form',action: '/api/v1/profile',method: 'PUT',title: 'Update User Information',submit: 'Save Changes'};
-const Form_c_topic = {};
-const Form_u_topic = {};
-const Form_c_tag = {};
-const Form_u_tag = {};
-const Form_c_cat = {};
-const Form_u_cat = {};
+const Form_c_blog = {id: 'blog-form',action: '/api/v1/profile',method: 'POST',title: 'Create New Blog Post',submit: 'Save New Post'};
+const Form_u_blog = {id: 'blog-update-form',action: '/api/v1/profile',method: 'PUT',title: 'Update Blog Post Information',submit: 'Save Changes'};
+    
+const Form_c_topic = {id: 'topic-form',action: '/api/v1/profile',method: 'POST',title: 'Create New Topic',submit: 'Save New Topic'};
+const Form_u_topic = {id: 'topic-update-form',action: '/api/v1/profile',method: 'PUT',title: 'Update Topic Information',submit: 'Save Changes'};
+
+const Form_c_tag = {id: 'tag-form',action: '/api/v1/profile',method: 'POST',title: 'Create New Tag',submit: 'Save New Tag'};
+const Form_u_tag = {id: 'tag-update-form',action: '/api/v1/profile',method: 'PUT',title: 'Update Tag Information',submit: 'Save Changes'};
+
+const Form_c_cat = {id: 'cat-form',action: '/api/v1/profile',method: 'POST',title: 'Create New Category',submit: 'Save New Category'};
+const Form_u_cat = {id: 'cat-update-form',action: '/api/v1/profile',method: 'PUT',title: 'Update Category Information',submit: 'Save Changes'};
+
+
 const forms = {blog: Form_c_blog,topic: Form_c_topic,tag: Form_c_tag,category: Form_c_cat};
 const updateforms = {blog: Form_u_blog,topic: Form_u_topic,tag: Form_u_tag,category: Form_u_cat};
 
