@@ -93,32 +93,36 @@ async function navigateTo(hashTarget) {
         else if (cleanedHash === 'createblog'){createBlog(urlParamId);}
 
         //else if (cleanedHash === 'createblog'){createBlog(urlParamId);}
-        else if (cleanedHash === 'createtopic'){formBlog(urlParamId);}
-        else if (cleanedHash === 'createcategory'){}
-        else if (cleanedHash === 'createtag'){}
+        //else if (cleanedHash === 'createtopic'){formBlog(urlParamId);}
+        //else if (cleanedHash === 'createcategory'){}
+        //else if (cleanedHash === 'createtag'){}
                     
         else if (cleanedHash === 'blog') {listBlogs();}
-        else if (cleanedHash === 'tag') {listTags();} 
-        else if (cleanedHash === 'categories') {listCats();} 
-        else if (cleanedHash === 'topics') {listTopics();}
+        //else if (cleanedHash === 'tag') {listTags();} 
+        //else if (cleanedHash === 'categories') {listCats();} 
+        //else if (cleanedHash === 'topics') {listTopics();}
     }
 window.addEventListener('hashchange', () => {navigateTo(window.location.hash);});
 // Handle initial page load setup
 if (window.location.hash) {navigateTo(window.location.hash);}
 else {window.location.hash = '#home'; }
 
-//Constants
+//Constants into List for easy to use
 const Api_base = 'https://jsonplaceholder.typicode.com';
 const Api_blog = 'posts/';
 const Api_cat = 'comments/';
 const Api_tag = 'todos/';
 const Api_topic = 'users/';
 const apiRoutes = {blog: Api_blog,topic: Api_topic,tag: Api_tag,category: Api_cat};
+const col_blog = ["Title", "Complete", "Control Actions"];
+const col_tag = ["Title", "Complete", "Control Actions"];
+const col_cat = ["Title", "Complete", "Control Actions"];
+const col_topic = ["Title", "Complete", "Control Actions"];
+const cols = {blog: col_blog,topic: col_topic,tag: col_tag,category: col_cat};
+
+    
 //table based functions
-function buildTableHead(hrl,tbl,columns){
-    const tb = document.getElementById(tbl);tb.innerHTML = `<tr><td colspan="3" class="table-empty-state">Loading latest records...</td></tr>`;
-    const hr = document.getElementById(hrl);hr.innerHTML = columns.map(col => `<th>${col}</th>`).join('');return tb;
-}
+function buildTableHead(hrl,tbl,columns){const tb = document.getElementById(tbl);tb.innerHTML = `<tr><td colspan="3" class="table-empty-state">Loading latest records...</td></tr>`;const hr = document.getElementById(hrl);hr.innerHTML = columns.map(col => `<th>${col}</th>`).join('');return tb;}
 function renderRows(tb,entries,type) {
     if (entries && entries.length > 0) {tb.innerHTML = entries.map(p => {
         return`<tr>
@@ -143,46 +147,34 @@ function generateField(fields) {const isRequired = fields.required ? 'required' 
     else if (fields.type === 'textarea') {return `<div class="field"><label>${fields.label}</label><textarea name="${fields.id}" ${isRequired}></textarea></div>`;}
     else{return `<div class="field"><label>${fields.label}</label><input type="${fields.type}" name="${fields.id}" ${isRequired}></div>`;}
 }
-function generateForm(form, Fields) {const enctypeAttr = form.enctype ? `enctype="${form.enctype}"` : ''; 
-    return `<form id="${form.id}" action="${form.action}" method="${form.method}" ${enctypeAttr} onsubmit="handleFormSubmit(event)"><h3>${form.title}</h3>${Fields}<button type="submit">${form.submit}</button><button type="reset">Clear Form</button></form>`;
-}
+function generateForm(form, Fields) {const enctypeAttr = form.enctype ? `enctype="${form.enctype}"` : ''; return `<form id="${form.id}" action="${form.action}" method="${form.method}" ${enctypeAttr} onsubmit="handleFormSubmit(event)"><h3>${form.title}</h3>${Fields}<button type="submit">${form.submit}</button><button type="reset">Clear Form</button></form>`;}
     
 //api based functionality
-async function apiRead(url,id = null) {
-    const urli = id ? `${Api_base}/${url}/${id}` : `${Api_base}/${url}`;const res = await fetch(urli);
-    if (!res.ok) {throw new Error(id ? `Failed to read database record payload for ID: ${id}` : 'Database server returned connection error status.');}return await res.json();
-}
-async function apiSave(payload,url, id = null) {
-    const urli = id ? `${Api_base}/${url}/${id}` : `${Api_base}/${url}`;const res = await fetch(urli, {method: id ? 'PUT' : 'POST',headers: { 'Content-Type': 'application/json' },body: JSON.stringify(payload)});
-    if (!res.ok) {throw new Error(`Failed to ${id ? 'update' : 'create'} record.`);}return await res.json();
-}
-async function apiDelete(url,id) {
-    const urli = id ? `${Api_base}/${url}/${id}` : `${Api_base}/${url}`;const res = await fetch(urli, { method: 'DELETE' });
-    if (!res.ok) throw new Error('Failed to delete');return true;
-}
+async function apiRead(url,id = null) {const urli = id ? `${Api_base}/${url}/${id}` : `${Api_base}/${url}`;const res = await fetch(urli);if (!res.ok) {throw new Error(id ? `Failed to read database record payload for ID: ${id}` : 'Database server returned connection error status.');}return await res.json();}
+async function apiSave(payload,url, id = null) {const urli = id ? `${Api_base}/${url}/${id}` : `${Api_base}/${url}`;const res = await fetch(urli, {method: id ? 'PUT' : 'POST',headers: { 'Content-Type': 'application/json' },body: JSON.stringify(payload)});if (!res.ok) {throw new Error(`Failed to ${id ? 'update' : 'create'} record.`);}return await res.json();}
+async function apiDelete(url,id) {const urli = id ? `${Api_base}/${url}/${id}` : `${Api_base}/${url}`;const res = await fetch(urli, { method: 'DELETE' });if (!res.ok) throw new Error('Failed to delete');return true;}
 
 //listing functions
 function er(error){return `<tr><td colspan="3" class="table-empty-state" style="color:red;"><strong>Failed to Load Content</strong><p>${error}. Please check your connection or endpoint configurations.</p></td></tr>`;}
 
 async function listBlogs(){
     const columns = ["Title", "Complete", "Control Actions"];
-    const tb = buildTableHead('table-blog-h','table-blog-l',columns);
-    try {const lst = await apiRead(Api_blog);renderRows(tb,lst,'blog');}
+    const tb = buildTableHead('table-blog-h','table-blog-l',cols['blog']);
+    try {const lst = await apiRead(apiRoutes['blog']);renderRows(tb,lst,'blog');}
     catch (error) {tb.innerHTML = er(error.message);}}
 async function listTopics(){
     const columns = ["Title", "Complete", "Control Actions"];
-    const tb = buildTableHead('table-topic-h','table-topic-l',columns);
-    try {const lst = await apiRead(Api_topic);renderRows(tb,lst,'topic');}
+    const tb = buildTableHead('table-topic-h','table-topic-l',cols['tag']);
+    try {const lst = await apiRead(apiRoutes['topic']);renderRows(tb,lst,'topic');}
     catch (error) {tb.innerHTML = er(error.message);}}
 async function listCats(){
     const columns = ["Title", "Complete", "Control Actions"];
-    const tb = buildTableHead('table-cat-h','table-cat-l',columns);
-    try {const lst = await apiRead(Api_cat);renderRows(tb,lst,'category');}
+    const tb = buildTableHead('table-cat-h','table-cat-l',cols['category']);
+    try {const lst = await apiRead(apiRoutes['category']);renderRows(tb,lst,'category');}
     catch (error) {tb.innerHTML = er(error.message);}}
 async function listTags(){
-    const columns = ["Title", "Complete", "Control Actions"];
-    const tb = buildTableHead('table-tag-h','table-tag-l',columns);
-    try {const lst = await apiRead(Api_tag);renderRows(tb,lst,'tag');}
+    const tb = buildTableHead('table-tag-h','table-tag-l',cols['tag']);
+    try {const lst = await apiRead(apiRoutes['tag']);renderRows(tb,lst,'tag');}
     catch (error) {tb.innerHTML = er(error.message);}}
 
 //form functions
