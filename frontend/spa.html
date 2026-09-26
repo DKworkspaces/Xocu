@@ -71,10 +71,10 @@ else if (cleanedHash === 'createblog'){await formBlog(urlParamId);}
 else if (cleanedHash === 'createtopic'){await formTopic(urlParamId);}
 else if (cleanedHash === 'createcategory'){await formCat(urlParamId);}
 else if (cleanedHash === 'createtag'){await formTag(urlParamId);}
-//else if (cleanedHash === 'blog') {await listBlog();}
-//else if (cleanedHash === 'tag') {await listTag();}
-else if (cleanedHash === 'categories') {await listCat();}
-else if (cleanedHash === 'topics') {await listTopic();}
+else if (cleanedHash === 'blog') {await listBlog();}
+else if (cleanedHash === 'tag') {await listTag();}
+else if (cleanedHash === 'category') {await listCat();}
+else if (cleanedHash === 'topic') {await listTopic();}
 }
 window.addEventListener('hashchange', () => {navigateTo(window.location.hash);});if (window.location.hash) {navigateTo(window.location.hash);}else {window.location.hash = '#home'; }
 
