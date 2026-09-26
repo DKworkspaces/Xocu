@@ -86,12 +86,6 @@ const Api_cat = 'posts/';
 const Api_tag = 'todos/';
 const Api_topic = 'photos/';
 const apiRoutes = {blog: Api_blog,topic: Api_topic,tag: Api_tag,category: Api_cat};
-    //header names of colums list
-const Col_blog = ["Name", "Email Id", "Control Actions"];
-const Col_tag = ["Title", "Completed", "Control Actions"];
-const Col_cat = ["Title", "Body", "Control Actions"];
-const Col_topic = ["Title", "Url", "Control Actions"];
-//const cols = {blog: Col_blog,topic: Col_topic,tag: Col_tag,category: Col_cat};
     //fields of form list
 const F_blog = [
     { id: 'id', label: 'Id', type: 'text', required: true },
@@ -133,19 +127,13 @@ const updateforms = {blog: Form_u_blog,topic: Form_u_topic,tag: Form_u_tag,categ
 
     
 //table based functions
-function buildTableHead(hrl,tbl,columns){
-    const tb = document.getElementById(tbl);
-    tb.innerHTML = `<tr><td colspan="3" class="table-empty-state">Loading latest records...</td></tr>`;
-    const hr = document.getElementById(hrl);
-    //hr.innerHTML = columns.map(col => `<th>${col}</th>`).join('');
-    hr.innerHTML = columns.map(col => `<th>${col.label}</th>`).join('')+'<th>Control Actions</th>';
-    return tb;}
+function buildTableHead(hrl,tbl,columns){const tb = document.getElementById(tbl);tb.innerHTML = `<tr><td colspan="3" class="table-empty-state">Loading latest records...</td></tr>`;const hr = document.getElementById(hrl);hr.innerHTML = columns.map(col => `<th>${col.label}</th>`).join('')+'<th>Control Actions</th>';return tb;}
 function renderRows(tb,entries,type) {
     if (entries && entries.length > 0) {tb.innerHTML = entries.map(p => {
         return`<tr>
 <td><code>${p.id}</code></td>
 <td><strong>${p.name || p.title}</strong></td>
-<td><code>${p.email || p.url || p.body || p.completed }</code></td>
+<td><code>${p.email || p.albumId || p.body || p.completed }</code></td>
 <td class="actions"><a href="#update${type}/${p.id}" class="btn-edit">Edit</a>
 <a class="btn-delete" onclick="handleDelete(event, ${p.id},${type})">Delete</a></td>
 </tr>`;}).join('');
