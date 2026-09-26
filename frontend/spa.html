@@ -114,11 +114,11 @@ const Api_cat = 'posts/';
 const Api_tag = 'posts/';
 const Api_topic = 'posts/';
 const apiRoutes = {blog: Api_blog,topic: Api_topic,tag: Api_tag,category: Api_cat};
-const col_blog = ["Name", "Email Id", "Control Actions"];
-const col_tag = ["Title", "Complete", "Control Actions"];
-const col_cat = ["Title", "Complete", "Control Actions"];
-const col_topic = ["Title", "Complete", "Control Actions"];
-const cols = {blog: col_blog,topic: col_topic,tag: col_tag,category: col_cat};
+const Col_blog = ["Name", "Email Id", "Control Actions"];
+const Col_tag = ["Title", "Complete", "Control Actions"];
+const Col_cat = ["Title", "Complete", "Control Actions"];
+const Col_topic = ["Title", "Complete", "Control Actions"];
+const cols = {blog: Col_blog,topic: Col_topic,tag: Col_tag,category: Col_cat};
 
     
 //table based functions
@@ -190,7 +190,7 @@ async function formBlog(id=null) {
     title: 'Update Profile Information',submit: 'Save Changes'};
     const fields = [
     { id: 'id', label: 'Id:', type: 'text', required: true },
-    { id: 'username', label: 'Username:', type: 'text', required: true },
+    { id: 'name', label: 'Username:', type: 'text', required: true },
     { id: 'email', label: 'Email Address:', type: 'email', required: true }
   ];
     await genform(fields,formParameters,container,Api_blog,id);
