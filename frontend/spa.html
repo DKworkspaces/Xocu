@@ -83,14 +83,14 @@ window.addEventListener('hashchange', () => {navigateTo(window.location.hash);})
 const Api_base = 'https://jsonplaceholder.typicode.com';
 const Api_blog = 'users/';
 const Api_cat = 'posts/';
-const Api_tag = 'posts/';
-const Api_topic = 'posts/';
+const Api_tag = 'todos/';
+const Api_topic = 'photos/';
 const apiRoutes = {blog: Api_blog,topic: Api_topic,tag: Api_tag,category: Api_cat};
     //header names of colums list
 const Col_blog = ["Name", "Email Id", "Control Actions"];
-const Col_tag = ["Title", "Complete", "Control Actions"];
-const Col_cat = ["Title", "Complete", "Control Actions"];
-const Col_topic = ["Title", "Complete", "Control Actions"];
+const Col_tag = ["Title", "Completed", "Control Actions"];
+const Col_cat = ["Title", "Body", "Control Actions"];
+const Col_topic = ["Title", "Url", "Control Actions"];
 const cols = {blog: Col_blog,topic: Col_topic,tag: Col_tag,category: Col_cat};
     //fields of form list
 const F_blog = [
@@ -98,9 +98,21 @@ const F_blog = [
     { id: 'name', label: 'Username:', type: 'text', required: true },
     { id: 'email', label: 'Email Address:', type: 'email', required: true }
 ];
-const F_topic = [];
-const F_cat = [];
-const F_tag = [];
+const F_topic = [
+    { id: 'id', label: 'Id:', type: 'text', required: true },
+    { id: 'title', label: 'Title:', type: 'text', required: true },
+    { id: 'url', label: 'Url:', type: 'text', required: true }
+];
+const F_cat = [
+    { id: 'id', label: 'Id:', type: 'text', required: true },
+    { id: 'title', label: 'Title:', type: 'text', required: true },
+    { id: 'body', label: 'Body:', type: 'textarea', required: true }
+];
+const F_tag = [
+    { id: 'id', label: 'Id:', type: 'text', required: true },
+    { id: 'title', label: 'Title:', type: 'text', required: true },
+    { id: 'completed', label: 'Completed:', type: 'checkbox', required: true }
+];
 const fields = {blog: F_blog,topic: F_topic,tag: F_tag,category: F_cat};
     //form basic list for create as well as update form
 const Form_c_blog = {id: 'user-form',action: '/api/v1/profile',method: 'POST',title: 'Create New User',submit: 'Save New'};
