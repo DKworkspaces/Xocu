@@ -132,7 +132,8 @@ function buildTableHead(hrl,tbl,columns){
     const tb = document.getElementById(tbl);
     tb.innerHTML = `<tr><td colspan="3" class="table-empty-state">Loading latest records...</td></tr>`;
     const hr = document.getElementById(hrl);
-    hr.innerHTML = columns.map(col => `<th>${col}</th>`).join('');
+    //hr.innerHTML = columns.map(col => `<th>${col}</th>`).join('');
+    hr.innerHTML = columns.map(col => `<th>${col.label}</th>`).join('');
     return tb;}
 function renderRows(tb,entries,type) {
     if (entries && entries.length > 0) {tb.innerHTML = entries.map(p => {
@@ -162,7 +163,8 @@ async function apiSave(payload,url, id = null) {const urli = id ? `${Api_base}/$
 async function apiDelete(url,id) {const urli = id ? `${Api_base}/${url}/${id}` : `${Api_base}/${url}`;const res = await fetch(urli, { method: 'DELETE' });if (!res.ok) throw new Error('Failed to delete');return true;}
 //listing all control functions
 async function listTable(headcl,tablecl,type){
-    const tb = buildTableHead(headcl,tablecl,cols[type]);
+    //const tb = buildTableHead(headcl,tablecl,cols[type]);
+    const tb = buildTableHead(headcl,tablecl,fields[type]);
     try {
         const lst = await apiRead(apiRoutes[type]);
         renderRows(tb,lst,type);}
