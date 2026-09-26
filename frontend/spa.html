@@ -26,86 +26,55 @@
         </tbody></table></div>
 </section>
     
-<section id="view-blog" class="spa-view" data-title="Blogs Directory — CMS Panel"><h2>Blogpost Workspace</h2><a href="#createblog" class="btn-create-new">Create New Blog</a>
-<div class="data-table-container"><div class="data-table-header-box"><h3>Existing Blog Posts</h3></div>
+<section id="view-blog" class="spa-view" data-title="Blogs Directory — CMS Panel"><h2>Blogpost Workspace</h2><a href="#createblog" class="btn-create-new">Create New Blog</a><div class="data-table-container"><div class="data-table-header-box"><h3>Existing Blog Posts</h3></div>
 <!-- Populated dynamically via script execution -->
-<table><thead><tr id="table-blog-h"></tr></thead><tbody id="table-blog-l"></tbody></table>
-</div></section>
+<table><thead><tr id="table-blog-h"></tr></thead><tbody id="table-blog-l"></tbody></table></div></section>
 
-<section id="view-topic" class="spa-view" data-title="Topics Directory — CMS Panel"><h2>Topic Workspace</h2><a href="#createtopic" class="btn-create-new">Create New Topic</a>
-<div class="data-table-container"><div class="data-table-header-box"><h3>Existing Topics</h3></div>
+<section id="view-topic" class="spa-view" data-title="Topics Directory — CMS Panel"><h2>Topic Workspace</h2><a href="#createtopic" class="btn-create-new">Create New Topic</a><div class="data-table-container"><div class="data-table-header-box"><h3>Existing Topics</h3></div>
 <!-- Populated dynamically via script execution -->
-<table><thead><tr id="table-topic-h"></tr></thead><tbody id="table-topic-l"></tbody></table>
-</div></section>
+<table><thead><tr id="table-topic-h"></tr></thead><tbody id="table-topic-l"></tbody></table></div></section>
 
-<section id="view-category" class="spa-view" data-title="Categories Directory — CMS Panel"><h2>Category Workspace</h2><a href="#createcategory" class="btn-create-new">Create New Category</a>
-<div class="data-table-container"><div class="data-table-header-box"><h3>Existing Categories</h3></div>
+<section id="view-category" class="spa-view" data-title="Categories Directory — CMS Panel"><h2>Category Workspace</h2><a href="#createcategory" class="btn-create-new">Create New Category</a><div class="data-table-container"><div class="data-table-header-box"><h3>Existing Categories</h3></div>
 <!-- Populated dynamically via script execution -->
-<table><thead><tr id="table-cat-h"></tr></thead>
-<tbody id="table-cat-l"></tbody></table>
-</div></section>
+<table><thead><tr id="table-cat-h"></tr></thead><tbody id="table-cat-l"></tbody></table></div></section>
 
-<section id="view-tag" class="spa-view" data-title="Tags Directory — CMS Panel"><h2>Tag Workspace</h2><a href="#createtag" class="btn-create-new">Create New Tag</a>
-<div class="data-table-container"><div class="data-table-header-box"><h3>Existing Tags</h3></div>
-<table><thead><tr id="table-tag-h"></tr></thead>
-<tbody id="table-tag-l"></tbody></table>
-</div></section>
+<section id="view-tag" class="spa-view" data-title="Tags Directory — CMS Panel"><h2>Tag Workspace</h2><a href="#createtag" class="btn-create-new">Create New Tag</a><div class="data-table-container"><div class="data-table-header-box"><h3>Existing Tags</h3></div>
+<!-- Populated dynamically via script execution -->
+<table><thead><tr id="table-tag-h"></tr></thead><tbody id="table-tag-l"></tbody></table></div></section>
 
 <section id="view-createblog" class="spa-view" data-title="Create Post-CMS Panel"><h2>Create/Update Blogpost</h2><div class="data-table-container">
+<!-- Populated dynamically via script execution -->
 </div></section>
 <section id="view-createtopic" class="spa-view" data-title="Create Topic-CMS Panel"><h2>Create/Update Topic</h2><div class="data-table-container">
+<!-- Populated dynamically via script execution -->
 </div></section>
 <section id="view-createcategory" class="spa-view" data-title="Create Category-CMS Panel"><h2>Create/Update Category</h2><div class="data-table-container">
+<!-- Populated dynamically via script execution -->
 </div></section>
 <section id="view-createtag" class="spa-view" data-title="Create Tag-CMS Panel"><h2>Create/Update Tag</h2><div class="data-table-container">
-</div></section>
-
-</div>
-
-
+<!-- Populated dynamically via script execution -->
+</div></section></div>
 <script>
-const navItems = document.querySelectorAll('.nav-item');
-const views = document.querySelectorAll('.spa-view');   
-async function navigateTo(hashTarget) {
-    const pathParts = hashTarget.split('/');
-    const urlParamId = pathParts[1] || null;
-    let cleanedHash = pathParts[0].replace('#', '') || 'home';
-    if (cleanedHash === 'updateblog') {cleanedHash = 'createblog';}
-    if (cleanedHash === 'updatetopic') {cleanedHash = 'createtopic';}
-    if (cleanedHash === 'updatetag') {cleanedHash = 'createtag';}
-    if (cleanedHash === 'updatecategory') {cleanedHash = 'createcategory';}
-    let viewFound = false;
-    views.forEach(view => {
-        if (view.id === `view-${cleanedHash}`) {view.classList.add('active');document.title = view.getAttribute('data-title') || 'CMS Dashboard';viewFound = true;} 
-        else {view.classList.remove('active');}
-    });
-    if (!viewFound) {
-        const homeView = document.getElementById('view-home');
-        if (homeView) {homeView.classList.add('active');document.title = homeView.getAttribute('data-title') || 'CMS Dashboard';}
-    }
-    navItems.forEach(item => {
-        const itemHash = item.getAttribute('href');
-        if (itemHash === `#${cleanedHash}` || (cleanedHash === 'home' && itemHash === '#home')) {item.classList.add('active');}
-        else {item.classList.remove('active');}
-    });
+const navItems = document.querySelectorAll('.nav-item');const views = document.querySelectorAll('.spa-view');   
+async function navigateTo(hashTarget) {const pathParts = hashTarget.split('/');const urlParamId = pathParts[1] || null;let viewFound = false;let cleanedHash = pathParts[0].replace('#', '') || 'home';
+// replacing update hash to create so same page open but wiàth id as parameter 
+    if (cleanedHash === 'updateblog') {cleanedHash = 'createblog';}else if (cleanedHash === 'updatetopic') {cleanedHash = 'createtopic';}else if (cleanedHash === 'updatetag') {cleanedHash = 'createtag';}else if (cleanedHash === 'updatecategory') {cleanedHash = 'createcategory';}
+    views.forEach(view => {if (view.id === `view-${cleanedHash}`) {view.classList.add('active');document.title = view.getAttribute('data-title') || 'CMS Dashboard';viewFound = true;} else {view.classList.remove('active');}});
+    if (!viewFound) {const homeView = document.getElementById('view-home');if (homeView) {homeView.classList.add('active');document.title = homeView.getAttribute('data-title') || 'CMS Dashboard';}}
+    navItems.forEach(item => {const itemHash = item.getAttribute('href');if (itemHash === `#${cleanedHash}` || (cleanedHash === 'home' && itemHash === '#home')) {item.classList.add('active');}else {item.classList.remove('active');}});
 // 3. Condition check using cleanedHash
-        if (cleanedHash === 'home') {fetchBlogPosts();}
-        //else if (cleanedHash === 'createblog'){createBlog(urlParamId);}
-
-        else if (cleanedHash === 'createblog'){formBlog(urlParamId);}
-        //else if (cleanedHash === 'createtopic'){formBlog(urlParamId);}
-        //else if (cleanedHash === 'createcategory'){}
-        //else if (cleanedHash === 'createtag'){}
-                    
-        else if (cleanedHash === 'blog') {listBlogs();}
-        else if (cleanedHash === 'tag') {listTags();} 
-        else if (cleanedHash === 'categories') {listCats();} 
-        else if (cleanedHash === 'topics') {listTopics();}
-    }
-window.addEventListener('hashchange', () => {navigateTo(window.location.hash);});
-// Handle initial page load setup
-if (window.location.hash) {navigateTo(window.location.hash);}
-else {window.location.hash = '#home'; }
+if (cleanedHash === 'home') {fetchBlogPosts();}
+//else if (cleanedHash === 'createblog'){createBlog(urlParamId);}
+else if (cleanedHash === 'createblog'){formBlog(urlParamId);}
+else if (cleanedHash === 'createtopic'){formTopic(urlParamId);}
+else if (cleanedHash === 'createcategory'){formCat(urlParamId);}
+else if (cleanedHash === 'createtag'){formTag(urlParamId);}
+else if (cleanedHash === 'blog') {listBlogs();}
+else if (cleanedHash === 'tag') {listTgs();}
+else if (cleanedHash === 'categories') {listCats();}
+else if (cleanedHash === 'topics') {listTopics();}
+}
+window.addEventListener('hashchange', () => {navigateTo(window.location.hash);});if (window.location.hash) {navigateTo(window.location.hash);}else {window.location.hash = '#home'; }
 
 //Constants into List for easy to use
     //api routes list
@@ -152,38 +121,25 @@ function renderRows(tb,entries,type) {
     } else {tb.innerHTML = `<tr><td colspan="3" class="table-empty-state"><p>No Entries found on network database.</p></td></tr>`;}
 }
 //table delete function 
-async function handleDelete(event,id,type){
-    event.preventDefault();
+async function handleDelete(event,id,type){event.preventDefault();
     if (!confirm('Are you absolutely sure you want to delete this record permanently?')) {return false;}
     try {const resp = await apiDelete(apiRoutes[type],id);if (resp){alert(`Record #${id} successfully dropped from server instance.`);}else{alert('Server rejected the delete operational sequence script logic parameters.');}
     } catch (err) {alert(`Network connection failure caught during deletion: ${err.message}`);}
 }
 //form related functions 
-function generateField(fields) {const isRequired = fields.required ? 'required' : '';
-    if (fields.type === 'checkbox') {return `<div class="field radio-check"><input type="checkbox" name="${fields.id}" value="${fields.id}" ${isRequired}><label>${fields.label}</label></div>`;}
-    else if (fields.type === 'textarea') {return `<div class="field"><label>${fields.label}</label><textarea name="${fields.id}" ${isRequired}></textarea></div>`;}
-    else{return `<div class="field"><label>${fields.label}</label><input type="${fields.type}" name="${fields.id}" ${isRequired}></div>`;}
-}
+function generateField(fields) {const isRequired = fields.required ? 'required' : '';if (fields.type === 'checkbox') {return `<div class="field radio-check"><input type="checkbox" name="${fields.id}" value="${fields.id}" ${isRequired}><label>${fields.label}</label></div>`;}else if (fields.type === 'textarea') {return `<div class="field"><label>${fields.label}</label><textarea name="${fields.id}" ${isRequired}></textarea></div>`;}else{return `<div class="field"><label>${fields.label}</label><input type="${fields.type}" name="${fields.id}" ${isRequired}></div>`;}}
 function generateForm(form, Fields) {const enctypeAttr = form.enctype ? `enctype="${form.enctype}"` : ''; return `<form id="${form.id}" action="${form.action}" method="${form.method}" ${enctypeAttr} onsubmit="handleFormSubmit(event)"><h3>${form.title}</h3>${Fields}<button type="submit">${form.submit}</button><button type="reset">Clear Form</button></form>`;}
    //form functions
 function homeEle(id){const parentView = document.getElementById(id);if (!parentView) return;return parentView.querySelector('.data-table-container');}
-async function genform(fields,form, container,url,id=null){let rawcont= fields.map(ele => generateField(ele)).join('');container.innerHTML = generateForm(form, rawcont);
-    if (id !== null) {try {
-        const sr = await apiRead(url,id);
-        fields.forEach(field => {container.querySelector(`input[name="${field.id}"]`).value=sr[field.id] ?? (field.id === 'id' ? id : '');});
-        alert('Record load successfully!');} catch (error) {alert('Failed to load existing records!');} } }
+async function genform(fields,form, container,url,id=null){let rawcont= fields.map(ele => generateField(ele)).join('');container.innerHTML = generateForm(form, rawcont);if (id !== null) {try {const sr = await apiRead(url,id);fields.forEach(field => {container.querySelector(`input[name="${field.id}"]`).value=sr[field.id] ?? (field.id === 'id' ? id : '');});alert('Record load successfully!');} catch (error) {alert('Failed to load existing records!');} } }
 
 //api based functionality
 async function apiRead(url,id = null) {const urli = id ? `${Api_base}/${url}/${id}` : `${Api_base}/${url}`;const res = await fetch(urli);if (!res.ok) {throw new Error(id ? `Failed to read database record payload for ID: ${id}` : 'Database server returned connection error status.');}return await res.json();}
 async function apiSave(payload,url, id = null) {const urli = id ? `${Api_base}/${url}/${id}` : `${Api_base}/${url}`;const res = await fetch(urli, {method: id ? 'PUT' : 'POST',headers: { 'Content-Type': 'application/json' },body: JSON.stringify(payload)});if (!res.ok) {throw new Error(`Failed to ${id ? 'update' : 'create'} record.`);}return await res.json();}
 async function apiDelete(url,id) {const urli = id ? `${Api_base}/${url}/${id}` : `${Api_base}/${url}`;const res = await fetch(urli, { method: 'DELETE' });if (!res.ok) throw new Error('Failed to delete');return true;}
 
-//listing functions
-function er(error){return ;}
-async function listTable(headcl,tablecl,type){
-    const tb = buildTableHead(headcl,tablecl,cols[type]);
-    try {const lst = await apiRead(apiRoutes[type]);renderRows(tb,lst,type);}
-    catch (error) {tb.innerHTML = `<tr><td colspan="3" class="table-empty-state" style="color:red;"><strong>Failed to Load Content</strong><p>${error.message}. Please check your connection or endpoint configurations.</p></td></tr>`;}}
+//listing all control functions
+async function listTable(headcl,tablecl,type){const tb = buildTableHead(headcl,tablecl,cols[type]);try {const lst = await apiRead(apiRoutes[type]);renderRows(tb,lst,type);}catch (error) {tb.innerHTML = `<tr><td colspan="3" class="table-empty-state" style="color:red;"><strong>Failed to Load Content</strong><p>${error.message}. Please check your connection or endpoint configurations.</p></td></tr>`;}}
 async function formBuild(home_ele,type,id=null) {const container = homeEle(home_ele);if (!container) return;await genform(fields[type],id != null ? updateforms[type] : forms[type],container,apiRoutes[type],id);return;}
 
     
@@ -227,28 +183,7 @@ async function formTag(id=null) {await formBuild('view-createtag','tag',id);}
 
     
 // A. Core Function: Asynchronously Fetch Data From Your Server API
-async function fetchBlogPosts() {
-    // Base configuration targeting a real public testing API endpoint
-    const API_BASE_URL = 'https://jsonplaceholder.typicode.com/todos/';
-    const tbody = document.getElementById('table-body-posts');
-    const headerRow = document.getElementById('table-headers');
-    tbody.innerHTML = `<tr><td colspan="3" class="table-empty-state">Loading latest records...</td></tr>`;
-    const columns = [{ name: "Title" }, { name: "Complete" }, { name: "Control Actions" }];
-    headerRow.innerHTML = columns.map(col => `<th>${col.name}</th>`).join('');
-    try {
-        const response = await fetch(API_BASE_URL);
-        if (!response.ok) {throw new Error(`HTTP network error code returned: ${response.status}`);}
-        const postsData = await response.json();
-        renderTableRows(postsData);
-    } catch (error) {
-        console.error("API Fetch Exception:", error);
-        tbody.innerHTML = `<tr>
-            <td colspan="3" class="table-empty-state" style="color:red;">
-            <strong>Failed to Load Content</strong>
-            <p>${error.message}. Please check your connection or endpoint configurations.</p>
-            </td></tr>`;
-    }
-}
+async function fetchBlogPosts() {const API_BASE_URL = 'https://jsonplaceholder.typicode.com/todos/';const tbody = document.getElementById('table-body-posts');const headerRow = document.getElementById('table-headers');tbody.innerHTML = `<tr><td colspan="3" class="table-empty-state">Loading latest records...</td></tr>`;const columns = [{ name: "Title" }, { name: "Complete" }, { name: "Control Actions" }];headerRow.innerHTML = columns.map(col => `<th>${col.name}</th>`).join('');try {const response = await fetch(API_BASE_URL);if (!response.ok) {throw new Error(`HTTP network error code returned: ${response.status}`);}const postsData = await response.json();renderTableRows(postsData);} catch (error) {console.error("API Fetch Exception:", error);tbody.innerHTML = `<tr><td colspan="3" class="table-empty-state" style="color:red;"><strong>Failed to Load Content</strong><p>${error.message}. Please check your connection or endpoint configurations.</p></td></tr>`;} }
 // B. Structural Rendering Loop
 function renderTableRows(posts) {
     const tbody = document.getElementById('table-body-posts');
@@ -263,59 +198,17 @@ function renderTableRows(posts) {
                         <a href="/edit-user/${post.id}" class="btn-edit" onclick="handleEditAction(event, ${post.id})">Edit</a>
                         <a href="/delete-user/${post.id}" class="btn-delete" onclick="handleDeleteAction(event, ${post.id})">Delete</a>
         </td></tr>`;}).join('');
-    } else {
-        tbody.innerHTML = `<tr><td colspan="3" class="table-empty-state"><p>No Entries found on network database.</p></td></tr>`;
-    }
+    } else {tbody.innerHTML = `<tr><td colspan="3" class="table-empty-state"><p>No Entries found on network database.</p></td></tr>`;}
 }
 // C. Functional Action Utilities (Connecting HTTP requests back out to your server)
-function handleEditAction(event, id) {
-    event.preventDefault();
-    alert(`Trigger internal SPA layout window change routing context targeting Edit Mode for ID: ${id}`);
-}
-async function handleDeleteAction(event, id) {
-    event.preventDefault();
-    if (!confirm('Are you absolutely sure you want to delete this record permanently?')) {return false;}
-    try {
-        const response = await fetch(`https://jsonplaceholder.typicode.com/todos{id}`, {method: 'DELETE'});
-        if (response.ok) {
-            const targetRow = document.getElementById(`post-row-${id}`);
-            if (targetRow) {
-                targetRow.style.transition = 'opacity 0.25s ease';
-                targetRow.style.opacity = '0';
-                setTimeout(() => targetRow.remove(), 250);
-            }
-            alert(`Record #${id} successfully dropped from remote server instance.`);
-        } else {alert('Server rejected the delete operational sequence script logic parameters.');}
-    } catch (err) {alert(`Network connection failure caught during deletion: ${err.message}`);}
-}
-
-
-
-async function readRecords(id = null) {
-    const API_BASE_URL = 'https://jsonplaceholder.typicode.com/todos/';
-    const url = id ? `${API_BASE_URL}/${id}` : API_BASE_URL;
-    const res = await fetch(url);
-    if (!res.ok) {
-        const errorMsg = id ? `Failed to read database record payload for ID: ${id}` : 'Database server returned connection error status.';
-        throw new Error(errorMsg);
-    }
-    return await res.json();
-}
-async function saveRecord(payload, id = null) {
-    const API_BASE_URL = 'https://jsonplaceholder.typicode.com/todos/';
-    const url = id ? `${API_BASE_URL}/${id}` : API_BASE_URL;
-    const method = id ? 'PUT' : 'POST';
-    const res = await fetch(url, {method: method,headers: { 'Content-Type': 'application/json' },body: JSON.stringify(payload)});
-    if (!res.ok) {throw new Error(`Failed to ${id ? 'update' : 'create'} record.`);}
-    return await res.json();
-}
-async function deleteRecord(id) {
-    const API_BASE_URL = 'https://jsonplaceholder.typicode.com/todos/';
-    const res = await fetch(`${API_BASE_URL}/${id}`, { method: 'DELETE' });
-    if (!res.ok) throw new Error('Failed to delete');
-    return true;
-}
-
+function handleEditAction(event, id) {event.preventDefault();alert(`Trigger internal SPA layout window change routing context targeting Edit Mode for ID: ${id}`);}
+async function handleDeleteAction(event, id) {event.preventDefault();if (!confirm('Are you absolutely sure you want to delete this record permanently?')) {return false;}try {const response = await fetch(`https://jsonplaceholder.typicode.com/todos{id}`, {method: 'DELETE'});if (response.ok) {const targetRow = document.getElementById(`post-row-${id}`);if (targetRow) {targetRow.style.transition = 'opacity 0.25s ease';targetRow.style.opacity = '0';setTimeout(() => targetRow.remove(), 250);}alert(`Record #${id} successfully dropped from remote server instance.`);} else {alert('Server rejected the delete operational sequence script logic parameters.');} } catch (err) {alert(`Network connection failure caught during deletion: ${err.message}`);} }
+async function readRecords(id = null) {const API_BASE_URL = 'https://jsonplaceholder.typicode.com/todos/';const url = id ? `${API_BASE_URL}/${id}` : API_BASE_URL;const res = await fetch(url);if (!res.ok) {const errorMsg = id ? `Failed to read database record payload for ID: ${id}` : 'Database server returned connection error status.';throw new Error(errorMsg);return;} await res.json();}
+async function saveRecord(payload, id = null) {const API_BASE_URL = 'https://jsonplaceholder.typicode.com/todos/';const url = id ? `${API_BASE_URL}/${id}` : API_BASE_URL;const method = id ? 'PUT' : 'POST';const res = await fetch(url, {method: method,headers: { 'Content-Type': 'application/json' },body: JSON.stringify(payload)});if (!res.ok) {throw new Error(`Failed to ${id ? 'update' : 'create'} record.`);}return await res.json();}
+async function deleteRecord(id) {const API_BASE_URL = 'https://jsonplaceholder.typicode.com/todos/';const res = await fetch(`${API_BASE_URL}/${id}`, { method: 'DELETE' });if (!res.ok) throw new Error('Failed to delete');return true;}
+function generateFieldHTML(fields) {const isRequired = fields.required ? 'required' : '';if (fields.type === 'checkbox') {return `<div class="field radio-check"><input type="checkbox" name="${fields.id}" value="${fields.id}" ${isRequired}><label>${fields.label}</label></div>`;}else if (fields.type === 'textarea') {return `<div class="field"><label>${fields.label}</label><textarea name="${fields.id}" ${isRequired}></textarea></div>`;}return `<div class="field"><label>${fields.label}</label><input type="${fields.type}" name="${fields.id}" ${isRequired}></div>`;}
+function generateFormWrapperHTML(form, innerFieldsHTML) {const enctypeAttr = form.enctype ? `enctype="${form.enctype}"` : '';return `<form id="${form.id}" action="${form.action}" method="${form.method}" ${enctypeAttr} onsubmit="handleFormSubmit(event)"><h3>${form.title}</h3>${innerFieldsHTML}<button type="submit">${form.submit}</button><button type="reset">Clear Form</button></form>`;}
+async function createBlog(id=null) {const parentView = document.getElementById('view-createblog');if (!parentView) return;const container = parentView.querySelector('.data-table-container');if (!container) return;const formParameters = {id: 'user-profile-form',action: '/api/v1/profile',method: 'POST',title: 'Update Profile Information',submit: 'Save Changes'};const fields = [{ id: 'id', label: 'Id:', type: 'text', required: true },{ id: 'username', label: 'Username:', type: 'text', required: true },{ id: 'email', label: 'Email Address:', type: 'email', required: true }];let rawJoinedContent = fields.map(ele => generateFieldHTML(ele)).join('');container.innerHTML = generateFormWrapperHTML(formParameters, rawJoinedContent);if (id !== null) {try {const singleRecord = await readRecords(id);alert('Record load successfully!');container.querySelector('input[name="id"]').value=singleRecord.id|| id || '';container.querySelector('input[name="username"]').value=singleRecord.username|| '';container.querySelector('input[name="email"]').value=singleRecord.email|| '';} catch (error) {alert('Failed to load existing records!');} }return;}
 // eg
 async function refreshListView() {
     try {
@@ -326,54 +219,5 @@ async function refreshListView() {
         await deleteRecord(id);alert('Record deleted successfully!');
         }
     catch (err) {console.error(err.message);}
-}
-
-function generateFieldHTML(fields) {
-    const isRequired = fields.required ? 'required' : '';
-    if (fields.type === 'checkbox') {
-        return `<div class="field radio-check"><input type="checkbox" name="${fields.id}" value="${fields.id}" ${isRequired}><label>${fields.label}</label></div>`;}
-    if (fields.type === 'textarea') {
-        return `<div class="field"><label>${fields.label}</label><textarea name="${fields.id}" ${isRequired}></textarea></div>`;}
-    return `<div class="field"><label>${fields.label}</label><input type="${fields.type}" name="${fields.id}" ${isRequired}></div>`;
-}
-function generateFormWrapperHTML(form, innerFieldsHTML) {
-    const enctypeAttr = form.enctype ? `enctype="${form.enctype}"` : ''; 
-    return `<form id="${form.id}" action="${form.action}" method="${form.method}" ${enctypeAttr} onsubmit="handleFormSubmit(event)"><h3>${form.title}</h3>${innerFieldsHTML}<button type="submit">${form.submit}</button><button type="reset">Clear Form</button></form>`;
-}
-async function createBlog(id=null) {
-    const parentView = document.getElementById('view-createblog');
-    if (!parentView) return;
-    const container = parentView.querySelector('.data-table-container');
-    if (!container) return;
-    const formParameters = {
-    id: 'user-profile-form',action: '/api/v1/profile',
-    method: 'POST',
-    title: 'Update Profile Information',submit: 'Save Changes'};
-    const fields = [
-    { id: 'id', label: 'Id:', type: 'text', required: true },
-    { id: 'username', label: 'Username:', type: 'text', required: true },
-    { id: 'email', label: 'Email Address:', type: 'email', required: true }
-  ];
-    let rawJoinedContent = fields.map(ele => generateFieldHTML(ele)).join('');
-    container.innerHTML = generateFormWrapperHTML(formParameters, rawJoinedContent);
-    if (id !== null) {
-        try {
-            const singleRecord = await readRecords(id);
-            alert('Record load successfully!');
-            container.querySelector('input[name="id"]').value=singleRecord.id|| id || '';
-            container.querySelector('input[name="username"]').value=singleRecord.username|| '';
-            container.querySelector('input[name="email"]').value=singleRecord.email|| '';
-        
-        } catch (error) {
-            alert('Failed to load existing records!');
-        }
     }
-    return;
-}
-                            
-  </script>
-  
-<!-- 
-  <script src="/global.js"></script>
-  -->
-</body></html>
+</script> <!-- <script src="/global.js"></script> --></body></html>
