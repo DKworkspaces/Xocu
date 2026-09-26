@@ -76,8 +76,15 @@ else if (cleanedHash === 'tag') {await listTag();}
 else if (cleanedHash === 'category') {await listCat();}
 else if (cleanedHash === 'topic') {await listTopic();}
 }
-window.addEventListener('hashchange', () => {navigateTo(window.location.hash);});if (window.location.hash) {navigateTo(window.location.hash);}else {window.location.hash = '#home'; }
+//window.addEventListener('hashchange', () => {navigateTo(window.location.hash);});if (window.location.hash) {navigateTo(window.location.hash);}else {window.location.hash = '#home'; }
+window.addEventListener('hashchange', () => {navigateTo(window.location.hash);});
 
+// Wrap the initial page-load check so it waits for the DOM
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.location.hash) {navigateTo(window.location.hash);}
+  else {window.location.hash = '#home';}
+});
+    
 //Constants into List for easy to use
     //api routes list
 const Api_base = 'https://jsonplaceholder.typicode.com';
