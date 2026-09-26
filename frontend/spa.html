@@ -130,7 +130,14 @@ const F_blog = [
 const F_topic = [];const F_cat = [];const F_tag = [];
 const fields = {blog: F_blog,topic: F_topic,tag: F_tag,category: F_cat};
     //form basic list for create as well as update form
-    
+const Form_c_blog = {id: 'user-form',action: '/api/v1/profile',method: 'POST',title: 'Create New User',submit: 'Save New'};
+const Form_u_blog = {id: 'user-update-form',action: '/api/v1/profile',method: 'PUT',title: 'Update User Information',submit: 'Save Changes'};
+const Form_c_topic = {};const Form_u_topic = {};
+const Form_c_tag = {};const Form_u_tag = {};
+const Form_c_cat = {};const Form_u_cat = {};
+const forms = {blog: Form_c_blog,topic: Form_c_topic,tag: Form_c_tag,category: Form_c_cat};
+const updateforms = {blog: Form_u_blog,topic: Form_u_topic,tag: Form_u_tag,category: Form_u_cat};
+
     
 //table based functions
 function buildTableHead(hrl,tbl,columns){const tb = document.getElementById(tbl);tb.innerHTML = `<tr><td colspan="3" class="table-empty-state">Loading latest records...</td></tr>`;const hr = document.getElementById(hrl);hr.innerHTML = columns.map(col => `<th>${col}</th>`).join('');return tb;}
@@ -195,11 +202,7 @@ async function genform(fields,form, container,url,id=null){let rawcont= fields.m
 
 async function formBlog(id=null) {
     const container = homeEle('view-createblog');if (!container) return;
-    const formParameters = {
-    id: 'user-profile-form',action: '/api/v1/profile',
-    method: 'POST',
-    title: 'Update Profile Information',submit: 'Save Changes'};
-    await genform(fields['blog'],formParameters,container,Api_blog,id);
+    await genform(fields['blog'],id != null ? updateforms['blog'] : forms['blog'],container,apiRoutes['blog'],id);
     return;
 }
 
