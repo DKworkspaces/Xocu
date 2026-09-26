@@ -197,16 +197,16 @@ async function genform(fields,form, container,url,id=null){let rawcont= fields.m
     if (id !== null) {try {
         const sr = await apiRead(url,id);
         fields.forEach(field => {container.querySelector(`input[name="${field.id}"]`).value=sr[field.id] ?? (field.id === 'id' ? id : '');});
-//container.querySelector('input[name="id"]').value=singleRecord.id|| id || '';container.querySelector('input[name="username"]').value=singleRecord.username|| '';container.querySelector('input[name="email"]').value=singleRecord.email|| '';
         alert('Record load successfully!');} catch (error) {alert('Failed to load existing records!');} } }
 
-async function formBlog(id=null) {
-    const container = homeEle('view-createblog');if (!container) return;
-    await genform(fields['blog'],id != null ? updateforms['blog'] : forms['blog'],container,apiRoutes['blog'],id);
-    return;
-}
-
-
+async function formBlog(id=null) {const container = homeEle('view-createblog');if (!container) return;
+    await genform(fields['blog'],id != null ? updateforms['blog'] : forms['blog'],container,apiRoutes['blog'],id);return;}
+async function formTopic(id=null) {const container = homeEle('view-createtopic');if (!container) return;
+    await genform(fields['topic'],id != null ? updateforms['topic'] : forms['topic'],container,apiRoutes['topic'],id);return;}
+async function formCat(id=null) {const container = homeEle('view-createcategory');if (!container) return;
+    await genform(fields['category'],id != null ? updateforms['category'] : forms['category'],container,apiRoutes['category'],id);return;}
+async function formTag(id=null) {const container = homeEle('view-createtag');if (!container) return;
+    await genform(fields['tag'],id != null ? updateforms['tag'] : forms['tag'],container,apiRoutes['tag'],id);return;}
 
 
 
