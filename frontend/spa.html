@@ -129,11 +129,12 @@ const updateforms = {blog: Form_u_blog,topic: Form_u_topic,tag: Form_u_tag,categ
 //table based functions
 function buildTableHead(hrl,tbl,columns){const tb = document.getElementById(tbl);tb.innerHTML = `<tr><td colspan="3" class="table-empty-state">Loading latest records...</td></tr>`;const hr = document.getElementById(hrl);hr.innerHTML = columns.map(col => `<th>${col.label}</th>`).join('')+'<th>Control Actions</th>';return tb;}
 function renderRows(tb,entries,type) {
+    const col_0=fields[type][0].id;const col_1=fields[type][1].id;const col_2=fields[type][2].id;
     if (entries && entries.length > 0) {tb.innerHTML = entries.map(p => {
         return`<tr>
-<td><code>${p.id}</code></td>
-<td><strong>${p.name || p.title}</strong></td>
-<td><code>${p.email || p.albumId || p.body || p.completed }</code></td>
+<td><code>${p[col_0]}</code></td>
+<td><strong>${p[col_1]}</strong></td>
+<td><code>${p[col_2] }</code></td>
 <td class="actions"><a href="#update${type}/${p.id}" class="btn-edit">Edit</a>
 <a class="btn-delete" onclick="handleDelete(event, ${p.id},${type})">Delete</a></td>
 </tr>`;}).join('');
