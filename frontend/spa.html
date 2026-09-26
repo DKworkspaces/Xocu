@@ -67,14 +67,14 @@ if (cleanedHash === 'home') {
 //fetchBlogPosts();
 }
 //else if (cleanedHash === 'createblog'){createBlog(urlParamId);}
-else if (cleanedHash === 'createblog'){formBlog(urlParamId);}
-else if (cleanedHash === 'createtopic'){formTopic(urlParamId);}
-else if (cleanedHash === 'createcategory'){formCat(urlParamId);}
-else if (cleanedHash === 'createtag'){formTag(urlParamId);}
-else if (cleanedHash === 'blog') {listBlog();}
-else if (cleanedHash === 'tag') {listTag();}
-else if (cleanedHash === 'categories') {listCat();}
-else if (cleanedHash === 'topics') {listTopic();}
+else if (cleanedHash === 'createblog'){await formBlog(urlParamId);}
+else if (cleanedHash === 'createtopic'){await formTopic(urlParamId);}
+else if (cleanedHash === 'createcategory'){await formCat(urlParamId);}
+else if (cleanedHash === 'createtag'){await formTag(urlParamId);}
+else if (cleanedHash === 'blog') {await listBlog();}
+else if (cleanedHash === 'tag') {await listTag();}
+else if (cleanedHash === 'categories') {await listCat();}
+else if (cleanedHash === 'topics') {await listTopic();}
 }
 window.addEventListener('hashchange', () => {navigateTo(window.location.hash);});if (window.location.hash) {navigateTo(window.location.hash);}else {window.location.hash = '#home'; }
 
