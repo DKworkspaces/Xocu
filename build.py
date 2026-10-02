@@ -366,3 +366,40 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+"""
+import requests
+
+# Base URL of the external API you want to communicate with
+BASE_URL = "https://typicode.com"
+HEADERS =  {"Bypass-Tunnel-Reminder": "true","Content-Type": "application/json"};
+# 1. CREATE (POST) - Send data to create a new resource
+def create_item():
+    new_data = {"title": "Learning Python","body": "How to make API calls using the requests library.","userId": 1}
+    response = requests.post(BASE_URL, json=new_data, headers=HEADERS)
+    if response.status_code == 201:print("🟢 CREATE Success:", response.json())
+    else:print(f"🔴 CREATE Failed: {response.status_code}")
+# 2. READ (GET) - Fetch data from the API
+def read_items(item_id=None):
+    if item_id:url = f"{BASE_URL}/{item_id}"
+    else:url = BASE_URL
+    response = requests.get(url,headers=HEADERS)
+    if response.status_code == 200:print(f"🔵 READ Success (ID: {item_id if item_id else 'All'}):", response.json()[:2] if not item_id else response.json())
+    else:print(f"🔴 READ Failed: {response.status_code}")
+# 3. UPDATE (PUT / PATCH) - Modify an existing resource
+def update_item(item_id):
+    url = f"{BASE_URL}/{item_id}"
+    updated_data = {"id": item_id,"title": "Mastering Python APIs","body": "Updated content here.","userId": 1}
+    response = requests.put(url,headers=HEADERS, json=updated_data)
+    if response.status_code == 200:print("🟡 UPDATE Success:", response.json())
+    else:print(f"🔴 UPDATE Failed: {response.status_code}")
+# 4. DELETE (DELETE) - Remove a resource
+def delete_item(item_id):
+    url = f"{BASE_URL}/{item_id}"
+    response = requests.delete(url,headers=HEADERS)
+    if response.status_code in [200, 202, 204]:print(f"🟠 DELETE Success for ID {item_id}: Status {response.status_code}")
+    else:print(f"🔴 DELETE Failed: {response.status_code}")
+
+"""
